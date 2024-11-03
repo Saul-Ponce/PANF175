@@ -1,3 +1,15 @@
+<?php
+if (!isset($_SESSION['usuario'])) {
+    echo '
+    <script>
+        window.location = "../index.php"
+    </script>
+    ';
+    session_destroy();
+    die();
+}
+
+?>
 <script src="../../public/assets/js/demo-theme.min.js?1692870487"></script>
 <!-- Navbar -->
 <header class="navbar navbar-expand-md navbar-overlap d-print-none" data-bs-theme="dark">
@@ -16,11 +28,11 @@
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
                     aria-label="Open user menu">
-                    <span class="avatar avatar-sm"
-                        style="background-image: url(../../public/assets/img/user.jpg)"></span>
+                    <span class="avatar avatar-sm" style="background-image: url(../public/assets/img/user.jpg)"></span>
                     <div class="d-none d-xl-block ps-2">
-                        <div><?=$_SESSION['usuario']?></div>
-                        <div class="mt-1 small text-secondary"><?=$_SESSION['rol']?></div>
+                        <div><?=$_SESSION['nombre']?></div>
+                        <div class="mt-1 small text-secondary"></div>
+                        <div class="mt-1 small text-secondary"><?=$_SESSION['usuario']?> | <?=$_SESSION['rol']?></div>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" data-bs-theme="light">
@@ -34,7 +46,7 @@
             <div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="./">
+                        <a class="nav-link" href="../vistas/home.php">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <!-- Download SVG icon from http://tabler-icons.io/i/home -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -51,6 +63,7 @@
                             </span>
                         </a>
                     </li>
+                    <?php if ($_SESSION['rol'] == 'Administrador'): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
@@ -79,13 +92,17 @@
                                     <a class="dropdown-item" href="../vistas/lista-usuario.php">
                                         Gestion de usuarios
                                     </a>
-                                    <a class="dropdown-item" href="./alerts.html">
-                                        Roles
+                                    <a class="dropdown-item" href="../vistas/registrar_rol.php">
+                                        Crear rol
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/lista-rol.php">
+                                        Gestion de Roles
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </li>
+                    <?php endif;?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
