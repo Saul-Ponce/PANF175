@@ -32,8 +32,8 @@ class UsuarioModel
         $id = $data['id'];
         $nombre = $data['nombre'];
         $usuario = $data['usuario'];
-        $rol_id = $data['rol_id'];
-        $correo = $data['correo_recuperacion'];
+        $rol_id = $data['rol-id'];
+        $correo = $data['correo-recuperacion'];
         $sql = "UPDATE usuarios SET nombre='$nombre', usuario='$usuario',rol_id='$rol_id', correo_recuperacion='$correo' WHERE id='$id'";
         $query = mysqli_query($con, $sql);
 

@@ -8,7 +8,7 @@ $contrasena = $_POST['contrasena'];
 
 // Consulta para obtener información del usuario, incluyendo el estado, desde la tabla 'usuario'
 // Se asume que hay una relación entre 'usuario' y 'persona' mediante 'dui_persona'
-$consulta_usuario = "SELECT u.usuario, u.contrasena, u.estado, r.nombre as rol
+$consulta_usuario = "SELECT u.nombre, u.usuario, u.contrasena, u.estado, r.nombre as rol
                          FROM usuarios u
                          INNER JOIN roles r
                          ON r.id = u.rol_id
@@ -26,7 +26,9 @@ if ($resultado_usuario) {
             if (password_verify($contrasena, $fila['contrasena'])) {
                 // Iniciar sesión y redirigir si la contraseña es correcta
                 $_SESSION['usuario'] = $row;
+                $_SESSION['nombre'] = $fila['nombre'];
                 $_SESSION['rol'] = $fila['rol'];
+                $_SESSION['estado'] = $fila['estado'];
 
                 echo json_encode(array("exito" => "Bienvenido '.$row.'"));
             } else {
