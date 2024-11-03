@@ -10,8 +10,13 @@ if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || $_SESSION['rol']
     die();
 }
 
-include "../controladores/ControladorUsuario.php";
-include_once "../models/UsuarioModel.php";
+require_once "../models/conexion.php";
+$con = connection();
+$sql = "SELECT * FROM roles";
+$query = mysqli_query($con, $sql);
+
+include "../controladores/ControladorRol.php";
+include_once "../models/RolModel.php";
 
 ?>
 <!DOCTYPE html>
@@ -34,7 +39,7 @@ include_once "../models/UsuarioModel.php";
         <div class="container mt-4 ">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Usuarios</h3>
+                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Roles</h3>
                     <div class="table-responsive">
                         <table class="table table-bordered text-center align-middle">
                             <thead>
@@ -42,6 +47,7 @@ include_once "../models/UsuarioModel.php";
                                     <th style="font-size:13px !important;" scope="col">
                                         Nombre</th>
                                     <th style="font-size:13px !important;" scope="col">Descripcion</th>
+                                    <th style="font-size:13px !important;" scope="col">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,11 +58,14 @@ while ($row = mysqli_fetch_assoc($resultado)): ?>
                                     <td>
                                         <?=$row["nombre"]?>
                                     </td>
+                                    <td>
+                                        <?=$row["descripcion"]?>
+                                    </td>
                                     <th>
                                         <div class="d-flex justify-content-center">
 
                                             <button type="button" onclick='editar(<?=json_encode($row)?>)'
-                                                id="btn-editar" class="btn btn-warning" data-bs-toggle="modal"
+                                                id="btn-editar" class="btn btn-warning me-2" data-bs-toggle="modal"
                                                 data-bs-target="#mdRol">
 
                                                 <i class="fa-regular fa-pen-to-square"></i>
@@ -80,71 +89,33 @@ while ($row = mysqli_fetch_assoc($resultado)): ?>
 
     <!-- Scripts de Bootstrap 4 y otros aquí -->
     <?php include '../layouts/footerScript.php';?>
-    <?php include '../vistas/Modals/ModalUsuario.php';?>
+    <?php include '../vistas/Modals/ModalRol.php';?>
 
     <script>
     function editar(data) {
         document.getElementById("nombre").removeAttribute("disabled", "");
-        document.getElementById("usuario").removeAttribute("disabled", "");
-        document.getElementById("correo-recuperacion").removeAttribute("disabled", "");
-        document.getElementById("rol-id").removeAttribute("disabled", "");
+        document.getElementById("descripcion").removeAttribute("disabled", "");
 
         document.getElementById("action").value = "editar";
         document.getElementById("id").value = data.id || "";
         document.getElementById("nombre").value = data.nombre || "";
-        document.getElementById("usuario").value = data.usuario || "";
-        document.getElementById("correo-recuperacion").value = data.correo_recuperacion || "";
-        document.getElementById("rol-id").value = data.rol_id || "";
+        document.getElementById("descripcion").value = data.descripcion || "";
         document.getElementById("enviar").innerHTML = "Guardar Cambios";
         document.getElementById("enviar").classList.remove('btn-danger');
         document.getElementById("enviar").classList.add('btn-primary');
 
     }
 
-    function cambiarEstado(data) {
-        document.getElementById("titulo").innerHTML = data.estado == "1" ?
-            '¿SEGURO QUE DESEA DAR DE BAJA A ESTE EMPLEADO?' : '¿SEGURO QUE DESEA ACTIVAR A ESTE EMPLEADO?';
-
-        document.getElementById("nombre").setAttribute("disabled", "");
-        document.getElementById("usuario").setAttribute("disabled", "");
-        document.getElementById("correo-recuperacion").setAttribute("disabled", "");
-        document.getElementById("rol-id").setAttribute("disabled", "");
-
-        document.getElementById("action").value = "cambiarEstado";
-        document.getElementById("id").value = data.id || "";
-        document.getElementById("estado").value = data.estado == 1 ? false : true || "";
-        document.getElementById("nombre").value = data.nombre || "";
-        document.getElementById("usuario").value = data.usuario || "";
-        document.getElementById("correo-recuperacion").value = data.correo_recuperacion || "";
-        document.getElementById("rol-id").value = data.rol_id || "";
-        document.getElementById("enviar").innerHTML = data.estado == 1 ? "Dar de baja" : "Activar";
-
-        if (data.estado == 1) {
-            document.getElementById("enviar").classList.remove('btn-primary');
-            document.getElementById("enviar").classList.add('btn-danger');
-
-        } else {
-            document.getElementById("enviar").classList.remove('btn-danger');
-            document.getElementById("enviar").classList.add('btn-primary');
-
-        }
-
-    }
-
     function eliminar(data) {
-        document.getElementById("titulo").innerHTML = "¿SEGURO QUE DESEA BORRAR ESTE USUARIO?";
+        document.getElementById("titulo").innerHTML = "¿SEGURO QUE DESEA BORRAR ESTE ROL?";
 
         document.getElementById("nombre").setAttribute("disabled", "");
-        document.getElementById("usuario").setAttribute("disabled", "");
-        document.getElementById("correo-recuperacion").setAttribute("disabled", "");
-        document.getElementById("rol-id").setAttribute("disabled", "");
+        document.getElementById("descripcion").setAttribute("disabled", "");
 
         document.getElementById("action").value = "borrar";
         document.getElementById("id").value = data.id || "";
         document.getElementById("nombre").value = data.nombre || "";
-        document.getElementById("usuario").value = data.usuario || "";
-        document.getElementById("correo-recuperacion").value = data.correo_recuperacion || "";
-        document.getElementById("rol-id").value = data.rol_id || "";
+        document.getElementById("descripcion").value = data.descripcion || "";
         document.getElementById("enviar").innerHTML = "Eliminar";
         document.getElementById("enviar").classList.remove('btn-primary');
         document.getElementById("enviar").classList.add('btn-danger');

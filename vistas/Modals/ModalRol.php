@@ -18,7 +18,7 @@
                                 onkeypress="return Solo_Texto(event);" required="true">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="usuario" class="col-form-label">Usuario</label>
+                            <label for="usuario" class="col-form-label">Descripcion</label>
                             <input type="text" name="descripcion" id="descripcion" class="form-control" value=""
                                 onkeypress="return Solo_Texto(event);" required="true">
                         </div>

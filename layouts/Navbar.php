@@ -92,10 +92,10 @@ if (!isset($_SESSION['usuario'])) {
                                     <a class="dropdown-item" href="../vistas/lista-usuario.php">
                                         Gestion de usuarios
                                     </a>
-                                    <a class="dropdown-item" href="./alerts.html">
+                                    <a class="dropdown-item" href="../vistas/registrar_rol.php">
                                         Crear rol
                                     </a>
-                                    <a class="dropdown-item" href="./alerts.html">
+                                    <a class="dropdown-item" href="../vistas/lista-rol.php">
                                         Gestion de Roles
                                     </a>
                                 </div>
