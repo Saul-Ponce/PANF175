@@ -70,18 +70,22 @@ while ($row = mysqli_fetch_assoc($resultado)): ?>
                                         <div class="d-flex justify-content-center">
 
                                             <button type="button" onclick='editar(<?=json_encode($row)?>)'
-                                                id="btn-editar" class="btn btn-warning" data-bs-toggle="modal"
+                                                id="btn-editar" class="btn btn-warning me-2" data-bs-toggle="modal"
                                                 data-bs-target="#mdUsuario">
 
                                                 <i class="fa-regular fa-pen-to-square"></i>
                                             </button>
-                                            <button class="btn <?=$row["estado"] ? 'btn-danger' : 'btn-success'?> mx-2"
+                                            <?php if ($row['usuario'] != $_SESSION['usuario']): ?>
+                                            <?php if ($row['nombre_rol'] != "Administrador"): ?>
+                                            <button class="btn <?=$row["estado"] ? 'btn-danger' : 'btn-success'?> me-2"
                                                 data-bs-toggle="modal" data-bs-target="#mdUsuario"
                                                 onclick='cambiarEstado(<?=json_encode($row)?>)'>
                                                 <?=$row["estado"] ? '<i class="fa fa-user-times" aria-hidden="true"></i>' : '<i class="fa fa-user" aria-hidden="true"></i>'?></button>
+                                            <?php endif?>
                                             <button class="btn btn-danger " data-bs-toggle="modal"
                                                 data-bs-target="#mdUsuario" onclick='eliminar(<?=json_encode($row)?>)'>
                                                 <i class="fa-solid fa-trash"></i></button>
+                                            <?php endif?>
                                         </div>
                                     </th>
                                 </tr>
@@ -122,7 +126,7 @@ while ($row = mysqli_fetch_assoc($resultado)): ?>
 
     function cambiarEstado(data) {
         document.getElementById("titulo").innerHTML = data.estado == "1" ?
-            '¿SEGURO QUE DESEA DAR DE BAJA A ESTE EMPLEADO?' : '¿SEGURO QUE DESEA ACTIVAR A ESTE EMPLEADO?';
+            '¿SEGURO QUE DESEA DAR DE BAJA A ESTE USUARIO?' : '¿SEGURO QUE DESEA ACTIVAR A ESTE USUARIO?';
 
         document.getElementById("nombre").setAttribute("disabled", "");
         document.getElementById("usuario").setAttribute("disabled", "");
