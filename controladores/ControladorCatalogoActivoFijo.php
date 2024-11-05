@@ -16,7 +16,7 @@ if (isset($_POST["action"])) {
     $action = $_POST["action"];
     switch ($action) {
         case "insert":
-            CatalogoActivoFijoModel::agregar($_POST['nombreActivo'], $_POST['descripcion'], $_POST['porcentajeDepreciacion']);
+            CatalogoActivoFijoModel::agregar($_POST['nombreActivo'], $_POST['descripcion'], $_POST['porcentajeDepreciacion'], $_POST['codigo']);
             $_SESSION['success_messageP'] = 'Tipo de activo agregado exitosamente!';
             header("Location: ../vistas/lista-catalogoActivoFijo.php");
             break;
@@ -28,11 +28,6 @@ if (isset($_POST["action"])) {
             CatalogoActivoFijoModel::cambiarEstado($_POST);
             header("Location: ../vistas/lista-catalogoActivoFijo.php");
             break;
-        case "borrarActivo":
-            CatalogoActivoFijoModel::borrar($_POST['idTipoActivo']);
-            header("Location: ../vistas/lista-catalogoActivoFijo.php");
-            break;
-
         default:
             echo "Bandera no encontrada";
             break;

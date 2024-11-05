@@ -46,6 +46,7 @@ include_once "../models/CatalogoActivoFijoModel.php";
                                     <th style="font-size:13px !important;" scope="col">Nombre</th>
                                     <th style="font-size:13px !important;" scope="col">Descripcion</th>
                                     <th style="font-size:13px !important;" scope="col">Procentaje depreciacion</th>
+                                    <th style="font-size:13px !important;" scope="col">Codigo</th>
                                     <th style="font-size:13px !important;" scope="col">Estado</th>
                                     <th style="font-size:13px !important;" scope="col">Acciones</th>
                                 </tr>
@@ -58,6 +59,7 @@ include_once "../models/CatalogoActivoFijoModel.php";
                                         <td><?= $row["nombreActivo"] ?></td>
                                         <td><?= $row["descripcion"] ?></td>
                                         <td><?= $row["porcentajeDepreciacion"] ?></td>
+                                        <td><?= $row["codigo"] ?></td>
                                         <td><?= $row["estado"] ? '<span class="badge bg-green text-green-fg">Activo</span>' : '<span class="badge bg-red text-red-fg">Inactivo</span>' ?></td>
                                         <th>
                                             <div class="d-flex justify-content-center">
@@ -104,6 +106,7 @@ include_once "../models/CatalogoActivoFijoModel.php";
             document.getElementById("nombreActivo").value = data.nombreActivo || ""; // Nombre
             document.getElementById("porcentajeDepreciacion").value = data.porcentajeDepreciacion || ""; // Porcentaje de depreciación
             document.getElementById("descripcion").value = data.descripcion || ""; // Descripción
+            document.getElementById("codigo").value = data.codigo || ""; // Codigo
             // Cambiar el texto y la clase del botón de enviar
             document.getElementById("enviar").innerHTML = "Guardar Cambios";
             document.getElementById("enviar").classList.remove('btn-danger');
@@ -117,11 +120,13 @@ include_once "../models/CatalogoActivoFijoModel.php";
             document.getElementById("nombreActivo").setAttribute("disabled", "");
             document.getElementById("porcentajeDepreciacion").setAttribute("disabled", "");
             document.getElementById("descripcion").setAttribute("disabled", "");
+            document.getElementById("codigo").setAttribute("disabled", "");
             document.getElementById("action").value = "cambiarEstado";
             document.getElementById("idTipoActivo").value = data.idTipoActivo || "";
             document.getElementById("nombreActivo").value = data.nombreActivo || "";
             document.getElementById("porcentajeDepreciacion").value = data.porcentajeDepreciacion || "";
             document.getElementById("descripcion").value = data.descripcion || "";
+            document.getElementById("codigo").value = data.codigo || ""; // Codigo
             document.getElementById("estado").value = data.estado == 1 ? false : true || ""; /// para dar de daba enviamos el estado del activo pero lo recive un input oculto
             document.getElementById("enviar").innerHTML = data.estado == 1 ? "Dar de baja" : "Activar";
             if (data.estado == 1) {

@@ -31,7 +31,7 @@ $query = mysqli_query($con, $sql);
     <?php include '../layouts/Navbar.php'; ?>
     <div class="page-body">
         <div class="container d-flex justify-content-center"> <!-- Centramos el contenedor de la tarjeta -->
-            <div class="card w-100" style="max-width: 550px;"> <!-- Limitamos el ancho de la tarjeta -->
+            <div class="card w-100" style="max-width: 400px;"> <!-- Limitamos el ancho de la tarjeta -->
                 <div class="card-header">
                     <h3 class="card-title">Catálogo Tipos de Activo</h3>
                 </div>
@@ -39,6 +39,10 @@ $query = mysqli_query($con, $sql);
                     <!-- Establece un ancho máximo para el formulario -->
                     <form action="../controladores/ControladorCatalogoActivoFijo.php" method="POST" style="max-width: 500px; margin: auto;" name="form" onsubmit="return validarFormulariocompleto()">
                         <input type="hidden" name="action" value="insert">
+                        <div class="mb-3">
+                            <label for="codigo">Codigo</label>
+                            <input type="text" class="form-control" id="codigo" name="codigo" required>
+                        </div>
                         <div class="mb-3">
                             <label for="nombreActivo">Nombre</label>
                             <input type="text" class="form-control" id="nombreActivo" name="nombreActivo" required>

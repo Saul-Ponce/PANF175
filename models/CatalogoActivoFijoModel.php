@@ -12,11 +12,11 @@ class CatalogoActivoFijoModel
         return $query;
     }
 
-    public static function agregar($nombreActivo, $descripcion, $porcentajeDepreciacion)
+    public static function agregar($nombreActivo, $descripcion, $porcentajeDepreciacion, $codigo)
     {
         $con = connection();
-        $sql = "INSERT INTO Catalogo_Tipos_Activos (nombreActivo,descripcion,porcentajeDepreciacion) 
-        VALUES ('$nombreActivo','$descripcion',$porcentajeDepreciacion)";
+        $sql = "INSERT INTO Catalogo_Tipos_Activos (nombreActivo,descripcion,porcentajeDepreciacion,codigo) 
+        VALUES ('$nombreActivo','$descripcion',$porcentajeDepreciacion,'$codigo')";
         $querry = mysqli_query($con, $sql);
     }
 
@@ -27,7 +27,8 @@ class CatalogoActivoFijoModel
         $nombreActivo = $data['nombreActivo'];
         $porcentajeDepreciacion = $data['porcentajeDepreciacion'];
         $descripcion = $data['descripcion'];
-        $sql = "UPDATE Catalogo_Tipos_Activos SET nombreActivo='$nombreActivo', porcentajeDepreciacion='$porcentajeDepreciacion',descripcion='$descripcion' WHERE idTipoActivo='$idTipoActivo'";
+        $codigo = $data['codigo'];
+        $sql = "UPDATE Catalogo_Tipos_Activos SET nombreActivo='$nombreActivo', porcentajeDepreciacion='$porcentajeDepreciacion',descripcion='$descripcion',codigo='$codigo' WHERE idTipoActivo='$idTipoActivo'";
         $query = mysqli_query($con, $sql);
     }
 

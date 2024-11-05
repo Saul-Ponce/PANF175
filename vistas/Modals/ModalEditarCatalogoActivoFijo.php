@@ -20,15 +20,19 @@ $query = mysqli_query($con, $sql);
                     <input type="hidden" name="idTipoActivo" id="idTipoActivo" value="">
                     <input type="hidden" name="estado" id="estado" value="">
                     <div class="row">
-                        <div class="mb-3">
+                        <div class="mb-2">
+                            <label for="codigo" class="col-form-label">Codigo</label>
+                            <input type="text" name="codigo" id="codigo" class="form-control" value="" required>
+                        </div>
+                        <div class="mb-2">
                             <label for="nombreActivo" class="col-form-label">Nombre</label>
                             <input type="text" name="nombreActivo" id="nombreActivo" class="form-control" value="" required>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label for="descripcion" class="col-form-label">Descripción</label>
                             <textarea name="descripcion" id="descripcion" class="form-control" rows="3" required></textarea>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label for="porcentajeDepreciacion" class="col-form-label">Porcentaje de Depreciación (%)</label>
                             <input type="number" step="0.01" name="porcentajeDepreciacion" id="porcentajeDepreciacion" class="form-control" value="" required>
                         </div>
