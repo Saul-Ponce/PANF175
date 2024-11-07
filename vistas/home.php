@@ -20,13 +20,13 @@ if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1) {
     <title>Inicio</title>
     <meta content="Proyecto de analisis finaciero" name="description" />
     <meta content="Grupo ANF DIU" name="author" />
-    <?php include '../layouts/headerStyles.php';?>
+    <?php include '../layouts/headerStyles.php'; ?>
 
 </head>
 
 <body>
     <div class="page">
-        <?php include '../layouts/Navbar.php';?>
+        <?php include '../layouts/Navbar.php'; ?>
         <div class="page-wrapper">
             <!-- Page body -->
             <div class="page-body">
@@ -35,9 +35,9 @@ if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1) {
                 </div>
             </div>
         </div>
-        <?php include '../layouts/Footer.php';?>
+        <?php include '../layouts/Footer.php'; ?>
     </div>
-    <?php include '../layouts/footerScript.php';?>
+    <?php include '../layouts/footerScript.php'; ?>
 
 </body>
 

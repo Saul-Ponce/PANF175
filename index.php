@@ -1,4 +1,4 @@
-<?php include 'layouts/header.php';?>
+<?php include 'layouts/header.php'; ?>
 <!-- CSS files -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script src="https://kit.fontawesome.com/16e0069a57.js" crossorigin="anonymous"></script>
@@ -118,15 +118,6 @@ body {
         }).done(function(json) {
             console.log("el login: ", json);
             if (json.exito) {
-                /* Swal.fire({
-                    icon: "success",
-                    title: "Bienvendio",
-                    text: json.exito,
-                });
-                var timer = setInterval(function() {
-                    $(location).attr("href", "/vistas/home.php");
-                    clearTimeout(timer);
-                }, 3500); */
                 $(location).attr("href", "/vistas/home.php");
             } else if (json[0] == "Bloqueo") {
                 Swal.fire({
