@@ -49,7 +49,7 @@
                         <label class="form-label">
                             Contraseña
                             <span class="form-label-description">
-                                <a href="./forgot-password.html">He olvidado mi contraseña</a>
+                                <a href="./vistas/recuperar_contra.php">He olvidado mi contraseña</a>
                             </span>
                         </label>
                         <div class="input-group input-group-flat">

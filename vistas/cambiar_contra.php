@@ -1,18 +1,16 @@
 <?php
 session_start();
 if (!isset($_SESSION['usuario'])) {
-    echo '
-    <script>
-        window.location = "../index.php"
-    </script>
-    ';
-    session_destroy();
-    die();
+    if (!isset($_GET['usuario'])) {
+        header('../index.php');
+        session_destroy();
+        die();
+    }
 }
 ?>
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="utf-8" />
@@ -38,7 +36,8 @@ if (!isset($_SESSION['usuario'])) {
             <form class="card card-md" method="POST" id="formulario_cambio" autocomplete="off" novalidate>
                 <div class="card-body">
                     <h2 class="card-title text-center mb-4">Cambiar contraseña</h2>
-                    <input type="hidden" name="usuario" value="<?= $_SESSION["usuario"] ?>">
+                    <input type="hidden" name="usuario"
+                        value="<?= isset($_SESSION['usuario']) ? $_SESSION["usuario"] : $_GET['usuario'] ?>">
                     <div class="mb-3">
                         <label class="form-label">Nueva Contraseña</label>
                         <div class="input-group input-group-flat mb-3">

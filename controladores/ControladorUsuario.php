@@ -42,7 +42,7 @@ if (isset($_POST["action"])) {
 
                 //Recipients
                 $mail->setFrom('puntodigital.soporte@gmail.com', 'Punto Digital');
-                $mail->addAddress($_POST['correo_recuperacion'], 'Usuario');
+                $mail->addAddress($_POST['correo_recuperacion'], $_POST['correo_recuperacion']);
                 //Content
                 $mail->isHTML(true);                                  //Set email format to HTML
                 $mail->Subject = 'Cuenta de usuario Punto Digital';
