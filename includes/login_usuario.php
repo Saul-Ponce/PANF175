@@ -8,7 +8,7 @@ $contrasena = $_POST['contrasena'];
 
 // Consulta para obtener información del usuario, incluyendo el estado, desde la tabla 'usuario'
 // Se asume que hay una relación entre 'usuario' y 'persona' mediante 'dui_persona'
-$consulta_usuario = "SELECT u.usuario, u.contrasena, u.estado, r.nombre as rol
+$consulta_usuario = "SELECT u.id, u.nombre, u.usuario, u.contrasena, u.estado,u.temp_contra, r.nombre as rol
                          FROM usuarios u
                          INNER JOIN roles r
                          ON r.id = u.rol_id
@@ -24,11 +24,19 @@ if ($resultado_usuario) {
         if ($fila['estado'] == 1) { // 1 es activo, 0 es inactivo
             // Verificar la contraseña
             if (password_verify($contrasena, $fila['contrasena'])) {
-                // Iniciar sesión y redirigir si la contraseña es correcta
-                $_SESSION['usuario'] = $row;
-                $_SESSION['rol'] = $fila['rol'];
+                if ($fila['temp_contra'] != 1) {
+                    // Iniciar sesión y redirigir si la contraseña es correcta
+                    $_SESSION['usuario'] = $row;
+                    $_SESSION['id'] = $fila['id'];
+                    $_SESSION['nombre'] = $fila['nombre'];
+                    $_SESSION['rol'] = $fila['rol'];
+                    $_SESSION['estado'] = $fila['estado'];
 
-                echo json_encode(array("exito" => "Bienvenido '.$row.'"));
+                    echo json_encode(array("exito" => "Bienvenido '.$row.'"));
+                } else {
+                    $_SESSION['usuario'] = $row;
+                    header("Location: change_password.php");
+                }
             } else {
                 // Contraseña incorrecta
                 mostrarMensajeError("Contraseña incorrecta");

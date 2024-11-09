@@ -1,125 +1,132 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || $_SESSION['rol'] != "Administrador") {
     echo '
     <script>
-        alert("Por favor Inicia Sesion");
-        window.location = "../index.html"
+        window.location = "../index.php"
     </script>
     ';
     session_destroy();
     die();
 }
+
+require_once "../models/conexion.php";
+$con = connection();
+$sql = "SELECT * FROM roles";
+$query = mysqli_query($con, $sql);
+
 include "../controladores/ControladorRol.php";
+include_once "../models/RolModel.php";
+
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Roles</title>
-     <!--     Fonts and icons     -->
-
-     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
-    <script src="https://kit.fontawesome.com/16e0069a57.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <!-- CSS Files -->
-    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />
-
-
-<!--   Core JS Files   -->
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
-<script src="../assets/js/plugins/bootstrap-switch.js"></script>
-
-<!--  Notifications Plugin    -->
-<script src="../assets/js/plugins/bootstrap-notify.js"></script>
-<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
-<script src="../assets/js/light-bootstrap-dashboard.js?v=2.0.0 " type="text/javascript"></script>
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Roles</title>
+    <meta content="Proyecto de analisis finaciero" name="description" />
+    <meta content="Grupo ANF DIU" name="author" />
+    <?php include '../layouts/headerStyles.php';?>
 </head>
+
 <body>
-<?php include '../includes/sidebar.php';?>
-<div class="main-panel">
-    <div class="container-fluid mt-4 "  >
+    <?php include '../layouts/Navbar.php';?>
 
-        <div class="card">
-            <div class="card-body">
+    <div class="main-panel">
+        <div class="container mt-4 ">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Roles</h3>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead>
+                                <tr>
+                                    <th style="font-size:13px !important;" scope="col">
+                                        Nombre</th>
+                                    <th style="font-size:13px !important;" scope="col">Descripcion</th>
+                                    <th style="font-size:13px !important;" scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+$resultado = ControladorRol::listar();
+while ($row = mysqli_fetch_assoc($resultado)): ?>
+                                <tr>
+                                    <td>
+                                        <?=$row["nombre"]?>
+                                    </td>
+                                    <td>
+                                        <?=$row["descripcion"]?>
+                                    </td>
+                                    <th>
+                                        <div class="d-flex justify-content-center">
 
-                <h3 class="card-title text-center align-middle"  style="font-weight: 700;">Lista de Roles</h3>
-                <table class="table table-bordered text-center align-middle">
-                    <thead>
-                        <tr>
+                                            <button type="button" onclick='editar(<?=json_encode($row)?>)'
+                                                id="btn-editar" class="btn btn-warning me-2" data-bs-toggle="modal"
+                                                data-bs-target="#mdRol">
 
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </button>
+                                            <button class="btn btn-danger " data-bs-toggle="modal"
+                                                data-bs-target="#mdRol" onclick='eliminar(<?=json_encode($row)?>)'>
+                                                <i class="fa-solid fa-trash"></i></button>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <?php endwhile;?>
 
-                            <th style="font-weight: 700; font-size:16px; text-align: center!important;" scope="col" >Rol</th>
-                            <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col" >Acciones</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach (ControladorRol::listar() as $row): ?>
-                            <tr>
-
-                                <td> <?=$row["nombre_rol"]?></td>
-
-                                <th>
-                                    <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-warning " data-toggle="modal"
-                                            data-target="#edit-rolModal<?php echo $row['id_rol']; ?>">
-                                            <i class="fa-regular fa-pen-to-square"></i>
-                                        </button>
-                                        <button class="btn btn-danger" data-toggle="modal"
-                                            data-target="#ModalEliminarRol<?php echo $row['id_rol']; ?>">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </th>
-                            </tr>
-
-                        <?php
-include '../vistas/modals/editar-rol.php';
-include '../vistas/modals/ModalEliminarRol.php';
-endforeach;?>
-
-                    </tbody>
-                </table>
-
-                <div clas="d-flex align-content-center">
-                <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rolModal">
-  Agregar rol
-</button>
-
-
-<?php include '../vistas/modals/rol.php';
-
-?>
-
-
-
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-
+        <?php include '../layouts/Footer.php';?>
     </div>
-</div>
 
-<script>
+    <!-- Scripts de Bootstrap 4 y otros aquí -->
+    <?php include '../layouts/footerScript.php';?>
+    <?php include '../vistas/Modals/ModalRol.php';?>
+
+    <script>
+    function editar(data) {
+        document.getElementById("nombre").removeAttribute("disabled", "");
+        document.getElementById("descripcion").removeAttribute("disabled", "");
+
+        document.getElementById("action").value = "editar";
+        document.getElementById("id").value = data.id || "";
+        document.getElementById("nombre").value = data.nombre || "";
+        document.getElementById("descripcion").value = data.descripcion || "";
+        document.getElementById("enviar").innerHTML = "Guardar Cambios";
+        document.getElementById("enviar").classList.remove('btn-danger');
+        document.getElementById("enviar").classList.add('btn-primary');
+
+    }
+
+    function eliminar(data) {
+        document.getElementById("titulo").innerHTML = "¿SEGURO QUE DESEA BORRAR ESTE ROL?";
+
+        document.getElementById("nombre").setAttribute("disabled", "");
+        document.getElementById("descripcion").setAttribute("disabled", "");
+
+        document.getElementById("action").value = "borrar";
+        document.getElementById("id").value = data.id || "";
+        document.getElementById("nombre").value = data.nombre || "";
+        document.getElementById("descripcion").value = data.descripcion || "";
+        document.getElementById("enviar").innerHTML = "Eliminar";
+        document.getElementById("enviar").classList.remove('btn-primary');
+        document.getElementById("enviar").classList.add('btn-danger');
+
+    }
     // Check if a success message is set in the session
-    <?php if (isset($_SESSION['success_messageR'])): ?>
-        Swal.fire('<?php echo $_SESSION['success_messageR']; ?>', '', 'success');
-        <?php unset($_SESSION['success_messageR']); // Clear the message ?>
+    <?php if (isset($_SESSION['success_messageP'])): ?>
+    Swal.fire('<?php echo $_SESSION['success_messageP']; ?>', '', 'success');
+    <?php unset($_SESSION['success_messageP']); // Clear the message ?>
     <?php endif;?>
-</script>
-
+    </script>
 </body>
 
 </html>

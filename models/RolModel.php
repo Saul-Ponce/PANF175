@@ -1,68 +1,51 @@
 <?php
-require_once("conexion.php");
+require_once "conexion.php";
 
 class RolModel
 {
 
-	public static function listar()
-	{
-		$con = connection();
-		$sql = "SELECT *
+    public static function listar()
+    {
+        $con = connection();
+        $sql = "SELECT *
         FROM
-        rol";
-		$query = mysqli_query($con, $sql);
+        roles";
+        $query = mysqli_query($con, $sql);
 
-		return $query;
-	}
+        return $query;
+    }
 
-	
+    public static function agregar($nombre, $descripcion)
+    {
+        $con = connection();
 
-	public static function agregar($nombre_rol)
-	{
-		$con = connection();
-
-
-		$sql = "INSERT INTO rol (nombre_rol) VALUES ('$nombre_rol')";
+        $sql = "INSERT INTO roles (nombre, descripcion) VALUES('$nombre', '$descripcion');";
         $querry = mysqli_query($con, $sql);
-		
-        
 
+    }
 
+    public static function editar($data)
+    {
 
-	}
+        $con = connection();
 
-	public static function editar($data)
-	{
+        $id = $data['id'];
+        $rol = $data['nombre'];
+        $descripcion = $data['descripcion'];
 
-		$con = connection();
+        $sql = "UPDATE roles SET nombre='$rol', descripcion='$descripcion'  WHERE id='$id'";
 
-		$id  = $data['id_rol'];
-		$rol = $data['nombre_rol'];
+        $query = mysqli_query($con, $sql);
+    }
 
+    public static function borrar($id)
+    {
 
+        $con = connection();
 
-		$sql = "UPDATE rol SET nombre_rol='$rol'  WHERE id_rol='$id'";
+        $sql = "DELETE FROM roles WHERE id='$id'";
+        $query = mysqli_query($con, $sql);
 
-		$query = mysqli_query($con, $sql);
-	}
+    }
 
-	public static function borrar($id_rol){
-
-		$con = connection();
-		
-
-		$sql="DELETE FROM rol WHERE id_rol='$id_rol'";
-		$query = mysqli_query($con, $sql);
-		
-	}
-
-
-	
-
-	
-	
-	
 }
-
-
-?>
