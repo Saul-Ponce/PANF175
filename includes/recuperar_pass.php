@@ -1,36 +1,41 @@
 <?php
-include "conexion.php";
+include '../models/conexion.php';
+$con = connection();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-require '../PHPMailer/Exception.php';
-require '../PHPMailer/PHPMailer.php';
-require '../PHPMailer/SMTP.php';
+
+include '../PHPMailer/Exception.php';
+include '../PHPMailer/PHPMailer.php';
+include '../PHPMailer/SMTP.php';
 $correo = $_POST['correo'];
-$verificar_correo = "SELECT count(1) FROM usuario WHERE correo = '$correo'";
-$obtener_id = "SELECT id_usuario FROM usuario WHERE correo = '$correo'";
-$ejecutar = mysqli_query($conexion, $verificar_correo);
+$verificar_correo = "SELECT count(1) FROM usuarios WHERE correo_recuperacion = '$correo'";
+$obtener_id = "SELECT id FROM usuarios WHERE correo_recuperacion = '$correo'";
+$ejecutar = mysqli_query($con, $verificar_correo);
 $fila = mysqli_fetch_row($ejecutar);
 if ($fila[0] > 0) {
-    $ejecutar = mysqli_query($conexion, $obtener_id);
+    $ejecutar = mysqli_query($con, $obtener_id);
     $fila = mysqli_fetch_row($ejecutar);
     $mail = new PHPMailer(true);
 
     try {
         //Configuracion del Servidor
-        $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host = 'smtp-mail.outlook.com';                     //Set the SMTP server to send through
-        $mail->SMTPAuth = true;                                   //Enable SMTP authentication
-        $mail->Username = 'activapc2022vostro@outlook.es';                     //SMTP username
-        $mail->Password = 'Activa2022';                               //SMTP password
-        $mail->Port = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        $mail->isSMTP();
+        $mail->Host = 'smtp-mail.outlook.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'activapc2022vostro@outlook.es';
+        $mail->Password = 'Activa2022';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Habilitar TLS
+        $mail->Port = 587; // Usar el puerto 587 para TLS
+        $mail->SMTPDebug = 2; // Muestra información detallada sobre el envío
+        $mail->Debugoutput = 'html'; // Para ver la salida en formato HTML
 
         //Recipients
         $mail->setFrom('activapc2022vostro@outlook.es', 'Punto Digital');
         $mail->addAddress($correo, 'Usuario');
         //Content
         $mail->isHTML(true);                                  //Set email format to HTML
-        $mail->Subject = 'Recuperacion de Cuenta';
-        $mail->Body = 'Para recuperar tu contraseña por favor haz clic en el siguiente enlace:
+        $mail->Subject = 'Cambio de contraseña';
+        $mail->Body = 'Para cambiar tu contraseña por favor haz clic en el siguiente enlace:
                       <a href="localhost/PD/vistas/cambiar_contra.php?id=' . $fila[0] . '">Recuperacion de Contraseña</a>';
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
@@ -58,4 +63,3 @@ if ($fila[0] > 0) {
         </script>
     ';
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1) {
+if (!isset($_SESSION['usuario'])) {
     echo '
     <script>
         window.location = "../index.php"
@@ -26,23 +26,24 @@ if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1) {
 
 <body class="d-flex flex-column">
     <script src="../public/assets/js/demo-theme.min.js?1692870487"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <div class="page page-center">
         <div class="container container-tight py-4">
-            <div class="text-center mb-4">
+            <div class="text-center mb-0">
                 <a href="." class="navbar-brand navbar-brand-autodark">
-                    <img src="../public/assets/img/logo.svg" height="100">
+                    <img src="../public/assets/img/logo.svg" height="150">
                 </a>
             </div>
-            <form class="card card-md" action="../includes/cambiar_pass.php" method="POST" id="formulario_cambio"
-                autocomplete="off" novalidate>
+            <form class="card card-md" method="POST" id="formulario_cambio" autocomplete="off" novalidate>
                 <div class="card-body">
                     <h2 class="card-title text-center mb-4">Cambiar contraseña</h2>
-                    <input type="hidden" name="id" id="<?= $_SESSION["id"] ?>">
+                    <input type="hidden" name="usuario" value="<?= $_SESSION["usuario"] ?>">
                     <div class="mb-3">
                         <label class="form-label">Nueva Contraseña</label>
-                        <div class="input-group input-group-flat">
-                            <input type="password" class="form-control" placeholder="contraseña" id="contrasena"
-                                autocomplete="off">
+                        <div class="input-group input-group-flat mb-3">
+                            <input type="password" class="form-control" placeholder="contrasena" id="contrasena"
+                                name="contrasena" autocomplete="off">
                             <span class="input-group-text">
                                 <a href="#" class="link-secondary" id="togglePassword">
                                     <!-- Download SVG icon from http://tabler-icons.io/i/eye -->
@@ -59,10 +60,10 @@ if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1) {
                         </div>
                         <label class="form-label">Repetir nueva contraseña</label>
                         <div class="input-group input-group-flat">
-                            <input type="password" class="form-control" placeholder="contraseña" id="nueva-contrasena"
-                                autocomplete="off">
+                            <input type="password" class="form-control" placeholder="contraseña" id="repetir-contrasena"
+                                name="repetir-contrasena" autocomplete="off">
                             <span class="input-group-text">
-                                <a href="#" class="link-secondary" id="togglePassword">
+                                <a href="#" class="link-secondary" id="togglePassword2">
                                     <!-- Download SVG icon from http://tabler-icons.io/i/eye -->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -84,11 +85,10 @@ if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1) {
         </div>
         <?php include '../layouts/footerScript.php'; ?>
         <script>
-            ver_contra('contrasena', 'togglePassword');
             let ver_contra = (input, button) => {
                 // Seleccionar el campo de contraseña y el botón
-                const passwordInput = document.getElementById('contrasena');
-                const togglePasswordButton = document.getElementById('togglePassword');
+                const passwordInput = document.getElementById(input);
+                const togglePasswordButton = document.getElementById(button);
 
                 // Agregar un evento de clic al botón
                 togglePasswordButton.addEventListener('click', () => {
@@ -106,37 +106,51 @@ if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1) {
                 });
             }
 
+            ver_contra('contrasena', 'togglePassword');
+            ver_contra('repetir-contrasena', 'togglePassword2');
 
             $(document).on("submit", "#formulario_cambio", function (event) {
                 event.preventDefault();
-                var datos = $("#formulario_login").serialize();
-                console.log("evento submit", datos);
-                $.ajax({
-                    dataType: "json",
-                    method: "POST",
-                    url: "includes/login_usuario.php",
-                    data: datos,
-                }).done(function (json) {
-                    console.log("el login: ", json);
-                    if (json.exito) {
-                        $(location).attr("href", "/vistas/home.php");
-                    } else if (json[0] == "Bloqueo") {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Usuario bloqueado",
-                        });
-                        var timer = setInterval(function () {
-                            $(location).attr("href", "../home/index.php?modulo=Home");
-                            clearTimeout(timer);
-                        }, 3500);
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: json[1],
-                            text: json.error,
-                        });
-                    }
-                });
+                const contrasena = document.getElementById('contrasena').value;
+                const contrasena2 = document.getElementById('repetir-contrasena').value;
+                if (contrasena === contrasena2) {
+                    var datos = $("#formulario_cambio").serialize();
+                    console.log("evento submit", datos);
+                    $.ajax({
+                        dataType: "json",
+                        method: "POST",
+                        url: "../includes/cambiar_pass.php",
+                        data: datos,
+                    }).done(function (json) {
+                        console.log("el login: ", json);
+                        if (json.exito) {
+                            Swal.fire({
+                                icon: "success",
+                                title: 'contraseña cambiada',
+                                text: json.exito,
+                            });
+                            let timer = setInterval(function () {
+                                $(location).attr("href", "../index.php");
+                                clearTimeout(timer);
+                            }, 3500);
+
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: json[1],
+                                text: json.error,
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: 'Error de contraseña',
+                        text: 'las contraseñas no coinciden',
+                    });
+                }
+
+
             });
         </script>
 </body>
