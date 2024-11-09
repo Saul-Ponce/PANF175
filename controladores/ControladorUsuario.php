@@ -38,7 +38,7 @@ if (isset($_POST["action"])) {
             break;
 
         default:
-            echo "Bandera no encontrada";
+
             break;
     }
 

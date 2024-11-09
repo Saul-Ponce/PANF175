@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || $_SESSION['rol'] != "Administrador") {
+if (!isset($_SESSION['usuario'])) {
     echo '
     <script>
         window.location = "../index.php"
@@ -89,7 +89,6 @@ $query = mysqli_query($con, $sql);
         </div>
 
     </div>
-    <?php include '../layouts/Footer.php';?>
     </div>
 
     <!-- Scripts de Bootstrap 4 y otros aquí -->

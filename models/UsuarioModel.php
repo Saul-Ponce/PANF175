@@ -17,10 +17,9 @@ class UsuarioModel
 
     public static function agregar($nombre, $usuario, $rol_id, $contrasena, $correo_recuperacion, $estado)
     {
-        $temp_contra = 1;
         $con = connection();
 
-        $sql = "INSERT INTO usuarios ( nombre, usuario, rol_id, contrasena, correo_recuperacion, estado, temp_contra) VALUES ('$nombre','$usuario','$rol_id','$contrasena','$correo_recuperacion',$estado,$temp_contra)";
+        $sql = "INSERT INTO usuarios ( nombre, usuario, rol_id, contrasena, correo_recuperacion, estado) VALUES ('$nombre','$usuario','$rol_id','$contrasena','$correo_recuperacion',$estado)";
         $querry = mysqli_query($con, $sql);
 
     }
@@ -33,8 +32,8 @@ class UsuarioModel
         $id = $data['id'];
         $nombre = $data['nombre'];
         $usuario = $data['usuario'];
-        $rol_id = $data['rol-id'];
-        $correo = $data['correo-recuperacion'];
+        $rol_id = $data['rol_id'];
+        $correo = $data['correo_recuperacion'];
         $sql = "UPDATE usuarios SET nombre='$nombre', usuario='$usuario',rol_id='$rol_id', correo_recuperacion='$correo' WHERE id='$id'";
         $query = mysqli_query($con, $sql);
 

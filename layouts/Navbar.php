@@ -1,15 +1,3 @@
-<?php
-if (!isset($_SESSION['usuario'])) {
-    echo '
-    <script>
-        window.location = "../index.php"
-    </script>
-    ';
-    session_destroy();
-    die();
-}
-
-?>
 <script src="../../public/assets/js/demo-theme.min.js?1692870487"></script>
 <!-- Navbar -->
 <header class="navbar navbar-expand-md navbar-overlap d-print-none" data-bs-theme="dark">
@@ -28,11 +16,11 @@ if (!isset($_SESSION['usuario'])) {
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
                     aria-label="Open user menu">
-                    <span class="avatar avatar-sm" style="background-image: url(../public/assets/img/user.jpg)"></span>
+                    <span class="avatar avatar-sm"
+                        style="background-image: url(../../public/assets/img/user.jpg)"></span>
                     <div class="d-none d-xl-block ps-2">
-                        <div><?= $_SESSION['nombre'] ?></div>
-                        <div class="mt-1 small text-secondary"></div>
-                        <div class="mt-1 small text-secondary"><?= $_SESSION['usuario'] ?> | <?= $_SESSION['rol'] ?></div>
+                        <div><?=$_SESSION['usuario']?></div>
+                        <div class="mt-1 small text-secondary"><?=$_SESSION['rol']?></div>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" data-bs-theme="light">
@@ -46,7 +34,7 @@ if (!isset($_SESSION['usuario'])) {
             <div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="../vistas/home.php">
+                        <a class="nav-link" href="./">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <!-- Download SVG icon from http://tabler-icons.io/i/home -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -63,46 +51,41 @@ if (!isset($_SESSION['usuario'])) {
                             </span>
                         </a>
                     </li>
-                    <?php if ($_SESSION['rol'] == 'Administrador'): ?>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                data-bs-auto-close="outside" role="button" aria-expanded="false">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <!-- Download SVG icon from http://tabler-icons.io/i/package -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-                                        <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                                        <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Usuarios
-                                </span>
-                            </a>
-                            <div class="dropdown-menu">
-                                <div class="dropdown-menu-columns">
-                                    <div class="dropdown-menu-column">
-                                        <a class="dropdown-item" href="../vistas/registrar_usuario.php">
-                                            Crear de usuario
-                                        </a>
-                                        <a class="dropdown-item" href="../vistas/lista-usuario.php">
-                                            Gestion de usuarios
-                                        </a>
-                                        <a class="dropdown-item" href="../vistas/registrar_rol.php">
-                                            Crear rol
-                                        </a>
-                                        <a class="dropdown-item" href="../vistas/lista-rol.php">
-                                            Gestion de Roles
-                                        </a>
-                                    </div>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
+                            data-bs-auto-close="outside" role="button" aria-expanded="false">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <!-- Download SVG icon from http://tabler-icons.io/i/package -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                    <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                                    <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
+                                </svg>
+                            </span>
+                            <span class="nav-link-title">
+                                Usuarios
+                            </span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-menu-columns">
+                                <div class="dropdown-menu-column">
+                                    <a class="dropdown-item" href="../vistas/registrar_usuario.php">
+                                        Crear de usuario
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/lista-usuario.php">
+                                        Gestion de usuarios
+                                    </a>
+                                    <a class="dropdown-item" href="./alerts.html">
+                                        Roles
+                                    </a>
                                 </div>
                             </div>
-                        </li>
-                    <?php endif; ?>
+                        </div>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
@@ -167,11 +150,8 @@ if (!isset($_SESSION['usuario'])) {
                         <div class="dropdown-menu">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item" href="../vistas/registrar_cliente_natural.php">
-                                        Agregar Clientes Naturales
-                                    </a>
-                                    <a class="dropdown-item" href="../vistas/lista-clientesnaturales.php">
-                                        Lista de Clientes Naturales
+                                    <a class="dropdown-item" href="./alerts.html">
+                                        Clientes Naturales
                                     </a>
                                     <a class="dropdown-item" href="../vistas/clientesjuridicos.php">
                                         Agregar Clientes Juridico
@@ -208,9 +188,6 @@ if (!isset($_SESSION['usuario'])) {
                         <div class="dropdown-menu">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item" href="../vistas/lista-catalogoActivoFijo.php">
-                                        Catalogo de activo fijo
-                                    </a>
                                     <a class="dropdown-item" href="./alerts.html">
                                         Activo fijo
                                     </a>
