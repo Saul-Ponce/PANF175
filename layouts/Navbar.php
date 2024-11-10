@@ -167,8 +167,11 @@ if (!isset($_SESSION['usuario'])) {
                         <div class="dropdown-menu">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item" href="./alerts.html">
-                                        Clientes Naturales
+                                    <a class="dropdown-item" href="../vistas/registrar_cliente_natural.php">
+                                        Agregar Clientes Naturales
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/lista-clientesnaturales.php">
+                                        Lista de Clientes Naturales
                                     </a>
                                     <a class="dropdown-item" href="../vistas/clientesjuridicos.php">
                                         Agregar Clientes Juridico
