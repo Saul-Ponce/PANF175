@@ -9,7 +9,7 @@ class ActivoFijoModel
     {
         $con = connection();
         $sql = "SELECT a.id_activo,a.codigo,a.nombre,c.idTipoActivo,c.nombreActivo,a.estadoActivo,
-        a.fecha_adquisicion,a.valor_adquisicion,a.vida_util,a.codigoUnidad 
+        a.fecha_adquisicion,a.valor_adquisicion,a.vida_util,a.codigoUnidad,a.estado
                 from activo_fijo a 
                 INNER JOIN Catalogo_Tipos_Activos c on c.idTipoActivo=a.idTipoActivo";
         $query = mysqli_query($con, $sql);
@@ -88,6 +88,15 @@ class ActivoFijoModel
         $con = connection();
 
         $sql = "DELETE FROM activo_fijo WHERE id_activo='$id_activo'";
+        $query = mysqli_query($con, $sql);
+    }
+
+    public static function cambiarEstado($data)
+    {
+        $con = connection();
+        $id_activo = $data['id_activo'];
+        $estado = $data['estado'];
+        $sql = $estado ? "UPDATE activo_fijo SET estado=$estado WHERE id_activo='$id_activo'" : "UPDATE activo_fijo SET estado='$estado' WHERE id_activo='$id_activo'";
         $query = mysqli_query($con, $sql);
     }
 }
