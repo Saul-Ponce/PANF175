@@ -211,7 +211,7 @@ if (!isset($_SESSION['usuario'])) {
                                     <a class="dropdown-item" href="../vistas/lista-catalogoActivoFijo.php">
                                         Catalogo de activo fijo
                                     </a>
-                                    <a class="dropdown-item" href="./alerts.html">
+                                    <a class="dropdown-item" href="../vistas/lista-activoFijo.php">
                                         Activo fijo
                                     </a>
                                 </div>
