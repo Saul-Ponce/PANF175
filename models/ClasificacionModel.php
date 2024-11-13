@@ -8,6 +8,9 @@ class ClasificacionModel
         $con = connection();
         $sql = "SELECT * FROM clasificaciones";
         $query = mysqli_query($con, $sql);
+        if (!$query) {
+            die("Error en la consulta de listar: " . mysqli_error($con));
+        }
         return $query;
     }
 
@@ -16,6 +19,9 @@ class ClasificacionModel
         $con = connection();
         $sql = "INSERT INTO clasificaciones (nombre, descripcion) VALUES ('$nombre', '$descripcion')";
         $query = mysqli_query($con, $sql);
+        if (!$query) {
+            die("Error en la consulta de inserción: " . mysqli_error($con));
+        }
         return $query;
     }
 
@@ -25,8 +31,12 @@ class ClasificacionModel
         $id = $data['id'];
         $nombre = $data['nombre'];
         $descripcion = $data['descripcion'];
+        
         $sql = "UPDATE clasificaciones SET nombre='$nombre', descripcion='$descripcion' WHERE id='$id'";
         $query = mysqli_query($con, $sql);
+        if (!$query) {
+            die("Error en la consulta de actualización: " . mysqli_error($con));
+        }
         return $query;
     }
 
@@ -35,6 +45,9 @@ class ClasificacionModel
         $con = connection();
         $sql = "DELETE FROM clasificaciones WHERE id='$id'";
         $query = mysqli_query($con, $sql);
+        if (!$query) {
+            die("Error en la consulta de eliminación: " . mysqli_error($con));
+        }
         return $query;
     }
 
@@ -43,6 +56,9 @@ class ClasificacionModel
         $con = connection();
         $sql = "SELECT * FROM clasificaciones WHERE id='$id'";
         $query = mysqli_query($con, $sql);
+        if (!$query) {
+            die("Error en la consulta de obtención: " . mysqli_error($con));
+        }
         return $query;
     }
 }
