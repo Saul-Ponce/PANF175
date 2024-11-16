@@ -1,25 +1,59 @@
 <?php
 session_start();
+$usuario;
 if (!isset($_SESSION['usuario'])) {
     if (!isset($_GET['token'])) {
         header('../index.php');
         session_destroy();
         die();
+    } else {
+        $clave_secreta = $_SESSION["clave"];
+
+        // Capturar el token de la URL
+        $token = $_GET['token'];
+
+        // Separar el payload y la firma
+        list($payload_base64, $firma) = explode('.', $token);
+
+        // Verificar la firma
+        $firma_calculada = hash_hmac('sha256', $payload_base64, $clave_secreta);
+
+        if (hash_equals($firma_calculada, $firma)) {
+            // Decodificar el payload
+            $payload = json_decode(base64_decode($payload_base64), true);
+
+            // Comprobar si el token ha expirado
+            if ($payload['exp'] >= time()) {
+                // Token válido
+                $usuario = $payload['usuario'];
+                // Aquí puedes mostrar el formulario para cambiar la contraseña
+            } else {
+                // Token expirado
+                echo "<script>Swal.fire({
+                                icon: 'error',
+                                title: 'Token expirado',
+                                text: 'su token ha expirado',
+                            });
+                            let timer = setInterval(function () {
+                                $(location).attr('href', '../index.php');
+                                clearTimeout(timer);
+                            }, 3500);</script>";
+            }
+        } else {
+            // Firma inválida
+            echo "<script>Swal.fire({
+                                icon: 'error',
+                                title: 'Enlace invalido',
+                                text: 'el enlace es invalido',
+                            });
+                            let timer = setInterval(function () {
+                                $(location).attr('href', '../index.php');
+                                clearTimeout(timer);
+                            }, 3500);</script>";
+        }
     }
 }
-
-$clave_secreta = $_SESSION["clave"];
-
-// Capturar el token de la URL
-$token = $_GET['token'];
-
-// Separar el payload y la firma
-list($payload_base64, $firma) = explode('.', $token);
-
-// Verificar la firma
-$firma_calculada = hash_hmac('sha256', $payload_base64, $clave_secreta);
-$usuario
-    ?>
+?>
 
 <!doctype html>
 <html lang="es">
@@ -47,41 +81,6 @@ $usuario
             </div>
             <form class="card card-md" method="POST" id="formulario_cambio" autocomplete="off" novalidate>
                 <div class="card-body">
-                    <?php
-                    if (hash_equals($firma_calculada, $firma)) {
-                        // Decodificar el payload
-                        $payload = json_decode(base64_decode($payload_base64), true);
-
-                        // Comprobar si el token ha expirado
-                        if ($payload['exp'] >= time()) {
-                            // Token válido
-                            $usuario = $payload['usuario'];
-                            // Aquí puedes mostrar el formulario para cambiar la contraseña
-                        } else {
-                            // Token expirado
-                            echo "<script>Swal.fire({
-                                icon: 'error',
-                                title: 'Token expirado',
-                                text: 'su token ha expirado',
-                            });
-                            let timer = setInterval(function () {
-                                $(location).attr('href', '../index.php');
-                                clearTimeout(timer);
-                            }, 3500);</script>";
-                        }
-                    } else {
-                        // Firma inválida
-                        echo "<script>Swal.fire({
-                                icon: 'error',
-                                title: 'Enlace invalido',
-                                text: 'el enlace es invalido',
-                            });
-                            let timer = setInterval(function () {
-                                $(location).attr('href', '../index.php');
-                                clearTimeout(timer);
-                            }, 3500);</script>";
-                    }
-                    ?>
                     <h2 class="card-title text-center mb-4">Cambiar contraseña</h2>
                     <input type="hidden" name="usuario"
                         value="<?= isset($_SESSION['usuario']) ? $_SESSION["usuario"] : $usuario ?>">
