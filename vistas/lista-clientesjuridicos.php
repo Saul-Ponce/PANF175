@@ -95,7 +95,7 @@ if ($clasificacionesResult) {
                                                 </button>
                                             </td>
                                             <td>
-                                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="<?= htmlspecialchars($row["descripcion_clasificacion"], ENT_QUOTES, 'UTF-8') ?>">
+                                                <span class="badge bg-primary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="<?= htmlspecialchars($row["descripcion_clasificacion"], ENT_QUOTES, 'UTF-8') ?>">
                                                     <?= htmlspecialchars($row["nombre_clasificacion"], ENT_QUOTES, 'UTF-8') ?>
                                                 </span>
                                             </td>
