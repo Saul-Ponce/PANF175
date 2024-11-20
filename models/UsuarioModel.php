@@ -73,7 +73,7 @@ class UsuarioModel
     {
 
         $con = connection();
-        $sql = "SELECT id FROM usuarios WHERE nombre = '$nombre'";
+        $sql = "SELECT id FROM usuarios WHERE usuario = '$nombre'";
         $query = mysqli_query($con, $sql);
         $fila = mysqli_fetch_row($query);
         return $fila;
