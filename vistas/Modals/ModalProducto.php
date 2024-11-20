@@ -50,7 +50,7 @@ $query = mysqli_query($con, $sql);
                         </div>
                         <div class="form-group col-md-6">
                             <label for="imagen">Actualizar Imagen del Producto</label>
-                            <input class="form-control-file" id="imagen" name="imagen" type="file" accept="image/*">
+                            <input class="form-control" id="imagen" name="imagen" type="file" accept="image/*">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="marca" class="col-form-label">Marca</label>

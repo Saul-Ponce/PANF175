@@ -75,7 +75,7 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="imagen">Imagen del producto</label>
-                                <input class="form-control-file" id="imagen" name="imagen" type="file" accept="image/*">
+                                <input class="form-control" id="imagen" name="imagen" type="file" accept="image/*" require="true">
                                 <img id="previewImage" style="display: none; max-width: 100px; max-height: 100px;">
                             </div>
                         </div>
