@@ -19,6 +19,7 @@ $query = mysqli_query($con, $sql);
                     <input type="hidden" name="action" id="action" value="">
                     <input type="hidden" name="id_activo" id="id_activo" value="">
                     <input type="hidden" name="codigo" id="codigo" value="">
+                    <input type="hidden" name="estado" id="estado" value="">
                     <div class="row">
                         <div class="mb-3">
                             <label for="nombre">Codigo de la unidad</label>
@@ -54,9 +55,7 @@ $query = mysqli_query($con, $sql);
                             <label for="estadoActivo">Estado del Activo</label>
                             <select class="form-control" id="estadoActivo" name="estadoActivo" required>
                                 <option value="1">Nuevo</option> <!-- Nuevo activo recién adquirido -->
-                                <option value="2">Activo</option> <!-- Activo en uso -->
                                 <option value="3">Mantenimiento</option> <!-- Activo en reparación o revisión -->
-                                <option value="4">Inactivo</option> <!-- Activo fuera de servicio, pero registrado -->
                                 <option value="5">Donado</option> <!-- Activo dado a otra entidad -->
                                 <option value="6">Vendido</option> <!-- Activo vendido -->
                                 <option value="7">Votado (Desechado)</option> <!-- Activo descartado -->

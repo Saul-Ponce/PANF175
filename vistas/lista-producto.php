@@ -1,116 +1,217 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || $_SESSION['rol'] != "Administrador") {
     echo '
     <script>
-        alert("Por favor Inicia Sesion");
-        window.location = "../index.html"
+        window.location = "../index.php"
     </script>
     ';
     session_destroy();
     die();
 }
+
+
 include "../controladores/ControladorProducto.php";
+include_once "../models/ProductoModel.php";
+
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Productos</title>
-    <!--     Fonts and icons     -->
-
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
-    <script src="https://kit.fontawesome.com/16e0069a57.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <!-- CSS Files -->
-    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />
-
-
-    <!--   Core JS Files   -->
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
-    <script src="../assets/js/plugins/bootstrap-switch.js"></script>
-
-    <!--  Notifications Plugin    -->
-    <script src="../assets/js/plugins/bootstrap-notify.js"></script>
-    <!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
-    <script src="../assets/js/light-bootstrap-dashboard.js " type="text/javascript"></script>
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Productos</title>
+    <meta content="Proyecto de analisis finaciero" name="description" />
+    <meta content="Grupo ANF DIU" name="author" />
+    <?php include '../layouts/headerStyles.php'; ?>
 </head>
 
-
 <body>
-    <?php
-include '../includes/sidebar.php';
-?>
+    <?php include '../layouts/Navbar.php'; ?>
+
     <div class="main-panel">
-    <div class="container-fluid mt-4 ">
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Productos</h3>
-                <table class="table table-bordered text-center align-middle">
-                    <thead>
-                        <tr>
-                            <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col">Codigo Producto</th>
-                            <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col">Nombre Producto</th>
-                            <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col">Marca</th>
-                            <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col">Precio</th>
-                            <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col">Stock</th>
-                            <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col">Categoria</th>
-                            <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col">Proveedor</th>
-                            <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col">Imagen del producto</th>
-                            <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach (ControladorProducto::listar() as $row): ?>
-                            <tr>
-                                <td> <?=$row["codigo_producto"]?></td>
-                                <td><?=$row["nombre_p"]?> </td>
-                                <td><?=$row["marca"]?></td>
-                                <td>$ <?=$row["precio"]?></td>
-                                <td><?=$row["stock"]?></td>
-                                <td><?=$row["nombre"]?></td>
-                                <td><?=$row["proveedor"]?></td>
-                                <td><img src="../controladores/<?=$row["imagen_p"]?>" style="max-width: 100px; max-height: 100px;"></td>
+        <div class="container mt-4 ">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Productos</h3>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead>
+                                <tr>
+                                    <th style="font-size:13px !important;" scope="col">Código</th>
+                                    <th style="font-size:13px !important;" scope="col">Nombre</th>
+                                    <th style="font-size:13px !important;" scope="col">Descripcion</th>
+                                    <th style="font-size:13px !important;" scope="col">Categoria</th>
+                                    <th style="font-size:13px !important;" scope="col">Imagen</th>
+                                    <th style="font-size:13px !important;" scope="col">Marca</th>
+                                    <th style="font-size:13px !important;" scope="col">Modelo</th>
+                                    <th style="font-size:13px !important;" scope="col">Stock Minimo</th>
+                                    <th style="font-size:13px !important;" scope="col">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $resultado = ControladorProducto::listar();
 
-                                <th>
-                                    <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#editarProducto<?php echo $row['codigo_producto']; ?>"><i class="fa-regular fa-pen-to-square"></i></button>
-                                        <button  class="btn btn-danger" data-toggle="modal" data-target="#eliminarProducto<?php echo $row['codigo_producto']; ?>"><i class="fa-solid fa-trash"></i></button>
-                                    </div>
-                                </th>
-                            </tr>
-                            <?php include '../vistas/Modals/ModalEditarProducto.php';
-?>
-                        <?php endforeach;?>
+                                while ($row = mysqli_fetch_assoc($resultado)):
+                                ?>
 
-                    </tbody>
-                </table>
+                                    <tr>
+                                    <td><?= $row["codigo"] ?></td>
+                                        <td>
+                                            <?= $row["pnombre"] ?>
+                                        </td>
+                                        <td><?= $row["pdescripcion"] ?></td>
+                                        <td><?= $row["cnombre"] ?></td>
+                                        <td><img src="../controladores/<?= $row["imagen"] ?>" style="max-width: 100px; max-height: 100px;"></td>
+                                        <td><?= $row["marca"] ?></td>
+                                        <td><?= $row["modelo"] ?></td>
+                                        <td><?= $row["stock_minimo"] ?></td>
+                                        <td>
+                                            <?= $row["pestado"] ? '<span class="badge bg-green text-green-fg">Activo</span>' : '<span class="badge bg-red text-red-fg">Inactivo</span>' ?>
+                                        </td>
+                                        <th>
+                                            <div class="d-flex justify-content-center">
+                                                <button type="button" onclick='editar(<?= json_encode($row) ?>)'
+                                                    id="btn-editar" class="btn btn-warning me-2" data-bs-toggle="modal"
+                                                    title="modificar"
+                                                    data-bs-target="#mdProducto">
+                                                    <i class="fa-regular fa-pen-to-square"></i>
+                                                </button>
+                                                <?php if ($_SESSION['rol'] == "Administrador"): ?>
+                                                    <button class="btn <?= $row["pestado"] ? 'btn-danger' : 'btn-success' ?> me-2 "
+                                                        onclick='cambiarEstado(<?= json_encode($row) ?>)'
+                                                        title="<?= $row["pestado"] ? 'Dar de baja' : 'Dar de alta' ?>"
+                                                        data-bs-toggle="modal" data-bs-target="#mdProducto">
+                                                        <?= $row["pestado"] ? '<i class="fa fa-user-times" aria-hidden="true"></i>' :
+                                                            '<i class="fa fa-user" aria-hidden="true"></i>' ?>
+                                                    </button>
+                                                    <button class="btn btn-danger " data-bs-toggle="modal"
+                                                        data-bs-target="#mdProducto" onclick='eliminar(<?= json_encode($row) ?>)'>
+                                                        <i class="fa-solid fa-trash"></i></button>
+                                                <?php endif ?>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                <?php endwhile; ?>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+        <?php include '../layouts/Footer.php'; ?>
     </div>
 
     <!-- Scripts de Bootstrap 4 y otros aquí -->
+    <?php include '../layouts/footerScript.php'; ?>
 
-    <?php foreach (ControladorProducto::listar() as $row): ?>
-        <?php include '../vistas/Modals/ModalEliminarProducto.php';?>
-    <?php endforeach;?>
+    <?php include '../vistas/Modals/ModalProducto.php'; ?>
+
+    <script>
+        function editar(data) {
+            document.getElementById("codigo").removeAttribute("disabled", "");
+            document.getElementById("nombre").removeAttribute("disabled", "");
+            document.getElementById("descripcion").removeAttribute("disabled", "");
+            document.getElementById("categoria_id").removeAttribute("disabled", "");
+            document.getElementById("imagen").removeAttribute("disabled", "");
+            document.getElementById("marca").removeAttribute("disabled", "");
+            document.getElementById("modelo").removeAttribute("disabled", "");
+            document.getElementById("stock_minimo").removeAttribute("disabled", "");
+            document.getElementById("action").value = "editar";
+
+            document.getElementById("id").value = data.pid || "";
+            document.getElementById("codigo").value = data.codigo || "";
+            document.getElementById("nombre").value = data.pnombre || "";
+            document.getElementById("descripcion").value = data.pdescripcion || "";
+            document.getElementById("categoria_id").value = data.categoria_id || "";
+            document.getElementById("marca").value = data.marca || "";
+            document.getElementById("modelo").value = data.modelo || "";
+            document.getElementById("stock_minimo").value = data.stock_minimo || "";
+            document.getElementById("imagen").value = data.imagen || "";
+            document.getElementById("enviar").innerHTML = "Guardar Cambios";
+            document.getElementById("enviar").classList.remove('btn-danger');
+            document.getElementById("enviar").classList.add('btn-primary');
+
+        }
+
+        function cambiarEstado(data) {
+            document.getElementById("titulo").innerHTML = data.estado == "1" ?
+                '¿SEGURO QUE DESEA DAR DE BAJA A ESTE PRODUCTO?' : '¿SEGURO QUE DESEA ACTIVAR A ESTE PRODUCTO?';
+
+            document.getElementById("codigo").setAttribute("disabled", "");    
+            document.getElementById("nombre").setAttribute("disabled", "");
+            document.getElementById("descripcion").setAttribute("disabled", "");
+            document.getElementById("categoria_id").setAttribute("disabled", "");
+            document.getElementById("imagen").setAttribute("disabled", "");
+            document.getElementById("marca").setAttribute("disabled", "");
+            document.getElementById("modelo").setAttribute("disabled", "");
+            document.getElementById("stock_minimo").setAttribute("disabled", "");
+            document.getElementById("action").value = "cambiarEstado";
 
 
+            document.getElementById("id").value = data.pid || "";
+            document.getElementById("codigo").value = data.codigo || "";
+            document.getElementById("estado").value = data.pestado == 1 ? false : true || "";
+            document.getElementById("nombre").value = data.pnombre || "";
+            document.getElementById("descripcion").value = data.pdescripcion || "";
+            document.getElementById("categoria_id").value = data.categoria_id || "";
+            document.getElementById("marca").value = data.marca || "";
+            document.getElementById("modelo").value = data.modelo || "";
+            document.getElementById("stock_minimo").value = data.stock_minimo || "";
+            document.getElementById("imagen").value = data.imagen || "";
+            document.getElementById("enviar").innerHTML = data.pestado == 1 ? "Dar de baja" : "Activar";
 
+            if (data.estado == 1) {
+                document.getElementById("enviar").classList.remove('btn-primary');
+                document.getElementById("enviar").classList.add('btn-danger');
 
+            } else {
+                document.getElementById("enviar").classList.remove('btn-danger');
+                document.getElementById("enviar").classList.add('btn-primary');
 
+            }
+
+        }
+
+        function eliminar(data) {
+            document.getElementById("titulo").innerHTML = "¿SEGURO QUE DESEA BORRAR ESTE PRODUCTO?";
+
+            document.getElementById("codigo").setAttribute("disabled", "");
+            document.getElementById("nombre").setAttribute("disabled", "");
+            document.getElementById("descripcion").setAttribute("disabled", "");
+            document.getElementById("categoria_id").setAttribute("disabled", "");
+            document.getElementById("imagen").setAttribute("disabled", "");
+            document.getElementById("marca").setAttribute("disabled", "");
+            document.getElementById("modelo").setAttribute("disabled", "");
+            document.getElementById("stock_minimo").setAttribute("disabled", "");
+            document.getElementById("action").value = "borrar";
+
+            document.getElementById("id").value = data.pid || "";
+            document.getElementById("codigo").value = data.codigo || "";
+            document.getElementById("nombre").value = data.pnombre || "";
+            document.getElementById("descripcion").value = data.pdescripcion || "";
+            document.getElementById("categoria_id").value = data.categoria_id || "";
+            document.getElementById("marca").value = data.marca || "";
+            document.getElementById("modelo").value = data.modelo || "";
+            document.getElementById("stock_minimo").value = data.stock_minimo || "";
+            document.getElementById("imagen").value = data.imagen || "";
+            document.getElementById("enviar").innerHTML = "Eliminar";
+            document.getElementById("enviar").classList.remove('btn-primary');
+            document.getElementById("enviar").classList.add('btn-danger');
+
+        }
+
+        // Check if a success message is set in the session
+        <?php if (isset($_SESSION['success_messageP'])): ?>
+            Swal.fire('<?php echo $_SESSION['success_messageP']; ?>', '', 'success');
+            <?php unset($_SESSION['success_messageP']); // Clear the message 
+            ?>
+        <?php endif; ?>
+    </script>
 </body>
 
 </html>

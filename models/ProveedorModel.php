@@ -7,13 +7,7 @@ class ProveedorModel
 	public static function listar()
 	{
 		$con = connection();
-		$sql = "SELECT\n".
-        "	proveedor.id_proveedor, \n".
-        "	proveedor.nombre_p, \n".
-        "	proveedor.direccion, \n".
-        "	proveedor.telefono\n".
-        "FROM\n".
-        "	proveedor";
+		$sql = "SELECT * FROM proveedores";
 
 		$query = mysqli_query($con, $sql);
 
@@ -22,12 +16,12 @@ class ProveedorModel
 
 	
 
-	public static function agregar($nombre_p, $direccion, $telefono)
+	public static function agregar($nombre, $direccion, $telefono, $correo)
 	{
 		$con = connection();
 
 
-		$sql = "INSERT INTO proveedor (nombre_p, direccion, telefono) VALUES ('$nombre_p','$direccion', '$telefono')";
+		$sql = "INSERT INTO proveedores (nombre, direccion, telefono, email) VALUES ('$nombre','$direccion', '$telefono', '$correo')";
         $query = mysqli_query($con, $sql);
         
 
@@ -40,25 +34,26 @@ class ProveedorModel
 
 		$con = connection();
 
-        $id_proveedor = $data['id_proveedor'];
-		$nombre = $data['nombre_p'];
+        $id_proveedor = $data['id'];
+		$nombre = $data['nombre'];
 		$direccion = $data['direccion'];
 		$telefono = $data['telefono'];
+		$correo = $data['correo'];
 
 		
 
-		$sql = "UPDATE proveedor SET nombre_p='$nombre',  direccion='$direccion', telefono='$telefono'   WHERE id_proveedor='$id_proveedor'";
+		$sql = "UPDATE proveedores SET nombre='$nombre',  direccion='$direccion', telefono='$telefono', email='$correo'   WHERE id='$id_proveedor'";
 		$query = mysqli_query($con, $sql);
 
 	
 	}
 
-	public static function borrar($id_proveedor){
+	public static function borrar($id){
 
 		$con = connection();
 		
 
-		$sql="DELETE FROM proveedor WHERE id_proveedor='$id_proveedor'";
+		$sql="DELETE FROM proveedores WHERE id='$id'";
 		$query = mysqli_query($con, $sql);
 		
 	}
@@ -78,29 +73,14 @@ class ProveedorModel
 
     }
 	
-	public static function esEliminable($id_proveedor){
-		
-		$con = connection();
-		$sql = "SELECT\n".
-		"	proveedor.*\n".
-		"FROM\n".
-		"	producto\n".
-		"	INNER JOIN\n".
-		"	proveedor\n".
-		"	ON \n".
-		"		producto.proveedor = proveedor.id_proveedor WHERE id_proveedor= $id_proveedor";
-		$result = mysqli_query($con, $sql);
-		
-		// Verificar si hay resultados
-		if (mysqli_num_rows($result) > 0) {
-			// Si hay resultados
-			return true;
-		} else {
-			// Si no hay resultados
-			return false;
-		}
-				
-	}
+	public static function cambiarEstado($data)
+    {
+        $con = connection();
+        $id = $data['id'];
+        $estado = $data['estado'];
+        $sql = $estado ? "UPDATE proveedores SET estado=$estado WHERE id='$id'" : "UPDATE proveedores SET estado='$estado' WHERE id='$id'";
+        $query = mysqli_query($con, $sql);
+    }
 	
 }
 
