@@ -15,7 +15,7 @@ require_once "../models/conexion.php";
 include "../models/VentaModel.php";
 include "../models/UsuarioModel.php";
 $con = connection();
-$sql = "SELECT * FROM productos";
+$sql = "SELECT * FROM productos INNER JOIN inventario WHERE inventario.producto_id = productos.id";
 $query = mysqli_query($con, $sql);
 
 $sql = "SELECT * FROM clientesjuridicos";
@@ -101,12 +101,14 @@ $ident = implode($id);
                                 <div class="col-lg-4">
                                     <label>Producto</label>
 
-                                    <select class="form-select" id="productSelect" name="productSelect">
-                                        <option value="0">Seleccione</option>
+                                    <select class="form-select" id="productSelect" aria-placeholder="Seleccione"
+                                        name="productSelect">
+                                        <option value="">Seleccione</option>
                                         <?php foreach ($query as $row): ?>
-                                        <option value="<?= $row["id"] ?>" data-code="<?= $row["id"] ?>" data-stock="n/a"
-                                            data-price="n/a">
-                                            <?= $row["nombre"] ?>
+                                        <option value="<?= $row["id"] ?>" data-code="<?= $row["codigo"] ?>"
+                                            data-stock="<?= $row["cantidad"] ?>"
+                                            data-price="<?= ($row["costo_adquisicion"] / $row["cantidad"]) + (($row["costo_adquisicion"] / $row["cantidad"])*0.22)?>">
+                                            <?= $row["codigo"] ?> | <?= $row["nombre"] ?>
                                         </option>
                                         <?php endforeach; ?>
                                     </select>
@@ -221,6 +223,13 @@ $ident = implode($id);
 
     $(document).ready(function() {
         window.TomSelect && (new TomSelect("#clienteSelect", {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        }));
+        window.TomSelect && (new TomSelect("#productSelect", {
             create: false,
             sortField: {
                 field: "text",
