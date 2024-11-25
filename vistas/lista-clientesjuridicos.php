@@ -26,6 +26,7 @@ if ($clasificacionesResult) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -33,6 +34,7 @@ if ($clasificacionesResult) {
     <title>Clientes Jurídicos</title>
     <?php include '../layouts/headerStyles.php'; ?>
 </head>
+
 <body>
     <?php include '../layouts/Navbar.php'; ?>
 
@@ -67,9 +69,10 @@ if ($clasificacionesResult) {
                                     <th>Dirección</th>
                                     <th>Teléfono</th>
                                     <th>Correo Electrónico</th>
+                                    <th>NIT</th> <!-- Nueva columna NIT-->
+                                    <th>NRC</th> <!-- Nueva columna NRC -->
                                     <th>Representante Legal</th>
                                     <th>Clasificación</th>
-                                    <th>Aval</th> <!-- Nueva columna para Aval -->
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -79,16 +82,16 @@ if ($clasificacionesResult) {
                                 $resultado = ControladorClienteJuridico::listar();
                                 if ($resultado && mysqli_num_rows($resultado) > 0) {
                                     while ($row = mysqli_fetch_assoc($resultado)):
-                                        // Crear una copia de $row sin el campo 'aval'
+                                        // Crear una copia de $row
                                         $dataForJs = $row;
-                                        $dataForJs['has_aval'] = !empty($row['aval']) ? true : false;
-                                        unset($dataForJs['aval']);
-                                        ?>
+                                ?>
                                         <tr>
                                             <td><?= htmlspecialchars($row["nombre"], ENT_QUOTES, 'UTF-8') ?></td>
                                             <td><?= htmlspecialchars($row["direccion"], ENT_QUOTES, 'UTF-8') ?></td>
                                             <td><?= htmlspecialchars($row["telefono"], ENT_QUOTES, 'UTF-8') ?></td>
                                             <td><?= htmlspecialchars($row["email"], ENT_QUOTES, 'UTF-8') ?></td>
+                                            <td><?= htmlspecialchars($row["nit"], ENT_QUOTES, 'UTF-8') ?></td>
+                                            <td><?= htmlspecialchars($row["nrc"], ENT_QUOTES, 'UTF-8') ?></td>
                                             <td>
                                                 <button class="btn btn-primary" onclick='verRepresentante(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)' data-bs-toggle="modal" data-bs-target="#modalVerRepresentante">
                                                     Ver Representante
@@ -99,15 +102,7 @@ if ($clasificacionesResult) {
                                                     <?= htmlspecialchars($row["nombre_clasificacion"], ENT_QUOTES, 'UTF-8') ?>
                                                 </span>
                                             </td>
-                                            <td>
-                                                <?php if (!empty($row["aval"])): ?>
-                                                    <button class="btn btn-secondary" onclick='verAval(<?= (int)$row["id"] ?>)' data-bs-toggle="modal" data-bs-target="#modalVerAval">
-                                                        Ver Aval
-                                                    </button>
-                                                <?php else: ?>
-                                                    <span>No Disponible</span>
-                                                <?php endif; ?>
-                                            </td>
+
                                             <td>
                                                 <?php if ($row["estado"] === "activo"): ?>
                                                     <span class="badge bg-success text-white">Activo</span>
@@ -117,19 +112,40 @@ if ($clasificacionesResult) {
                                             </td>
                                             <td>
                                                 <div class="d-flex justify-content-center">
-                                                    <button type="button" class="btn btn-warning me-2" onclick='editarCliente(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)' data-bs-toggle="modal" data-bs-target="#modalEditarCliente">
-                                                        <i class="fa-regular fa-pen-to-square"></i> Editar
+                                                    <!-- Botón Editar Cliente -->
+                                                    <button type="button" class="btn btn-warning me-2"
+                                                        data-toggle="tooltip" data-bs-placement="top" title="Editar Cliente"
+                                                        data-bs-toggle="modal" data-bs-target="#modalEditarCliente"
+
+                                                        onclick='editarCliente(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                                        <i class="fa-regular fa-pen-to-square"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-info me-2" onclick='editarRepresentante(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)' data-bs-toggle="modal" data-bs-target="#modalEditarRepresentante">
-                                                        <i class="fa-regular fa-pen-to-square"></i> Editar Representante
+
+                                                    <!-- Botón Editar Representante -->
+                                                    <button type="button" class="btn btn-info me-2"
+                                                        data-toggle="tooltip" data-bs-placement="top" title="Editar Representante Legal"
+                                                        data-bs-toggle="modal" data-bs-target="#modalEditarRepresentante"
+
+                                                        onclick='editarRepresentante(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                                        <i class="fa-regular fa-pen-to-square"></i>
                                                     </button>
-                                                    <button type="button" class="btn <?= $row["estado"] === 'activo' ? 'btn-danger' : 'btn-success' ?>" onclick='cambiarEstado(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)' data-bs-toggle="modal" data-bs-target="#modalCambiarEstado">
-                                                        <?= $row["estado"] === 'activo' ? 'Marcar como Incobrable' : 'Activar' ?>
+
+                                                    <!-- Botón Cambiar Estado -->
+                                                    <button type="button" class="btn <?= $row["estado"] === 'activo' ? 'btn-danger' : 'btn-success' ?>"
+                                                        data-bs-toggle="modal" data-bs-target="#modalCambiarEstado"
+                                                        data-toggle="tooltip" data-bs-placement="top" title="<?= $row["estado"] === 'activo' ? 'Marcar como Incobrable' : 'Activar' ?>"
+                                                        onclick='cambiarEstado(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                                        <!-- Ícono para "Marcar como Incobrable" o "Activar" -->
+                                                        <?php if ($row["estado"] === 'activo'): ?>
+                                                            <i class="fa-solid fa-ban"></i> <!-- Ícono "Marcar como Incobrable" -->
+                                                        <?php else: ?>
+                                                            <i class="fa-solid fa-check"></i> <!-- Ícono "Activar" -->
+                                                        <?php endif; ?>
                                                     </button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    <?php
+                                <?php
                                     endwhile;
                                 } else {
                                     echo '<tr><td colspan="9">No se encontraron clientes jurídicos.</td></tr>';
@@ -161,23 +177,6 @@ if ($clasificacionesResult) {
             </div>
         </div>
 
-        <!-- Modal Ver Aval -->
-        <div class="modal fade" id="modalVerAval" tabindex="-1" aria-labelledby="modalVerAvalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl"> <!-- Modal extra grande para la vista previa del PDF -->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 id="modalVerAvalLabel" class="modal-title">Vista Previa del Aval</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" onclick="cerrarVerAval()"></button>
-                    </div>
-                    <div class="modal-body">
-                        <iframe id="modalVerAvalIframe" src="" width="100%" height="600px" frameborder="0"></iframe>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="cerrarVerAval()">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Modal Editar Cliente -->
         <div class="modal fade" id="modalEditarCliente" tabindex="-1" aria-labelledby="modalEditarClienteLabel" aria-hidden="true">
@@ -265,7 +264,9 @@ if ($clasificacionesResult) {
                     '"': '&quot;',
                     "'": '&#039;'
                 };
-                return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+                return text.replace(/[&<>"']/g, function(m) {
+                    return map[m];
+                });
             }
 
             // Función para ver el representante legal
@@ -301,52 +302,42 @@ if ($clasificacionesResult) {
                     clasificacionOptions += `<option value="${clasificacion.id}" ${selected}>${escapeHtml(clasificacion.nombre)}</option>`;
                 });
 
-                // Verificar si el cliente tiene aval
-                let verAvalButton = '';
-                if (data.has_aval) {
-                    verAvalButton = `
-                        <div class="form-group mb-3">
-                            <label>Aval Actual:</label>
-                            <a href="vista_previa.php?id=${data.id}" target="_blank" class="btn btn-secondary">
-                                Ver Aval
-                            </a>
-                        </div>
-                    `;
-                }
-
                 // Cargar los campos en el modal
                 let modalContent = `
-                    <div class="form-group mb-3">
-                        <label for="nombre">Nombre de la Empresa</label>
-                        <input type="text" class="form-control" name="nombre" value="${escapeHtml(data.nombre)}" required>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="direccion">Dirección</label>
-                        <input type="text" class="form-control" name="direccion" value="${escapeHtml(data.direccion)}" required>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="telefono">Teléfono</label>
-                        <input type="text" class="form-control" name="telefono" value="${escapeHtml(data.telefono)}" maxlength="9" required>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="email">Correo Electrónico</label>
-                        <input type="email" class="form-control" name="email" value="${escapeHtml(data.email)}" required>
-                    </div>
-                    ${verAvalButton}
-                    <div class="form-group mb-3">
-                        <label for="aval">Cambiar Aval</label>
-                        <input type="file" class="form-control" name="aval" accept=".pdf, .doc, .docx">
-                        <small class="form-text text-muted">Dejar vacío si no desea cambiar el aval.</small>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="clasificacion_id">Clasificación</label>
-                        <select class="form-select" name="clasificacion_id" required>
-                            ${clasificacionOptions}
-                        </select>
-                    </div>
-                `;
+        <div class="form-group mb-3">
+            <label for="nombre">Nombre de la Empresa</label>
+            <input type="text" class="form-control" name="nombre" value="${escapeHtml(data.nombre)}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="direccion">Dirección</label>
+            <input type="text" class="form-control" name="direccion" value="${escapeHtml(data.direccion)}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="telefono">Teléfono</label>
+            <input type="text" class="form-control" name="telefono" value="${escapeHtml(data.telefono)}" maxlength="9" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="email">Correo Electrónico</label>
+            <input type="email" class="form-control" name="email" value="${escapeHtml(data.email)}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="nit">NIT</label>
+            <input type="text" class="form-control" name="nit" value="${escapeHtml(data.nit)}" maxlength="17" placeholder="0000-000000-000-0" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="nrc">NRC</label>
+            <input type="text" class="form-control" name="nrc" value="${escapeHtml(data.nrc)}" maxlength="8" placeholder="000000-0" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="clasificacion_id">Clasificación</label>
+            <select class="form-select" name="clasificacion_id" required>
+                ${clasificacionOptions}
+            </select>
+        </div>
+    `;
                 document.getElementById('modalEditarClienteContent').innerHTML = modalContent;
             }
+
 
             // Función para editar el representante legal
             function editarRepresentante(data) {
@@ -396,25 +387,16 @@ if ($clasificacionesResult) {
                 boton.className = data.estado === 'activo' ? 'btn btn-danger' : 'btn btn-success';
             }
 
-            // Función para ver el Aval en un modal
-            function verAval(id) {
-                // Establecer la fuente del iframe para mostrar el PDF
-                document.getElementById('modalVerAvalIframe').src = `vista_previa.php?id=${id}`;
-            }
-
-            // Función para cerrar el modal de Aval y limpiar el iframe
-            function cerrarVerAval() {
-                document.getElementById('modalVerAvalIframe').src = '';
-            }
 
             // Inicializar tooltips de Bootstrap
-            document.addEventListener('DOMContentLoaded', function () {
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            document.addEventListener('DOMContentLoaded', function() {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
                     return new bootstrap.Tooltip(tooltipTriggerEl);
                 });
             });
         </script>
     </div>
 </body>
+
 </html>

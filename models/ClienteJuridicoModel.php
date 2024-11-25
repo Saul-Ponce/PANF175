@@ -7,11 +7,12 @@ class ClienteJuridicoModel
     {
         $con = connection();
         $sql = "SELECT cj.*, r.nombre AS nombre_representante, r.direccion AS direccion_representante, 
-                r.telefono AS telefono_representante, r.email AS email_representante, r.dui AS dui_representante, 
-                c.nombre AS nombre_clasificacion, c.descripcion AS descripcion_clasificacion 
-                FROM clientesjuridicos cj 
-                LEFT JOIN representante_legal r ON cj.representante_legal = r.id 
-                LEFT JOIN clasificaciones c ON cj.clasificacion_id = c.id";
+        r.telefono AS telefono_representante, r.email AS email_representante, r.dui AS dui_representante,
+        c.nombre AS nombre_clasificacion, c.descripcion AS descripcion_clasificacion
+        FROM clientesjuridicos cj 
+        LEFT JOIN representante_legal r ON cj.representante_legal = r.id
+        LEFT JOIN clasificaciones c ON cj.clasificacion_id = c.id";
+
         $query = mysqli_query($con, $sql);
         return $query;
     }
@@ -33,7 +34,7 @@ class ClienteJuridicoModel
 
             // Insertar los datos del representante legal
             $sql_representante = "INSERT INTO representante_legal (nombre, direccion, telefono, email, dui) 
-                                  VALUES ('$nombre_representante', '$direccion_representante', '$telefono_representante', '$email_representante', '$dui_representante')";
+                                VALUES ('$nombre_representante', '$direccion_representante', '$telefono_representante', '$email_representante', '$dui_representante')";
             $result_representante = mysqli_query($con, $sql_representante);
 
             if (!$result_representante) {
@@ -48,17 +49,21 @@ class ClienteJuridicoModel
             $direccion = mysqli_real_escape_string($con, $data['direccion']);
             $telefono = mysqli_real_escape_string($con, $data['telefono']);
             $email = mysqli_real_escape_string($con, $data['email']);
-            $clasificacion_id = (int)$data['clasificacion_id'];
-            $estado = mysqli_real_escape_string($con, $data['estado']);
-            $aval = $data['aval']; // Asumimos que aval contiene el archivo binario
+            $nit = mysqli_real_escape_string($con, $data['nit']);
+            $nrc = mysqli_real_escape_string($con, $data['nrc']);
 
-            // Insertar los datos del cliente jurídico
-            $stmt = $con->prepare("INSERT INTO clientesjuridicos (nombre, direccion, telefono, email, representante_legal, aval, clasificacion_id, estado) 
-                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssibis", $nombre, $direccion, $telefono, $email, $representante_id, $null, $clasificacion_id, $estado);
+            // Validar formato de NIT y NRC
+            if (!self::validarFormatoNIT($nit)) {
+                throw new Exception("Formato de NIT inválido");
+            }
+            if (!self::validarFormatoNRC($nrc)) {
+                throw new Exception("Formato de NRC inválido");
+            }
 
-            // Enlaza el parámetro binario `aval`
-            $stmt->send_long_data(5, $aval); // 5 es el índice del parámetro `aval`
+            // Insertar los datos del cliente jurídico con valores predeterminados
+            $stmt = $con->prepare("INSERT INTO clientesjuridicos (nombre, direccion, telefono, email, representante_legal, nit, nrc, clasificacion_id, estado) 
+                                 VALUES (?, ?, ?, ?, ?, ?, ?, 2, 'activo')"); // clasificacion_id = 1 para 'A', estado = 'activo' por defecto
+            $stmt->bind_param("ssssiss", $nombre, $direccion, $telefono, $email, $representante_id, $nit, $nrc);
 
             $result_cliente = $stmt->execute();
 
@@ -87,19 +92,23 @@ class ClienteJuridicoModel
         $direccion = mysqli_real_escape_string($con, $data['direccion']);
         $telefono = mysqli_real_escape_string($con, $data['telefono']);
         $email = mysqli_real_escape_string($con, $data['email']);
-        $clasificacion_id = (int)$data['clasificacion_id'];
+        $nit = mysqli_real_escape_string($con, $data['nit']);
+        $nrc = mysqli_real_escape_string($con, $data['nrc']);
+        $clasificacion_id = (int)$data['clasificacion_id']; // Asegúrate de que el campo esté presente y sea un entero.
 
-        // Si no se proporciona un nuevo archivo para `aval`, mantén el valor actual en la base de datos
-        if (isset($data['aval']) && $data['aval'] !== null) {
-            $aval = $data['aval'];
-            $stmt = $con->prepare("UPDATE clientesjuridicos SET nombre = ?, direccion = ?, telefono = ?, email = ?, aval = ?, clasificacion_id = ? WHERE id = ?");
-            $stmt->bind_param("ssssbii", $nombre, $direccion, $telefono, $email, $null, $clasificacion_id, $id);
-            $stmt->send_long_data(4, $aval); // 4 es el índice del parámetro `aval`
-        } else {
-            // Si no hay archivo, omite el campo `aval`
-            $stmt = $con->prepare("UPDATE clientesjuridicos SET nombre = ?, direccion = ?, telefono = ?, email = ?, clasificacion_id = ? WHERE id = ?");
-            $stmt->bind_param("ssssii", $nombre, $direccion, $telefono, $email, $clasificacion_id, $id);
+        // Validar formato de NIT y NRC
+        if (!self::validarFormatoNIT($nit)) {
+            throw new Exception("Formato de NIT inválido");
         }
+        if (!self::validarFormatoNRC($nrc)) {
+            throw new Exception("Formato de NRC inválido");
+        }
+
+        // Actualizar el registro del cliente jurídico
+        $stmt = $con->prepare("UPDATE clientesjuridicos 
+                           SET nombre = ?, direccion = ?, telefono = ?, email = ?, nit = ?, nrc = ?, clasificacion_id = ? 
+                           WHERE id = ?");
+        $stmt->bind_param("ssssssii", $nombre, $direccion, $telefono, $email, $nit, $nrc, $clasificacion_id, $id);
 
         $result_cliente = $stmt->execute();
 
@@ -108,6 +117,19 @@ class ClienteJuridicoModel
         }
 
         return $result_cliente;
+    }
+
+
+    // Función para validar el formato del NIT
+    private static function validarFormatoNIT($nit)
+    {
+        return preg_match('/^\d{4}-\d{6}-\d{3}-\d{1}$/', $nit);
+    }
+
+    // Función para validar el formato del NRC
+    private static function validarFormatoNRC($nrc)
+    {
+        return preg_match('/^\d{6}-\d{1}$/', $nrc);
     }
 
     public static function editarRepresentante($data)
@@ -122,8 +144,9 @@ class ClienteJuridicoModel
         $email_representante = mysqli_real_escape_string($con, $data['email_representante']);
         $dui_representante = mysqli_real_escape_string($con, $data['dui_representante']);
 
-        // Actualizar los datos del representante legal
-        $sql = "UPDATE representante_legal SET nombre='$nombre_representante', direccion='$direccion_representante', telefono='$telefono_representante', email='$email_representante', dui='$dui_representante' WHERE id=$representante_legal_id";
+        $sql = "UPDATE representante_legal SET nombre='$nombre_representante', direccion='$direccion_representante', 
+                telefono='$telefono_representante', email='$email_representante', dui='$dui_representante' 
+                WHERE id=$representante_legal_id";
         $result = mysqli_query($con, $sql);
 
         if (!$result) {
@@ -150,4 +173,3 @@ class ClienteJuridicoModel
         return $result;
     }
 }
-?>
