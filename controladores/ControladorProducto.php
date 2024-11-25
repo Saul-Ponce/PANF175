@@ -11,6 +11,12 @@ class ControladorProducto
         $respuesta = ProductoModel::listar();
         return $respuesta;
     }
+    public static function obtenercategoria($id)
+    {
+
+        $respuesta = ProductoModel::obtener_categoria($id);
+        return $respuesta;
+    }
 }
 
 if (isset($_POST["action"])) {
@@ -18,13 +24,13 @@ if (isset($_POST["action"])) {
     $action = $_POST["action"];
     switch ($action) {
         case "insert":
-            $file = $_FILES["imagen_p"]["name"]; // Nombre del archivo
+            $file = $_FILES["imagen"]["name"]; // Nombre del archivo
 
             $validator = 1; // Variable validadora
 
             $file_type = strtolower(pathinfo($file, PATHINFO_EXTENSION)); // Extensión del archivo
 
-            $url_temp = $_FILES["imagen_p"]["tmp_name"]; // Ruta temporal donde se carga el archivo
+            $url_temp = $_FILES["imagen"]["tmp_name"]; // Ruta temporal donde se carga el archivo
 
             $nuevo_nombre = uniqid() . '.' . $file_type;
 
@@ -40,7 +46,7 @@ if (isset($_POST["action"])) {
             }
 
             // Validamos el tamaño del archivo (1 MB en este caso)
-            $file_size = $_FILES["imagen_p"]["size"];
+            $file_size = $_FILES["imagen"]["size"];
             if ($file_size > 1000000) {
                 echo "El archivo es muy pesado. Tamaño máximo permitido es 1MB.";
                 $validator = 0;
@@ -55,30 +61,8 @@ if (isset($_POST["action"])) {
             // Movemos el archivo de la carpeta temporal a la carpeta objetivo y verificamos si fue exitoso
             if ($validator == 1) {
                 if (move_uploaded_file($url_temp, $url_target)) {
-                    $correlativo = "001"; // Correlativo autoincremental, inicializado a "001"
-                    $ultimo_correlativo = ProductoModel::obtener_ultimocorrelativo();
-                    if ($ultimo_correlativo->num_rows > 0) {
-                        while ($row = mysqli_fetch_assoc($ultimo_correlativo)) {
-
-                            $correlativoComoEntero = (int) $row["ultimo_correlativo"]; // Convertir a entero
-                            $correlativoComoEntero++; // Incrementar
-                            // Formatear nuevamente como string de tres dígitos, rellenando con ceros si es necesario
-                            $nuevoCorrelativo = str_pad($correlativoComoEntero, 3, '0', STR_PAD_LEFT);
-                            $correlativo = $nuevoCorrelativo;
-                        }
-                    }
-                    $precio_producto = $_POST['precio']; // Obtener el precio del formulario
-                    $fecha_actual = date("dmY"); // Obtener la fecha actual en el formato deseado
-
-                    // Formatear el precio con dos ceros al inicio si es menor a 100
-                    $precio_formateado = str_pad(str_replace('.', '', $precio_producto), 5, '0', STR_PAD_LEFT);
-
-                    // Construir el código del producto
-                    $codigo_producto = $precio_formateado . $fecha_actual . $correlativo;
-
-                    ProductoModel::agregar($codigo_producto, $_POST['nombre_p'], $_POST['marca'], $_POST['precio'], $_POST['stock'], $_POST['categoria'], $_POST['proveedor'], 'upload/' . $nuevo_nombre);
-
-                    header("Location: ../vistas/producto.php");
+                    ProductoModel::agregar($_POST['nombre'], $_POST['descripcion'], $_POST['cat_id'], 'upload/' . $nuevo_nombre, $_POST['marca'], $_POST['modelo'], $_POST['stock'], $_POST['codigo']);
+                    header("Location: ../vistas/lista-producto.php");
                 } else {
                     echo "Ha habido un error al cargar tu archivo.";
                 }
@@ -88,13 +72,13 @@ if (isset($_POST["action"])) {
             break;
 
         case "editar":
-            $file = $_FILES["imagen_p"]["name"]; // Nombre del archivo
+            $file = $_FILES["imagen"]["name"]; // Nombre del archivo
 
             $validator = 1; // Variable validadora
 
             $file_type = strtolower(pathinfo($file, PATHINFO_EXTENSION)); // Extensión del archivo
 
-            $url_temp = $_FILES["imagen_p"]["tmp_name"]; // Ruta temporal donde se carga el archivo
+            $url_temp = $_FILES["imagen"]["tmp_name"]; // Ruta temporal donde se carga el archivo
 
             $nuevo_nombre = uniqid() . '.' . $file_type;
 
@@ -110,7 +94,7 @@ if (isset($_POST["action"])) {
             }
 
             // Validamos el tamaño del archivo (1 MB en este caso)
-            $file_size = $_FILES["imagen_p"]["size"];
+            $file_size = $_FILES["imagen"]["size"];
             if ($file_size > 1000000) {
                 echo "El archivo es muy pesado. Tamaño máximo permitido es 1MB.";
                 $validator = 0;
@@ -133,16 +117,21 @@ if (isset($_POST["action"])) {
                     echo "Ha habido un error al cargar tu archivo.";
                 }
             } else {
-                ProductoModel::editar($_POST);
+                ProductoModel::editar($_POST, null);
                 header("Location: ../vistas/lista-producto.php");
             }
 
             break;
 
         case "borrar":
-            ProductoModel::borrar($_POST['codigo_producto']);
+            ProductoModel::borrar($_POST['id']);
             header("Location: ../vistas/lista-producto.php");
             break;
+
+            case "cambiarEstado":
+                ProductoModel::cambiarEstado($_POST);
+                header("Location: ../vistas/lista-producto.php");
+                break;
 
         default:
 

@@ -14,13 +14,6 @@ class ControladorProveedor{
         return $respuesta;
     }
 
-    public static function esEliminable($id_proveedor) 
-    {
-
-        $respuesta = ProveedorModel::esEliminable($id_proveedor) ;
-        return $respuesta;
-    }
-
 
 }
 
@@ -31,7 +24,7 @@ class ControladorProveedor{
             
         case "insert":
             
-            ProveedorModel::agregar($_POST['nombre_p'],  $_POST['direccion'], $_POST['telefono']);
+            ProveedorModel::agregar($_POST['nombre'],  $_POST['direccion'], $_POST['telefono'], $_POST['correo']);
             
             header("Location: ../vistas/lista-proveedor.php");
             break;
@@ -42,11 +35,14 @@ class ControladorProveedor{
                 break;
 
             case "borrar":
-                ProveedorModel::borrar($_POST['id_proveedor']);
+                ProveedorModel::borrar($_POST['id']);
                  header("Location: ../vistas/lista-proveedor.php");
                 break;
 
-           
+                case "cambiarEstado":
+                    ProveedorModel::cambiarEstado($_POST);
+                    header("Location: ../vistas/lista-proveedor.php");
+                    break;
         default:
             
             break;

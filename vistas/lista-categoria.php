@@ -1,10 +1,9 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || $_SESSION['rol'] != "Administrador") {
     echo '
     <script>
-        alert("Por favor Inicia Sesion");
-        window.location = "../index.html"
+        window.location = "../index.php"
     </script>
     ';
     session_destroy();
@@ -12,152 +11,154 @@ if (!isset($_SESSION['usuario'])) {
 }
 
 include "../controladores/ControladorCategoria.php";
+include_once "../models/CategoriaModel.php";
+
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Categorias</title>
-
-
-    <!--     Fonts and icons     -->
-
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
-    <script src="https://kit.fontawesome.com/16e0069a57.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <!-- CSS Files -->
-    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />
-
-
-    <!--   Core JS Files   -->
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
-    <script src="../assets/js/plugins/bootstrap-switch.js"></script>
-
-    <!--  Notifications Plugin    -->
-    <script src="../assets/js/plugins/bootstrap-notify.js"></script>
-    <!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
-    <script src="../assets/js/light-bootstrap-dashboard.js " type="text/javascript"></script>
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Usuarios</title>
+    <meta content="Proyecto de analisis finaciero" name="description" />
+    <meta content="Grupo ANF DIU" name="author" />
+    <?php include '../layouts/headerStyles.php'; ?>
 </head>
 
-
 <body>
-    <?php
-include '../includes/sidebar.php';
-?>
+    <?php include '../layouts/Navbar.php'; ?>
+
     <div class="main-panel">
-        <div class="container-fluid mt-4 ">
+        <div class="container mt-4 ">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Categorias de Productos</h3>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead>
+                                <tr>
+                                    <th style="font-size:13px !important;" scope="col">Nombre</th>
+                                    <th style="font-size:13px !important;" scope="col">Descripcion</th>
+                                    <th style="font-size:13px !important;" scope="col">Estado</th>
+                                    <th style="font-size:13px !important;" scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $resultado = ControladorCategoria::listar();
+                                while ($row = mysqli_fetch_assoc($resultado)): ?>
+                                    <tr>
+                                        <td>
+                                            <?= $row["nombre"] ?>
+                                        </td>
+                                        <td><?= $row["descripcion"] ?></td>
+                                        <td>
+                                            <?= $row["estado"] ? '<span class="badge bg-green text-green-fg">Activo</span>' : '<span class="badge bg-red text-red-fg">Inactivo</span>' ?>
+                                        </td>
+                                        <th>
+                                            <div class="d-flex justify-content-center">
+                                                <button type="button" onclick='editar(<?= json_encode($row) ?>)'
+                                                    id="btn-editar" class="btn btn-warning me-2" data-bs-toggle="modal"
+                                                    title="modificar"
+                                                    data-bs-target="#mdCategoria">
+                                                    <i class="fa-regular fa-pen-to-square"></i>
+                                                </button>
+                                                <?php if ($_SESSION['rol'] == "Administrador"): ?>
+                                                    <button class="btn <?= $row["estado"] ? 'btn-danger' : 'btn-success' ?> me-2 "
+                                                        onclick='cambiarEstado(<?= json_encode($row) ?>)'
+                                                        title="<?= $row["estado"] ? 'Dar de baja' : 'Dar de alta' ?>"
+                                                        data-bs-toggle="modal" data-bs-target="#mdCategoria">
+                                                        <?= $row["estado"] ? '<i class="fa fa-user-times" aria-hidden="true"></i>' :
+                                                            '<i class="fa fa-user" aria-hidden="true"></i>' ?>
+                                                    </button>
+                                                    <button class="btn btn-danger " data-bs-toggle="modal"
+                                                data-bs-target="#mdCategoria" onclick='eliminar(<?=json_encode($row)?>)'>
+                                                <i class="fa-solid fa-trash"></i></button>
+                                                <?php endif ?>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                <?php endwhile; ?>
 
-            <!-- Modal registrar -->
-            <div class="modal fade" id="modalregistrar" tabindex="-1" role="dialog" aria-labelledby="modalregistrar" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Registrar Categoria</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="frmregistrar" action="../controladores/ControladorCategoria.php" method="POST">
-                                <input type="hidden" name="action" value="insert">
-                                <div class="row">
-
-                                    <div class="col-md-12">
-
-                                        <label>Nombre</label>
-                                        <input type="text" class="form-control" id="nombre" name="nombre" required="true">
-
-
-                                    </div>
-
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary" id="btnregistrar">Guardar</button>
-                        </div>
-                        </form>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-
-
-
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Categorias</h3>
-                    <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#modalregistrar"> Registrar </button>
-                    <table class="table table-bordered text-center align-middle">
-                        <thead>
-                            <tr>
-                                <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col">Nombre</th>
-                                <th style="font-weight: 700; font-size:16px; text-align: center!important; " scope="col">Acciones</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach (ControladorCategoria::listar() as $row): ?>
-                                <tr>
-
-                                    <td>
-                                        <?=$row["nombre"]?>
-                                    </td>
-
-                                    <th>
-                                        <div class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#editarCategoria<?php echo $row['id_categoria']; ?>"><i class="fa-regular fa-pen-to-square"></i></button>
-                                            <button class="btn btn-danger" <?=ControladorCategoria::esEliminable($row['id_categoria']) ? "disabled" : ""?> data-toggle="modal" data-target="#eliminarCategoria<?php echo $row['id_categoria']; ?>"><i class="fa-solid fa-trash"></i></button>
-                                        </div>
-                                    </th>
-                                </tr>
-                                <?php include '../vistas/Modals/ModalEditarCategoria.php';
-?>
-                            <?php endforeach;?>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
+        <?php include '../layouts/Footer.php'; ?>
     </div>
 
-        <!-- Scripts de Bootstrap 4 y otros aquí -->
+    <!-- Scripts de Bootstrap 4 y otros aquí -->
+    <?php include '../layouts/footerScript.php'; ?>
 
-        <?php foreach (ControladorCategoria::listar() as $row): ?>
-            <?php include '../vistas/Modals/ModalEliminarCategoria.php';?>
-        <?php endforeach;?>
+    <?php include '../vistas/Modals/ModalCategoria.php'; ?>
 
+    <script>
+        function editar(data) {
+            document.getElementById("nombre").removeAttribute("disabled", "");
+            document.getElementById("descripcion").removeAttribute("disabled", "");
+            document.getElementById("action").value = "editar";
+            
+            document.getElementById("id").value = data.id || "";
+            document.getElementById("nombre").value = data.nombre || "";
+            document.getElementById("descripcion").value = data.descripcion || "";
+            document.getElementById("enviar").innerHTML = "Guardar Cambios";
+            document.getElementById("enviar").classList.remove('btn-danger');
+            document.getElementById("enviar").classList.add('btn-primary');
 
+        }
 
-        <script>
-            function validarFormulariocompleto() {
+        function cambiarEstado(data) {
+            document.getElementById("titulo").innerHTML = data.estado == "1" ?
+                '¿SEGURO QUE DESEA DAR DE BAJA A ESTA CATEGORIA?' : '¿SEGURO QUE DESEA ACTIVAR A ESTA CATEGORIA?';
 
-                const categoria = document.getElementById('nombre').value;
+            document.getElementById("nombre").setAttribute("disabled", "");
+            document.getElementById("descripcion").setAttribute("disabled", "");
 
+            document.getElementById("action").value = "cambiarEstado";
+            document.getElementById("id").value = data.id || "";
+            document.getElementById("estado").value = data.estado == 1 ? false : true || "";
+            document.getElementById("nombre").value = data.nombre || "";
+            document.getElementById("descripcion").value = data.descripcion || "";
+            document.getElementById("enviar").innerHTML = data.estado == 1 ? "Dar de baja" : "Activar";
 
-                if (!categoria) {
-                    Swal.fire("Aviso", "Por favor, agregue una categoria.", "warning");
-                    return false; // Evitar el envío del formulario
-                }
+            if (data.estado == 1) {
+                document.getElementById("enviar").classList.remove('btn-primary');
+                document.getElementById("enviar").classList.add('btn-danger');
 
-                return true;
+            } else {
+                document.getElementById("enviar").classList.remove('btn-danger');
+                document.getElementById("enviar").classList.add('btn-primary');
 
             }
-        </script>
 
+        }
 
+        function eliminar(data) {
+            document.getElementById("titulo").innerHTML = "¿SEGURO QUE DESEA BORRAR ESTA CATEGORIA?";
 
+            document.getElementById("nombre").setAttribute("disabled", "");
+            document.getElementById("descripcion").setAttribute("disabled", "");
+
+            document.getElementById("action").value = "borrar";
+            document.getElementById("id").value = data.id || "";
+            document.getElementById("nombre").value = data.nombre || "";
+            document.getElementById("descripcion").value = data.descripcion || "";
+            document.getElementById("enviar").innerHTML = "Eliminar";
+            document.getElementById("enviar").classList.remove('btn-primary');
+            document.getElementById("enviar").classList.add('btn-danger');
+
+        }
+        // Check if a success message is set in the session
+        <?php if (isset($_SESSION['success_messageP'])): ?>
+            Swal.fire('<?php echo $_SESSION['success_messageP']; ?>', '', 'success');
+            <?php unset($_SESSION['success_messageP']); // Clear the message 
+            ?>
+        <?php endif; ?>
+    </script>
 </body>
 
 </html>

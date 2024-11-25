@@ -29,7 +29,7 @@ class ControladorCategoria{
         $action = $_POST["action"];
         switch($action){
         case "insert":
-            CategoriaModel::agregar($_POST['nombre']);
+            CategoriaModel::agregar($_POST['nombre'], $_POST['descripcion']);
             
             header("Location: ../vistas/lista-categoria.php");
             break;
@@ -40,8 +40,13 @@ class ControladorCategoria{
                 break;
 
             case "borrar":
-                CategoriaModel::borrar($_POST['id_categoria']);
+                CategoriaModel::borrar($_POST['id']);
                  header("Location: ../vistas/lista-categoria.php");
+                break;
+
+            case "cambiarEstado":
+                CategoriaModel::cambiarEstado($_POST);
+                header("Location: ../vistas/lista-categoria.php");
                 break;
 
            

@@ -36,6 +36,10 @@ if (isset($_POST["action"])) {
             ActivoFijoModel::borrar($_POST['id_activo']);
             header("Location: ../vistas/lista-ActivoFijo.php");
             break;
+        case "cambiarEstado":
+            ActivoFijoModel::cambiarEstado($_POST);
+            header("Location: ../vistas/lista-ActivoFijo.php");
+            break;
         default:
             echo "Bandera no encontrada";
             break;
