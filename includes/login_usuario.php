@@ -35,15 +35,15 @@ if ($resultado_usuario) {
                     echo json_encode(array("exito" => "Bienvenido '.$row.'"));
                 } else {
                     $_SESSION['usuario'] = $row;
-                    header("Location: change_password.php");
+                    echo json_encode(array("cambiar_contra" => "primero debes cambiar tu contraseña"));
                 }
             } else {
                 // Contraseña incorrecta
-                mostrarMensajeError("Contraseña incorrecta");
+                echo json_encode(array("error" => "Contraseña incorrecta"));
             }
         } else {
             // El empleado está inactivo
-            mostrarMensajeError("Cuenta desactivada");
+            echo json_encode(array("error" => "Cuenta desactivada"));
         }
     } else {
         // Usuario no encontrado
@@ -52,7 +52,7 @@ if ($resultado_usuario) {
     }
 } else {
     // Error en la consulta
-    mostrarMensajeError("Error en la consulta de usuario");
+    echo json_encode(array("error" => "Error en la consulta de usuario"));
 }
 
 // Función para mostrar mensajes de error y redirigir

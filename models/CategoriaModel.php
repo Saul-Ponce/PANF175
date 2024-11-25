@@ -7,11 +7,7 @@ class CategoriaModel
 	public static function listar()
 	{
 		$con = connection();
-		$sql ="SELECT\n".
-        "	categoria.id_categoria, \n".
-        "	categoria.nombre\n".
-        "FROM\n".
-        "	categoria";
+		$sql ="SELECT * from categoriaproducto";
 
 		$query = mysqli_query($con, $sql);
 
@@ -20,12 +16,12 @@ class CategoriaModel
 
 	
 
-	public static function agregar($nombre)
+	public static function agregar($nombre,$descripcion)
 	{
 		$con = connection();
 
 
-		$sql = "INSERT INTO categoria (nombre) VALUES ('$nombre')";
+		$sql = "INSERT INTO categoriaproducto (nombre,descripcion) VALUES ('$nombre','$descripcion')";
         $query = mysqli_query($con, $sql);
         
 
@@ -38,15 +34,11 @@ class CategoriaModel
 
 		$con = connection();
 
-        $id_categoria = $data['id_categoria'];
+        $id_categoria = $data['id'];
 		$nombre = $data['nombre'];
-	
-		
-
-		$sql = "UPDATE categoria SET nombre='$nombre'  WHERE id_categoria='$id_categoria'";
-		$query = mysqli_query($con, $sql);
-
-	
+		$descripcion = $data['descripcion'];
+		$sql = "UPDATE categoriaproducto SET nombre='$nombre', descripcion='$descripcion'  WHERE id='$id_categoria'";
+		$query = mysqli_query($con, $sql);	
 	}
 
 	public static function borrar($id_categoria){
@@ -54,22 +46,17 @@ class CategoriaModel
 		$con = connection();
 		
 
-		$sql="DELETE FROM categoria WHERE id_categoria='$id_categoria'";
+		$sql="DELETE FROM categoriaproducto WHERE id='$id_categoria'";
 		$query = mysqli_query($con, $sql);
 		
 	}
-	public static function obtener_persona($id_categoria){
-
+	public static function cambiarEstado($data)
+    {
         $con = connection();
-		$sql = "SELECT\n".
-        "	categoria.id_categoria, \n".
-        "	categoria.nombre\n".
-        "FROM\n".
-        "	categoria WHERE id_categoria = '$id_categoria'";
-		$query = mysqli_query($con, $sql);
-
-		return $query;
-
+        $idCategoria = $data['id'];
+        $estado = $data['estado'];
+        $sql = $estado ? "UPDATE categoriaproducto SET estado=$estado WHERE id='$idCategoria'" : "UPDATE categoriaproducto SET estado='$estado' WHERE id='$idCategoria'";
+        $query = mysqli_query($con, $sql);
     }
 
 	public static function esEliminable($id_categoria){
