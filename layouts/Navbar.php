@@ -225,6 +225,9 @@ if (!isset($_SESSION['usuario'])) {
                                         <a class="dropdown-item" href="../vistas/lista-activoFijo.php">
                                             Activo fijo
                                         </a>
+                                        <a class="dropdown-item" href="../vistas/lista-activoFijoReporte.php">
+                                            Depreciacion
+                                        </a>
                                     </div>
                                 </div>
                             </div>
