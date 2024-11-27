@@ -19,14 +19,20 @@ class ControladorClienteJuridico
             $data['direccion'] = htmlspecialchars(trim($data['direccion']));
             $data['telefono'] = htmlspecialchars(trim($data['telefono']));
             $data['email'] = htmlspecialchars(trim($data['email']));
-            $data['clasificacion_id'] = (int)$data['clasificacion_id'];
-            $data['estado'] = htmlspecialchars(trim($data['estado'] ?? 'activo'));
+            $data['nit'] = htmlspecialchars(trim($data['nit']));
+            $data['nrc'] = htmlspecialchars(trim($data['nrc']));
 
-            // Procesar archivo 'aval' si está presente
-            if (isset($_FILES['aval']) && $_FILES['aval']['error'] == 0) {
-                $data['aval'] = file_get_contents($_FILES['aval']['tmp_name']);
-            } else {
-                $data['aval'] = null; // No hay archivo subido
+            // Validar formato de NIT y NRC
+            if (!self::validarFormatoNIT($data['nit'])) {
+                throw new Exception("El formato del NIT no es válido. Debe ser XXXX-XXXXXX-XXX-X");
+            }
+            if (!self::validarFormatoNRC($data['nrc'])) {
+                throw new Exception("El formato del NRC no es válido. Debe ser XXXXXX-X");
+            }
+
+            // Validar que solo contengan números y guiones
+            if (!self::validarSoloNumerosYGuiones($data['nit']) || !self::validarSoloNumerosYGuiones($data['nrc'])) {
+                throw new Exception("NIT y NRC solo pueden contener números y guiones");
             }
 
             // Verificamos si existen los datos del representante legal y los agregamos a $representanteData
@@ -61,27 +67,48 @@ class ControladorClienteJuridico
             $data['direccion'] = htmlspecialchars(trim($data['direccion']));
             $data['telefono'] = htmlspecialchars(trim($data['telefono']));
             $data['email'] = htmlspecialchars(trim($data['email']));
-            $data['clasificacion_id'] = (int)$data['clasificacion_id'];
+            $data['nit'] = htmlspecialchars(trim($data['nit']));
+            $data['nrc'] = htmlspecialchars(trim($data['nrc']));
+            $data['clasificacion_id'] = (int)$data['clasificacion_id']; // Validación adicional
 
-            // Procesar archivo 'aval' si está presente
-            if (isset($_FILES['aval']) && $_FILES['aval']['error'] == 0) {
-                $data['aval'] = file_get_contents($_FILES['aval']['tmp_name']);
-            } else {
-                $data['aval'] = null; // Mantener el archivo existente si no hay nuevo archivo
+            // Validar formato de NIT y NRC
+            if (!self::validarFormatoNIT($data['nit'])) {
+                throw new Exception("El formato del NIT no es válido. Debe ser XXXX-XXXXXX-XXX-X");
+            }
+            if (!self::validarFormatoNRC($data['nrc'])) {
+                throw new Exception("El formato del NRC no es válido. Debe ser XXXXXX-X");
             }
 
-            // Llamamos al modelo para editar el cliente jurídico
+            // Llamar al modelo para editar
             ClienteJuridicoModel::editar($data);
 
             $_SESSION['success_messageC'] = "Cliente Jurídico actualizado exitosamente.";
             header("Location: ../vistas/lista-clientesjuridicos.php");
             exit();
         } catch (Exception $e) {
-            // Manejo de la excepción
             $_SESSION['error_messageC'] = "Error al actualizar el Cliente Jurídico: " . $e->getMessage();
             header("Location: ../vistas/lista-clientesjuridicos.php");
             exit();
         }
+    }
+
+
+    // Función para validar formato del NIT
+    private static function validarFormatoNIT($nit)
+    {
+        return preg_match('/^\d{4}-\d{6}-\d{3}-\d{1}$/', $nit);
+    }
+
+    // Función para validar formato del NRC
+    private static function validarFormatoNRC($nrc)
+    {
+        return preg_match('/^\d{6}-\d{1}$/', $nrc);
+    }
+
+    // Función para validar que solo contenga números y guiones
+    private static function validarSoloNumerosYGuiones($valor)
+    {
+        return preg_match('/^[0-9-]+$/', $valor);
     }
 
     public static function editarRepresentante($data)
@@ -128,6 +155,7 @@ class ControladorClienteJuridico
     }
 }
 
+// Manejo de las solicitudes POST
 if ($_POST) {
     switch ($_POST['action']) {
         case 'insert':
@@ -143,10 +171,8 @@ if ($_POST) {
             ControladorClienteJuridico::cambiarEstado($_POST['id'], $_POST['estado']);
             break;
         default:
-            // Acción no reconocida
             $_SESSION['error_messageC'] = "Acción no reconocida.";
             header("Location: ../vistas/lista-clientesjuridicos.php");
             exit();
     }
 }
-?>
