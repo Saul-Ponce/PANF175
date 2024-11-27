@@ -61,14 +61,14 @@ do {
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre"
+                                <input type="text" class="form-control" id="nombre" name="nombre" autocomplete="off"
                                     onkeypress="return Solo_Texto(event);">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="usuario">Usuario</label>
-                                <input type="text" class="form-control" id="usuario" name="usuario"
+                                <input type="text" class="form-control" id="usuario" name="usuario" autocomplete="off"
                                     onkeypress="return Solo_Texto(event);">
                             </div>
                         </div>
@@ -94,7 +94,7 @@ do {
                             <div class="mb-3">
                                 <label for="correo_recuperacion">Correo de recuperacion</label>
                                 <input type="email" class="form-control" id="correo_recuperacion"
-                                    name="correo_recuperacion">
+                                    name="correo_recuperacion" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-12">
