@@ -37,6 +37,10 @@ if ($clasificacionesResult) {
 
 <body>
     <?php include '../layouts/Navbar.php'; ?>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="./../public/assets/libs/datatables/datatables.min.js"></script>
+
 
     <div class="main-panel">
         <div class="container-fluid mt-4">
@@ -62,7 +66,7 @@ if ($clasificacionesResult) {
                     <?php endif; ?>
 
                     <div class="table-responsive">
-                        <table class="table table-bordered text-center align-middle">
+                    <table id="tabla-clientesjuridicos" class="table table-bordered text-center align-middle datatable">
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
@@ -395,6 +399,15 @@ if ($clasificacionesResult) {
                     return new bootstrap.Tooltip(tooltipTriggerEl);
                 });
             });
+
+            //Data table
+            $(document).ready(function () {
+        $('#tabla-clientesjuridicos').DataTable({
+            "language": {
+                "url": "./../public/assets/libs/datatables/esp.json"
+            }
+        });
+    });
         </script>
     </div>
 </body>
