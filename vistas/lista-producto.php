@@ -30,14 +30,16 @@ include_once "../models/ProductoModel.php";
 
 <body>
     <?php include '../layouts/Navbar.php'; ?>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./../public/assets/libs/datatables/datatables.min.js"></script>
     <div class="main-panel">
         <div class="container mt-4 ">
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Productos</h3>
                     <div class="table-responsive">
-                        <table class="table table-bordered text-center align-middle">
+                        <table id="tabla-producto" class="table table-bordered text-center align-middle datatable">
                             <thead>
                                 <tr>
                                     <th style="font-size:13px !important;" scope="col">Código</th>
@@ -49,6 +51,7 @@ include_once "../models/ProductoModel.php";
                                     <th style="font-size:13px !important;" scope="col">Modelo</th>
                                     <th style="font-size:13px !important;" scope="col">Stock Minimo</th>
                                     <th style="font-size:13px !important;" scope="col">Estado</th>
+                                    <th style="font-size:13px !important;" scope="col">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -111,6 +114,31 @@ include_once "../models/ProductoModel.php";
 
     <?php include '../vistas/Modals/ModalProducto.php'; ?>
 
+    <script src="../public/assets/js/toast.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tabla-producto').DataTable({
+                "language": {
+                    "url": "./../public/assets/libs/datatables/esp.json"
+                },
+            });
+        });
+        // Check if a success message is set in the session
+        <?php if (isset($_SESSION['success_messageP'])): ?>
+
+            Toast.fire({
+                icon: "success",
+                title: "<?php echo $_SESSION['success_messageP']; ?>"
+            });
+        <?php unset($_SESSION['success_messageP']); // Clear the message ?> <?php endif; ?> <?php if (isset($_SESSION['info_messageP'])): ?> console
+                .log('si vinos');
+
+            Toast.fire({
+                icon: "info",
+                title: "<?php echo $_SESSION['info_messageP']; ?>"
+            });
+        <?php unset($_SESSION['success_messageP']); // Clear the message ?> <?php endif; ?>
+            </script>
     <script>
         function editar(data) {
             document.getElementById("codigo").removeAttribute("disabled", "");

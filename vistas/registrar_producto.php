@@ -57,14 +57,14 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="descripcion">Descripción</label>
-                                <input type="text" class="form-control" id="descripcion" name="descripcion">
+                                <input type="text" class="form-control" id="descripcion" name="descripcion" maxlength="50">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="rol">Categoria</label>
                                 <select class="form-select" id="cat_id" name="cat_id">
-                                    <option value="0">Seleccione</option>
+                                    <option value="0" disabled selected>Seleccione</option>
                                     <?php foreach ($query as $row): ?>
                                         <option value="<?= $row["id"] ?>"><?= $row["nombre"] ?></option>
                                     <?php endforeach; ?>
@@ -74,7 +74,7 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="imagen">Imagen del producto</label>
-                                <input class="form-control-file" id="imagen" name="imagen" type="file" accept="image/*">
+                                <input class="form-control" id="imagen" name="imagen" type="file" accept="image/*" require="true">
                                 <img id="previewImage" style="display: none; max-width: 100px; max-height: 100px;">
                             </div>
                         </div>

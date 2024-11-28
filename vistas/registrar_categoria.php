@@ -41,15 +41,13 @@ if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || $_SESSION['rol']
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre"
-                                    onkeypress="return Solo_Texto(event);">
+                                <input type="text" class="form-control" id="nombre" name="nombre">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="descripcion">Descripción</label>
-                                <input type="text" class="form-control" id="descripcion" name="descripcion"
-                                    onkeypress="return Solo_Texto(event);">
+                                <input type="text" class="form-control" id="descripcion" name="descripcion">
                             </div>
                         </div>
                         <div class="col-12">

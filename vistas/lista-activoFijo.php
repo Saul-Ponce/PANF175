@@ -32,12 +32,6 @@ include_once "../models/ActivoFijoModel.php";
         <div class="container mt-4 ">
             <div class="card">
                 <div class="card-body">
-                    <!-- Botón para redirigir a la página del formulario -->
-                    <div class="d-flex justify-content-end mb-3">
-                        <a href="../vistas/registrar_activoFijo.php" class="btn btn-primary">
-                            Agregar Activo Fijo
-                        </a>
-                    </div>
                     <h3 class="card-title text-center align-middle" style="font-weight: 700;">Activo fijo</h3>
                     <div class="table-responsive">
                         <table class="table table-bordered text-center align-middle">
@@ -49,6 +43,7 @@ include_once "../models/ActivoFijoModel.php";
                                     <th style="font-size:13px !important;" scope="col">Fecha</th>
                                     <th style="font-size:13px !important;" scope="col">Valor</th>
                                     <th style="font-size:13px !important;" scope="col">Vida util</th>
+                                    <th style="font-size:13px !important;" scope="col">Adquirido</th>
                                     <th style="font-size:13px !important;" scope="col">Estado</th>
                                     <th style="font-size:13px !important;" scope="col">Acciones</th>
                                 </tr>
@@ -66,44 +61,40 @@ include_once "../models/ActivoFijoModel.php";
                                         <td><?= $row["vida_util"] . " años" ?></td>
                                         <td>
                                             <?php
-                                            $estadoActivo = $row["estadoActivo"];
-                                            $estadoTexto = '';
-
-                                            // Determina el estado descriptivo
-                                            switch ($estadoActivo) {
+                                            switch ($row["estadoActivo"]) {
                                                 case 1:
-                                                    $estadoTexto = "Nuevo";
+                                                    echo "Nuevo";
                                                     break;
-                                                case 3:
-                                                    $estadoTexto = "Mantenimiento";
-                                                    break;
-                                                case 5:
-                                                    $estadoTexto = "Donado";
-                                                    break;
-                                                case 6:
-                                                    $estadoTexto = "Vendido";
-                                                    break;
-                                                case 7:
-                                                    $estadoTexto = "Votado (Desechado)";
-                                                    break;
-                                                case 8:
-                                                    $estadoTexto = "Pendiente de Revisión";
-                                                    break;
-                                                case 9:
-                                                    $estadoTexto = "Obsoleto";
+                                                case 2:
+                                                    echo "Usado";
                                                     break;
                                                 default:
-                                                    $estadoTexto = "Desconocido";
+                                                    echo "Estado desconocido"; // En caso de que haya un valor diferente
+                                                    break;
                                             }
-
-                                            // Determina si es activo o inactivo
-                                            $activoInactivo = $row["estado"] ? '<span class="badge bg-green text-green-fg">Activo</span>' : '<span class="badge bg-red text-red-fg">Inactivo</span>';
-
-                                            echo $estadoTexto .  $activoInactivo;
                                             ?>
                                         </td>
-
-
+                                        <td>
+                                            <?php
+                                            switch ($row["darBaja"]) {
+                                                case 1:
+                                                    echo "Dar de baja";
+                                                    break;
+                                                case 2:
+                                                    echo "Donar";
+                                                    break;
+                                                case 3:
+                                                    echo "Vendido";
+                                                    break;
+                                                case 4:
+                                                    echo "Votarlo";
+                                                    break;
+                                                default:
+                                                    echo "Estado desconocido"; // En caso de que haya un valor diferente
+                                                    break;
+                                            }
+                                            ?>
+                                        </td>
                                         <th>
                                             <div class="d-flex justify-content-center">
                                                 <button type="button" onclick='editar(<?= json_encode($row) ?>)'
@@ -113,13 +104,16 @@ include_once "../models/ActivoFijoModel.php";
                                                     <i class="fa-regular fa-pen-to-square"></i>
                                                 </button>
                                                 <?php if ($_SESSION['rol'] == "Administrador"): ?>
-                                                    <button class="btn <?= $row["estado"] ? 'btn-danger' : 'btn-success' ?> me-1"
-                                                        data-bs-toggle="modal" data-bs-target="#mdActivofijo"
-                                                        onclick='cambiarEstado(<?= json_encode($row) ?>)'>
-                                                        <?= $row["estado"] ? '<i class="fa fa-user-times" aria-hidden="true"></i>' : '<i class="fa fa-user" aria-hidden="true"></i>' ?></button>
-                                                    <button class="btn btn-danger " data-bs-toggle="modal"
+                                                    <button class="btn btn-danger me-1" data-bs-toggle="modal"
+                                                        title="Eliminar"
                                                         data-bs-target="#mdActivofijo" onclick='eliminar(<?= json_encode($row) ?>)'>
-                                                        <i class="fa-solid fa-trash"></i></button>
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                    <button class="btn btn-secondary" data-bs-toggle="modal"
+                                                        title="Dar de baja"
+                                                        data-bs-target="#mdActivofijo" onclick='cambiarEstado(<?= json_encode($row) ?>)'>
+                                                        <i class="fas fa-sync-alt"></i>
+                                                    </button>
                                                 <?php endif ?>
                                             </div>
                                         </th>
@@ -167,6 +161,7 @@ include_once "../models/ActivoFijoModel.php";
             document.getElementById("valor_adquisicion").setAttribute("disabled", "");
             document.getElementById("vida_util").setAttribute("disabled", "");
             document.getElementById("estadoActivo").setAttribute("disabled", "");
+            document.getElementById("darBaja").setAttribute("disabled", "");
 
             document.getElementById("action").value = "borrar";
             document.getElementById("id_activo").value = data.id_activo || "";
@@ -184,8 +179,8 @@ include_once "../models/ActivoFijoModel.php";
         }
 
         function cambiarEstado(data) {
-            document.getElementById("titulo").innerHTML = data.estado == "1" ?
-                '¿SEGURO QUE DESEA DAR DE BAJA A ESTE ACTIVO FIJO?' : '¿SEGURO QUE DESEA ACTIVAR A ESTE ACTIVO FIJO?';
+            document.getElementById("titulo").innerHTML =
+                '¿SEGURO QUE DESEA DAR DE BAJA A ESTE ACTIVO FIJO?';
 
             document.getElementById("codigoUnidad").setAttribute("disabled", "");
             document.getElementById("nombre").setAttribute("disabled", "");
@@ -204,8 +199,10 @@ include_once "../models/ActivoFijoModel.php";
             document.getElementById("vida_util").value = data.vida_util || "";
             document.getElementById("estadoActivo").value = data.estadoActivo || "";
             document.getElementById("action").value = "cambiarEstado";
-            document.getElementById("estado").value = data.estado == 1 ? false : true || "";
-            document.getElementById("enviar").innerHTML = data.estado == 1 ? "Dar de baja" : "Activar";
+            document.getElementById("darBaja").value = data.darBaja || "";
+            document.getElementById("enviar").innerHTML = "Guardar";
+            document.getElementById("enviar").classList.remove('btn-primary');
+            document.getElementById("enviar").classList.add('btn-warning');
         }
 
         // Check if a success message is set in the session

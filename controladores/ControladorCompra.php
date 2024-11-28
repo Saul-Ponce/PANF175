@@ -37,12 +37,14 @@ class ControladorCompra{
             var_dump($dataArray);
             
             $_SESSION['success_messageC'] = 'Compra agregada exitosamente!';
-            CompraModel::agregar($_POST['fecha'], $_POST['dui'], $_POST['total'], $dataArray);
+            CompraModel::agregar($_POST['fecha'], $_POST['total'], $_POST['usuario_id'], $dataArray);
             
 
             
-            header("Location: ../vistas/genera-Compra.php");
+            header("Location: ../vistas/generar-Compra.php");
             break;
+
+           
 
            case "editar":
                 CompraModel::editar($_POST);
