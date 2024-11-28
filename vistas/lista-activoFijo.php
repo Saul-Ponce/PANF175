@@ -32,12 +32,6 @@ include_once "../models/ActivoFijoModel.php";
         <div class="container mt-4 ">
             <div class="card">
                 <div class="card-body">
-                    <!-- Botón para redirigir a la página del formulario -->
-                    <div class="d-flex justify-content-end mb-3">
-                        <a href="../vistas/registrar_activoFijo.php" class="btn btn-primary">
-                            Agregar Activo Fijo
-                        </a>
-                    </div>
                     <h3 class="card-title text-center align-middle" style="font-weight: 700;">Activo fijo</h3>
                     <div class="table-responsive">
                         <table class="table table-bordered text-center align-middle">
@@ -118,7 +112,7 @@ include_once "../models/ActivoFijoModel.php";
                                                     <button class="btn btn-secondary" data-bs-toggle="modal"
                                                         title="Dar de baja"
                                                         data-bs-target="#mdActivofijo" onclick='cambiarEstado(<?= json_encode($row) ?>)'>
-                                                        <i class="fa-solid fa-archive"></i>
+                                                        <i class="fas fa-sync-alt"></i>
                                                     </button>
                                                 <?php endif ?>
                                             </div>

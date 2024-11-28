@@ -69,7 +69,6 @@ $query = mysqli_query($con, $sql);
                                 <label for="fechaAdquisicion">Fecha de Adquisición</label>
                                 <input type="date" class="form-control" name="fecha_adquisicion" max="<?= date('Y-m-d') ?>" required>
                             </div>
-
                         </div>
 
                         <!-- Tercera fila con 2 columnas -->
@@ -86,15 +85,18 @@ $query = mysqli_query($con, $sql);
 
                         <!-- Cuarta fila con solo un campo (Estado del Activo) que ocupará toda la fila -->
                         <div class="row mb-3">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label for="estadoActivo">Estado del Activo</label>
                                 <select class="form-select" id="estadoActivo" name="estadoActivo" required>
                                     <option value="1">Nuevo</option>
                                     <option value="2">Usado</option>
                                 </select>
                             </div>
+                            <div class="col-md-6">
+                                <label for="fecha_registro">Fecha de Registro</label>
+                                <input type="date" class="form-control" name="fecha_registro" max="<?= date('Y-m-d') ?>" required>
+                            </div>
                         </div>
-
                         <!-- Botón de guardar -->
                         <div class="text-center">
                             <button class="btn btn-primary" type="submit">Guardar</button>

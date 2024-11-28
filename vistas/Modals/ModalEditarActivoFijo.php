@@ -59,7 +59,7 @@ $query = mysqli_query($con, $sql);
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="darBaja">Dar de baja</label>
+                            <label for="darBaja">Proceso</label>
                             <select class="form-control" id="darBaja" name="darBaja" required>
                                 <option value="1">Dar de baja</option>
                                 <option value="2">Donar</option>
