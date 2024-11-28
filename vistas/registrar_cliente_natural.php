@@ -45,14 +45,14 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre"
+                                <input type="text" class="form-control" id="nombre" name="nombre"autocomplete="off" 
                                     onkeypress="return Solo_Texto(event);">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="direccion">Direccion</label>
-                                <input type="text" class="form-control" id="direccion" name="direccion"
+                                <input type="text" class="form-control" id="direccion" name="direccion"autocomplete="off" 
                                     onkeypress="return Solo_Texto(event);">
                             </div>
                         </div>
@@ -60,7 +60,7 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="telefono">telefono</label>
-                                <input type="text" class="form-control" id="telefono" name="telefono">
+                                <input type="text" class="form-control" id="telefono" name="telefono" autocomplete="off" >
                             </div>
                         </div>
 
@@ -68,19 +68,19 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" name="email">
+                                <input type="email" class="form-control" id="email" name="email" autocomplete="off" >
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="ingresos">Ingresos</label>
-                                <input type="number" class="form-control" id="ingresos" name="ingresos">
+                                <input type="number" class="form-control" id="ingresos" name="ingresos" autocomplete="off" >
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="egresos">egresos</label>
-                                <input type="number" class="form-control" id="egresos" name="egresos">
+                                <input type="number" class="form-control" id="egresos" name="egresos" autocomplete="off" >
                             </div>
                         </div>
 
@@ -102,7 +102,7 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="lugar">Lugar de trabajo</label>
-                                <input type="text" class="form-control" id="lugar_trabajo" name="lugar_trabajo"
+                                <input type="text" class="form-control" id="lugar_trabajo" name="lugar_trabajo" autocomplete="off" 
                                     onkeypress="return Solo_Texto(event);">
                             </div>
                         </div>
@@ -110,7 +110,7 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="dui">DUI</label>
-                                <input type="text" class="form-control" id="dui" name="dui">
+                                <input type="text" class="form-control" id="dui" name="dui" autocomplete="off">
                             </div>
                         </div>
 
@@ -119,7 +119,7 @@ $query = mysqli_query($con, $sql);
                             <div class="mb-3">
                                 <label for="fiador_id">Fiador</label>
                                 <select class="form-select" id="fiador_id" name="fiador_id">
-                                    <option value="0">Seleccione</option>
+                                    <option value="">Seleccione</option>
                                     <?php foreach ($query as $row): ?>
                                     <option value="<?=$row["id"]?>"> <?=$row["nombre"]?> <?="-"?> <?=$row["dui"]?></option>
                                     <?php endforeach;?>
