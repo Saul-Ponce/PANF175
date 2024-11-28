@@ -32,12 +32,6 @@ include_once "../models/CatalogoActivoFijoModel.php";
         <div class="container mt-4 ">
             <div class="card">
                 <div class="card-body">
-                    <!-- Botón para redirigir a la página del formulario -->
-                    <div class="d-flex justify-content-end mb-3">
-                        <a href="../vistas/registrar_catalogo_tipo_activo.php" class="btn btn-primary">
-                            Agregar Nuevo Tipo de Activo Fijo
-                        </a>
-                    </div>
                     <h3 class="card-title text-center align-middle" style="font-weight: 700;">Catalogo Activo fijo</h3>
                     <div class="table-responsive">
                         <table class="table table-bordered text-center align-middle">
@@ -58,7 +52,7 @@ include_once "../models/CatalogoActivoFijoModel.php";
                                     <tr>
                                         <td><?= $row["nombreActivo"] ?></td>
                                         <td><?= $row["descripcion"] ?></td>
-                                        <td><?= $row["porcentajeDepreciacion"] ?></td>
+                                        <td><?= $row["porcentajeDepreciacion"] ?>%</td>
                                         <td><?= $row["codigo"] ?></td>
                                         <td><?= $row["estado"] ? '<span class="badge bg-green text-green-fg">Activo</span>' : '<span class="badge bg-red text-red-fg">Inactivo</span>' ?></td>
                                         <th>

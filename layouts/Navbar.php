@@ -220,10 +220,16 @@ if (!isset($_SESSION['usuario'])) {
                                 <div class="dropdown-menu-columns">
                                     <div class="dropdown-menu-column">
                                         <a class="dropdown-item" href="../vistas/lista-catalogoActivoFijo.php">
-                                            Catalogo de activo fijo
+                                            Listar catalogo de activo fijo
+                                        </a>
+                                        <a class="dropdown-item" href="../vistas/registrar_catalogo_tipo_activo.php">
+                                            Registrar catalogo de activo fijo
                                         </a>
                                         <a class="dropdown-item" href="../vistas/lista-activoFijo.php">
-                                            Activo fijo
+                                            Listar activo fijo
+                                        </a>
+                                        <a class="dropdown-item" href="../vistas/registrar_activoFijo.php">
+                                            Registrar activo fijo
                                         </a>
                                         <a class="dropdown-item" href="../vistas/lista-activoFijoReporte.php">
                                             Depreciacion
