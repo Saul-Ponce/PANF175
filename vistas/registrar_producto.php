@@ -51,21 +51,20 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre"
-                                    onkeypress="return Solo_Texto(event);">
+                                <input type="text" class="form-control" id="nombre" name="nombre">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="descripcion">Descripción</label>
-                                <input type="text" class="form-control" id="descripcion" name="descripcion">
+                                <input type="text" class="form-control" id="descripcion" name="descripcion" maxlength="50">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="rol">Categoria</label>
                                 <select class="form-select" id="cat_id" name="cat_id">
-                                    <option value="0">Seleccione</option>
+                                    <option value="0" disabled selected>Seleccione</option>
                                     <?php foreach ($query as $row): ?>
                                         <option value="<?= $row["id"] ?>"><?= $row["nombre"] ?></option>
                                     <?php endforeach; ?>

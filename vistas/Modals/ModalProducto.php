@@ -33,12 +33,11 @@ $query = mysqli_query($con, $sql);
                         <div class="form-group col-md-6">
                             <label for="nombre" class="col-form-label">Nombre</label>
                             <input type="text" name="nombre" id="nombre" class="form-control" value=""
-                                onkeypress="return Solo_Texto(event);" required="true">
+                                 required="true">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="descripcion" class="col-form-label">Descripción</label>
-                            <input type="text" name="descripcion" id="descripcion" class="form-control" value=""
-                                >
+                            <input type="text" name="descripcion" id="descripcion" class="form-control" value="" maxlength="50">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="categoria_id">Categoria</label>
