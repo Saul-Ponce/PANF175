@@ -74,13 +74,13 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="ingresos">Ingresos</label>
-                                <input type="text" class="form-control" id="ingresos" name="ingresos">
+                                <input type="number" class="form-control" id="ingresos" name="ingresos">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="egresos">egresos</label>
-                                <input type="text" class="form-control" id="egresos" name="egresos">
+                                <input type="number" class="form-control" id="egresos" name="egresos">
                             </div>
                         </div>
 

@@ -4,58 +4,95 @@ require_once("conexion.php");
 class CompraModel
 {
 
+
+	public static function actualizarInventario($id, $cantidad) {
+		$con = connection();
+		
+		// Retrieve the current cantidad from the inventario table
+		$sqlSelect = "SELECT cantidad FROM inventario WHERE id='$id'";
+		$result = mysqli_query($con, $sqlSelect);
+		
+		if ($result && mysqli_num_rows($result) > 0) {
+			$row = mysqli_fetch_assoc($result);
+			$currentCantidad = $row['cantidad'];
+			
+			// Calculate the new cantidad
+			$nuevo = $currentCantidad + $cantidad;
+			
+			// Update the inventario table with the new cantidad
+			$sqlUpdate = "UPDATE inventario SET cantidad='$nuevo' WHERE id='$id'";
+			$query = mysqli_query($con, $sqlUpdate);
+			
+			if ($query) {
+				echo "Inventario actualizado correctamente.";
+			} else {
+				echo "Error al actualizar el inventario: " . mysqli_error($con);
+			}
+		} else {
+			echo "Producto no encontrado.";
+		}
+		
+		mysqli_close($con);
+	}
+
 	public static function listar()
     {
 		$con = connection();
 			
 			$sql = "SELECT
-			p.nombre, 
-			p.apellido, 
-			c.*
+			u.id as usuario_id,
+			c.id as compras_id,
+			c.*,
+			u.*
 		FROM
 			compras AS c
 			INNER JOIN
-			persona AS p
+			usuarios AS u
 			ON 
-				c.gerente = p.dui_persona";
+				c.usuario_id = u.id";
 			$result = mysqli_query($con,$sql);
             return $result; 
     }
 
+
+
 	public static function listarDet($id)
-    {
-		$con = connection();
-			
-			$sql = "SELECT
-			p.nombre_p,
-			det.compra, 
-			det.producto, 
-			det.cantidad, 
-			det.cantidad*p.precio as precioDet
-		FROM
-			detallecompra AS det
-			INNER JOIN
-			compras AS c
-			ON 
-				det.compra = c.id_compra
-			INNER JOIN
-			producto AS p
-			ON 
-				det.producto = p.codigo_producto
-		WHERE
-			id_compra = '$id'";
-			$result = mysqli_query($con,$sql);
-            return $result; 
-    }
+{
+    $con = connection();
+    
+    $sql = "SELECT
+        p.nombre,
+        det.compra_id, 
+        det.producto_id, 
+        det.cantidad,
+        det.precio_unitario
+    FROM
+        detallecompra AS det
+    INNER JOIN
+        compras AS c ON det.compra_id = c.id
+    INNER JOIN
+        productos AS p ON det.producto_id = p.id
+    WHERE
+        det.compra_id = '$id'";
+    
+    $result = mysqli_query($con, $sql);
+    
+    return $result;
+
+   
+	
+}
+
 
 	
 
-	public static function agregar($fecha_c, $gerente, $total, $data)
+	public static function agregar($fecha, $total_compra, $usuario_id, $data)
 	{
+		
 		$con = connection();
 
 
-		$sql = "INSERT INTO compras (fecha_c, gerente, total) VALUES ('$fecha_c','$gerente','$total')";
+		$sql = "INSERT INTO compras (fecha, total_compra, usuario_id) VALUES ('$fecha','$total_compra','$usuario_id')";
         $querry = mysqli_query($con, $sql);
 
 		$compra_id = mysqli_insert_id($con);
@@ -72,11 +109,16 @@ class CompraModel
 
 		 // Extract data from the array
 		 foreach ($data as $item) {
-		 $producto = $item['code'];
+		 $producto_id = $item['code'];
 		 $cantidad = $item['quantity'];
+		 $precio_unitario = $item['price'];
+		 $proveedor_id = $item['proveedorId'];
+		 $inventario_id = $item['inventarioid'];
+
+		 self::actualizarInventario($inventario_id, $cantidad);
 
 
-		$sql = "INSERT INTO detallecompra (compra, producto, cantidad) VALUES ('$id','$producto','$cantidad')";
+		$sql = "INSERT INTO detallecompra (compra_id, producto_id, proveedor_id, cantidad, precio_unitario) VALUES ('$id','$producto_id','$proveedor_id','$cantidad','$precio_unitario')";
 		
         $querry = mysqli_query($con, $sql);
         
@@ -116,6 +158,9 @@ class CompraModel
 		
 		
 	}
+	
+	
+	
 	
 
 

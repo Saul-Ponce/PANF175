@@ -15,13 +15,13 @@ require_once "../models/conexion.php";
 include "../models/VentaModel.php";
 include "../models/UsuarioModel.php";
 $con = connection();
-$sql = "SELECT * FROM productos INNER JOIN inventario WHERE inventario.producto_id = productos.id";
+$sql = "SELECT p.id as productoid, i.id as inventarioid, p.*,i.* FROM productos as p INNER JOIN inventario as i ON i.producto_id = p.id";
+
 $query = mysqli_query($con, $sql);
 
-$sql = "SELECT * FROM clientesjuridicos";
-$cjquery = mysqli_query($con, $sql);
-$sql = "SELECT * FROM clientesnaturales";
-$cnquery = mysqli_query($con, $sql);
+$sql = "SELECT * FROM proveedores";
+$pquery = mysqli_query($con, $sql);
+
 $nombre = $_SESSION['usuario'];
 $id = UsuarioModel::obtener_IDusuario($nombre);
 $ident = implode($id);
@@ -51,40 +51,26 @@ $ident = implode($id);
             <div class="card">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Generar Venta</h3>
+                        <h3 class="card-title">Generar Compra</h3>
                     </div>
                     <div class="card-body">
-                        <form id="form" class="row" name="form" action="../controladores/ControladorVenta.php"
+                        <form id="form" class="row" name="form" action="../controladores/ControladorCompra.php"
                             method="POST" class="row">
                             <div class="row">
-                                <label class="form-label">Seleccione el tipo de cliente</label>
-                                <div class="form-selectgroup mb-2">
-                                    <label class="form-selectgroup-item">
-                                        <input type="radio" name="cliente" value="cliente-juridico"
-                                            class="form-selectgroup-input">
-                                        <span onclick="mostrarSelectCliente('juridico')" class="form-selectgroup-label">
-                                            Cliente Juridico</span>
-                                    </label>
-                                    <label class="form-selectgroup-item">
-                                        <input type="radio" name="cliente" value="cliente-natural"
-                                            class="form-selectgroup-input" checked>
-                                        <span onclick="mostrarSelectCliente('natural')" class="form-selectgroup-label">
-                                            Cliente Natural</span>
-                                    </label>
-                                </div>
+                                
 
                                 <input type="hidden" name="action" value="insert">
-                                <input type="hidden" class="form-control" id="dui_emp" name="dui_emp"
+                                <input type="hidden" class="form-control" id="usuaio_id" name="usuario_id"
                                     value="<?php echo $ident ?>">
 
                                 <input type="hidden" id="data_array" name="data_array">
-                                <div id="cliente" class="col-lg-5">
-                                    <label>Cliente</label><input type="hidden" id="tipo-cliente" name="tipo-cliente"
-                                        value="cliente-natural"><select class="form-select" id="clienteSelect"
-                                        name="clienteSelect" placeholder="Seleccione un cliente...">
-                                        <option value=""> Seleccione un cliente... </option>
-                                        <?php foreach ($cnquery as $row): ?> <option value="<?= $row['id'] ?>"
-                                            data-id="<?= $row['id'] ?>"> <?= $row['id'] ?> <?= $row['nombre'] ?>
+                                <div id="proveedordiv" class="col-lg-5">
+                                    <label>proveedor</label>
+                                        <select class="form-select" id="proveedor"
+                                        name="proveedor" placeholder="Seleccione un proveedor...">
+                                        <option value=""> Seleccione un proveedor... </option>
+                                        <?php foreach ($pquery as $row): ?> <option value="<?= $row['id'] ?>"
+                                            data-id="<?= $row['id'] ?>">  <?= $row['nombre'] ?>
                                         </option> <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -92,8 +78,8 @@ $ident = implode($id);
                                     <label>Fecha</label>
                                     <?php date_default_timezone_set("America/El_Salvador");
                                     $fecha = date("Y-m-d"); ?>
-                                    <input type="date" class="form-control" value="<?= $fecha ?>" id="fecha_venta"
-                                        name="fecha_venta" readonly>
+                                    <input type="date" class="form-control" value="<?= $fecha ?>" id="fecha"
+                                        name="fecha" readonly>
                                 </div>
                             </div>
 
@@ -105,9 +91,9 @@ $ident = implode($id);
                                         name="productSelect">
                                         <option value="">Seleccione</option>
                                         <?php foreach ($query as $row): ?>
-                                        <option value="<?= $row["id"] ?>" data-code="<?= $row["codigo"] ?>"
+                                        <option value="<?= $row["productoid"] ?>" data-code="<?= $row["codigo"] ?>"
                                             data-stock="<?= $row["cantidad"] ?>"
-                                            data-price="<?= sprintf("%01.2f",round((($row["costo_adquisicion"] / $row["cantidad"]) + (($row["costo_adquisicion"] / $row["cantidad"])*0.22)),2))?>">
+                                            data-inventario="<?= $row["inventarioid"]?>">
                                             <?= $row["codigo"] ?> | <?= $row["nombre"] ?>
                                         </option>
                                         <?php endforeach; ?>
@@ -115,8 +101,8 @@ $ident = implode($id);
                                 </div>
 
                                 <div class="col-lg-2">
-                                    <label>Precio($)</label>
-                                    <input readonly class="form-control" id="txtprecio" name="txtprecio"
+                                    <label>Precio unitario</label>
+                                    <input class="form-control" id="txtprecio" name="txtprecio"
                                         type="number" />
                                 </div>
 
@@ -163,6 +149,7 @@ $ident = implode($id);
                                     <thead>
                                         <tr>
                                             <th scope="col">Producto</th>
+                                            <th scode="col">Proveedor</th>
                                             <th scope="col">Precio</th>
                                             <th scope="col">cantidad</th>
                                             <th scope="col">Accion</th>
@@ -197,38 +184,9 @@ $ident = implode($id);
 
 
     <script>
-    function mostrarSelectCliente(tipo) {
-        if (tipo == 'juridico') {
-            document.getElementById('cliente').innerHTML =
-                "<label>Cliente</label><input type='hidden' id='tipo-cliente' name='tipo-cliente' value='cliente-juridico'><select class='form-select' id='clienteSelect' name='clienteSelect' placeholder='Seleccione un cliente...' > <option value='' > Seleccione un cliente... </option> <?php foreach ($cjquery as $row): ?> <option value='<?= $row['id'] ?>' data-id='<?= $row['id'] ?>'> <?= $row['id'] ?>                             <?= $row['nombre'] ?> </option> <?php endforeach; ?></select>"
-            window.TomSelect && (new TomSelect("#clienteSelect", {
-                create: false,
-                sortField: {
-                    field: "text",
-                    direction: "asc"
-                }
-            }));
-        } else if (tipo == 'natural') {
-            document.getElementById('cliente').innerHTML =
-                "<label>Cliente</label><input type='hidden' id='tipo-cliente' name='tipo-cliente' value='cliente-natural'><select class='form-select' id='clienteSelect' name='clienteSelect' placeholder='Seleccione un cliente...'> <option value='' > Seleccione un cliente... </option> <?php foreach ($cnquery as $row): ?> <option value='<?= $row['id'] ?>' data-id='<?= $row['id'] ?>' > <?= $row['id'] ?>                                 <?= $row['nombre'] ?> </option> <?php endforeach; ?></select>"
-            window.TomSelect && (new TomSelect("#clienteSelect", {
-                create: false,
-                sortField: {
-                    field: "text",
-                    direction: "asc"
-                }
-            }));
-        }
-    }
+   
 
     $(document).ready(function() {
-        window.TomSelect && (new TomSelect("#clienteSelect", {
-            create: false,
-            sortField: {
-                field: "text",
-                direction: "asc"
-            }
-        }));
         window.TomSelect && (new TomSelect("#productSelect", {
             create: false,
             sortField: {
@@ -255,12 +213,7 @@ $ident = implode($id);
     });
 
 
-    $(document).ready(function() {
-        $('#productSelect').on('change', function() {
-            var selectedPrice = $('option:selected', this).data('price');
-            $('#txtprecio').val(selectedPrice);
-        });
-    });
+    
 
     $(document).ready(function() {
         $('#productSelect').on('change', function() {
@@ -289,12 +242,24 @@ $ident = implode($id);
         var selectElement = document.getElementById("productSelect");
         var selectedIndex = selectElement.selectedIndex;
         var quantityInput = document.getElementById("txtcantidad");
+        var priceInput = document.getElementById("txtprecio");
+        
+        var proveedorSelect = document.getElementById("proveedor");
+       
+        
 
         if (selectedIndex !== -1 && selectedIndex !== 0) {
             var selectedOption = selectElement.options[selectedIndex];
+            var selectedProveedorId = proveedorSelect.value; // Fetch the provider ID
+            if (!selectedProveedorId) {
+            alert("Seleccione un proveedor válido.");
+            return;
+        }
+            var selectedProveedorName = proveedorSelect.options[proveedorSelect.selectedIndex].text; 
             var selectedProductCode = selectedOption.value;
-            var selectedProductPrice = selectedOption.getAttribute("data-price");
+            var selectedProductPrice = parseFloat(priceInput.value) || 0;;
             var selectedProductName = selectedOption.textContent;
+            var inventario = parseInt(selectedOption.getAttribute("data-inventario")); 
             var quantity = parseInt(quantityInput.value);
             var stock = parseInt(selectedOption.getAttribute("data-stock"));
 
@@ -312,7 +277,7 @@ $ident = implode($id);
                     return total + item.quantity;
                 }, 0);
 
-            if (quantity > 0 && (totalQuantityInCart + quantity) <= availableStock[selectedProductCode]) {
+                if (quantity > 0) {
                 var existingItem = cart.find(item => item.product === selectedProductName);
 
                 if (existingItem) {
@@ -321,25 +286,25 @@ $ident = implode($id);
                 } else {
                     // Otherwise, add the new item to the cart
                     var item = {
-                        code: selectedProductCode,
-                        product: selectedProductName,
-                        price: parseFloat(selectedProductPrice),
-                        quantity: quantity,
-                    };
+                    code: selectedProductCode,
+                    product: selectedProductName,
+                    proveedorId: selectedProveedorId,
+                    proveedor: selectedProveedorName,
+                    price: selectedProductPrice,
+                    quantity: quantity,
+                    inventarioid:inventario, 
+                };
                     cart.push(item);
                 }
 
                 // Update the cart table, its visibility, and the total price
                 updateCartTable();
                 updatetotal();
-            } else if (quantity > (availableStock[selectedProductCode] - totalQuantityInCart)) {
-                alert("No hay suficiente stock. Cantidad disponible: " + (availableStock[selectedProductCode] -
-                    totalQuantityInCart));
             } else {
-                alert("Please enter a valid quantity.");
+                alert("Porfavor Ingrese un numero valido!!!");
             }
         } else {
-            alert("Seleccione un producto.");
+            alert("Porfavor Seleccione un producto!!!");
         }
     });
 
@@ -351,29 +316,37 @@ $ident = implode($id);
     }
 
     function updateCartTable() {
-        var tableBody = document.querySelector("#cartTable tbody");
-        tableBody.innerHTML = ""; // Clear the table body
+    var tableBody = document.querySelector("#cartTable tbody");
+    tableBody.innerHTML = ""; // Clear the table body
 
-        if (cart.length > 0) {
-            document.getElementById("cartContainer").style.display = "block"; // Show the table
-            cart.forEach(function(item) {
-                var row = tableBody.insertRow();
-                var productCell = row.insertCell(0);
-                var priceCell = row.insertCell(1);
-                var quantityCell = row.insertCell(2);
-                var actionCell = row.insertCell(3);
+    if (cart.length > 0) {
+        document.getElementById("cartContainer").style.display = "block"; // Show the table
+        cart.forEach(function (item) {
+            var row = tableBody.insertRow();
+            var productCell = row.insertCell(0);
+            var proveedorCell = row.insertCell(1);
+            var priceCell = row.insertCell(2);
+            var quantityCell = row.insertCell(3);
+            var actionCell = row.insertCell(4);
+            
 
-                productCell.innerHTML = item.product;
-                priceCell.innerHTML = item.price;
-                quantityCell.innerHTML = item.quantity;
-                actionCell.innerHTML =
-                    '<button type="button" class="btn btn-danger" onclick="removeItem(this)"><i class="fa-solid fa-trash"></i></button></button>';
-            });
-        } else {
-            document.getElementById("cartContainer").style.display = "none"; // Hide the table
-        }
+            productCell.innerHTML = item.product;
+            proveedorCell.innerHTML = item.proveedor;
 
+            // Fetch price dynamically from txtprecio input
+            
+
+            quantityCell.innerHTML = item.quantity;
+            
+            priceCell.innerHTML = item.price;
+            actionCell.innerHTML =
+                '<button type="button" class="btn btn-danger" onclick="removeItem(this)"><i class="fa-solid fa-trash"></i></button>';
+
+        });
+    } else {
+        document.getElementById("cartContainer").style.display = "none"; // Hide the table
     }
+}
 
     function removeItem(button) {
         var row = button.parentNode.parentNode;
@@ -384,14 +357,16 @@ $ident = implode($id);
     }
 
     function updatetotal() {
-        var totalInput = document.getElementById("total");
-        var total = 0;
+    var totalInput = document.getElementById("total");
+    var total = 0;
 
-        for (var i = 0; i < cart.length; i++) {
-            var item = cart[i];
-            total += item.price * item.quantity;
-        }
-
-        totalInput.value = total.toFixed(2); // Display total with two decimal places
+    for (var i = 0; i < cart.length; i++) {
+        var item = cart[i];
+        // Use the value from txtprecio input field
+        var price = parseFloat(document.getElementById("txtprecio").value) || 0;
+        total += price * item.quantity;
     }
+
+    totalInput.value = total.toFixed(2); // Display total with two decimal places
+}
     </script>

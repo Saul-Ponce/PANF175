@@ -39,8 +39,8 @@ $query = mysqli_query($con, $sql);
                     <h3 class="card-title">Agregar Productos</h3>
                 </div>
                 <div class="card-body">
-                    <form action="../controladores/ControladorProducto.php" method="POST" class="row" name="form" enctype="multipart/form-data"
-                        onsubmit="return validarFormulariocompleto()">
+                    <form action="../controladores/ControladorProducto.php" method="POST" class="row" name="form"
+                        enctype="multipart/form-data" onsubmit="return validarFormulariocompleto()">
                         <input type="hidden" name="action" value="insert">
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -93,7 +93,8 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="stock">Stock Minimo</label>
-                                <input type="number" class="form-control" id="stock" name="stock" oninput="validarNoNegativo('stock')">
+                                <input type="number" class="form-control" id="stock" name="stock"
+                                    oninput="validarNoNegativo('stock')">
                             </div>
                         </div>
                         <div class="col-12">
@@ -113,16 +114,24 @@ $query = mysqli_query($con, $sql);
 
 
     <script>
+        //evitar que cualquier campo de texto envie el formulario despues de dar enter
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input[type=text]').forEach(node => node.addEventListener('keypress', e => {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                }
+            }))
+        });
         const imageInput = document.getElementById('imagen');
         const previewImage = document.getElementById('previewImage');
 
-        imageInput.addEventListener('change', function(event) {
+        imageInput.addEventListener('change', function (event) {
             const selectedFile = event.target.files[0];
 
             if (selectedFile) {
                 const reader = new FileReader();
 
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     // Muestra la vista previa de la imagen
                     previewImage.style.display = 'block';
                     previewImage.src = e.target.result;
@@ -179,7 +188,6 @@ $query = mysqli_query($con, $sql);
             }
 
             return true;
-
         }
     </script>
 </body>

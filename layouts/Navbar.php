@@ -19,7 +19,7 @@ if (!isset($_SESSION['usuario'])) {
             <span class="navbar-toggler-icon"></span>
         </button>
         <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-            <a href=".">
+            <a href="../vistas/home.php">
                 <img src="../../public/assets/img/logo-white.svg" width="200" height="100" alt="Punto digital"
                     class="navbar-brand-image" style="height: 4rem;">
             </a>
@@ -37,7 +37,7 @@ if (!isset($_SESSION['usuario'])) {
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" data-bs-theme="light">
-                    <a href="./profile.html" class="dropdown-item">Perfil</a>
+                    <a href="../vistas/mantenimiento.php" class="dropdown-item">Perfil</a>
                     <div class="dropdown-divider"></div>
                     <a href="../includes/cerrar_sesion.php" class="dropdown-item">Salir</a>
                 </div>
@@ -225,6 +225,9 @@ if (!isset($_SESSION['usuario'])) {
                                         <a class="dropdown-item" href="../vistas/lista-activoFijo.php">
                                             Activo fijo
                                         </a>
+                                        <a class="dropdown-item" href="../vistas/lista-activoFijoReporte.php">
+                                            Depreciacion
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -259,10 +262,10 @@ if (!isset($_SESSION['usuario'])) {
                                                 Ventas a credito
                                             </a>
                                             <div class="dropdown-menu">
-                                                <a href="./sign-in.html" class="dropdown-item">
+                                                <a href="../vistas/genera-venta-credito.php" class="dropdown-item">
                                                     Registrar Venta a credito
                                                 </a>
-                                                <a href="./sign-in.html" class="dropdown-item">
+                                                <a href="../vistas/lista-venta-credito.php" class="dropdown-item">
                                                     lista de Ventas a credito
                                                 </a>
                                             </div>
@@ -277,12 +280,12 @@ if (!isset($_SESSION['usuario'])) {
                                                 <a href="../vistas/genera-venta-contado.php" class="dropdown-item">
                                                     Registrar Venta al contado
                                                 </a>
-                                                <a href="./sign-in.html" class="dropdown-item">
+                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     lista de Ventas al contado
                                                 </a>
                                             </div>
                                         </div>
-                                        <a class="dropdown-item" href="./alerts.html">
+                                        <a class="dropdown-item" href="../vistas/mantenimiento.php">
                                             Facturacion
                                         </a>
                                         <div class="dropend">
@@ -292,16 +295,16 @@ if (!isset($_SESSION['usuario'])) {
                                                 Cuentas por cobrar
                                             </a>
                                             <div class="dropdown-menu">
-                                                <a href="./sign-in.html" class="dropdown-item">
+                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     Gestion de cuentas por cobrar
                                                 </a>
-                                                <a href="./sign-in-link.html" class="dropdown-item">
+                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     Intereses
                                                 </a>
-                                                <a href="./sign-in-illustration.html" class="dropdown-item">
+                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     Embargo
                                                 </a>
-                                                <a href="./sign-in-cover.html" class="dropdown-item">
+                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     Historial de pago
                                                 </a>
                                             </div>
@@ -310,6 +313,34 @@ if (!isset($_SESSION['usuario'])) {
                                 </div>
                             </div>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
+                                data-bs-auto-close="outside" role="button" aria-expanded="false">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-home-dollar">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M19 10l-7 -7l-9 9h2v7a2 2 0 0 0 2 2h6" />
+                                        <path d="M9 21v-6a2 2 0 0 1 2 -2h2c.387 0 .748 .11 1.054 .3" />
+                                        <path d="M21 15h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
+                                        <path d="M19 21v1m0 -8v1" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">
+                                    Compras
+                                </span>
+                            </a>
+                            <div class="dropdown-menu">
+                                <div class="dropdown-menu-columns">
+                                    <div class="dropdown-menu-column">
+                                        <a class="dropdown-item" href="../vistas/generar-compra.php">
+                                            Compra
+                                        </a>
+                                        <a class="dropdown-item" href="../vistas/lista-compras.php">
+                                            Lista de compras
+                                        </a>
                     <?php endif; ?>
 
                 </ul>

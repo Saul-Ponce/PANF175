@@ -8,16 +8,17 @@
 <link href="../../public/assets/css/tabler-payments.min.css?1692870487" rel="stylesheet" />
 <link href="../../public/assets/css/tabler-vendors.min.css?1692870487" rel="stylesheet" />
 <link href="../../public/assets/css/demo.min.css?1692870487" rel="stylesheet" />
+<link href="../../public/assets/css/datatables.min.css" rel="stylesheet" />
 <style>
-@import url('https://rsms.me/inter/inter.css');
+    @import url('https://rsms.me/inter/inter.css');
 
-:root {
-    --tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
-}
+    :root {
+        --tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+    }
 
-body {
-    font-feature-settings: "cv03", "cv04", "cv11";
-}
+    body {
+        font-feature-settings: "cv03", "cv04", "cv11";
+    }
 </style>
 
 </head>

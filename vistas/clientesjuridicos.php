@@ -7,20 +7,18 @@ if (!isset($_SESSION['usuario'])) {
 }
 
 require_once("../models/conexion.php");
-include("../models/ClasificacionModel.php");
-
-// Obtener las clasificaciones existentes para el select
-$clasificaciones = ClasificacionModel::listar();
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Cliente Jurídico</title>
     <?php include '../layouts/headerStyles.php'; ?>
 </head>
+
 <body>
     <?php include '../layouts/Navbar.php'; ?>
 
@@ -32,7 +30,7 @@ $clasificaciones = ClasificacionModel::listar();
                 </div>
                 <div class="card-body">
                     <!-- Inicio del formulario principal -->
-                    <form action="../controladores/ControladorClienteJuridico.php" method="POST" class="row" name="form" enctype="multipart/form-data">
+                    <form action="../controladores/ControladorClienteJuridico.php" method="POST" class="row" name="form">
                         <input type="hidden" name="action" value="insert">
 
                         <!-- Campos del cliente jurídico -->
@@ -61,36 +59,22 @@ $clasificaciones = ClasificacionModel::listar();
                             </div>
                         </div>
 
-                        <!-- Campo para cargar el archivo de aval -->
+                        <!-- Nuevos campos NIT y NRC -->
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="aval">Aval</label>
-                                <input type="file" class="form-control" id="aval" name="aval" accept=".pdf, .doc, .docx">
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="clasificacion_id">Clasificación</label>
-                                <select class="form-select" id="clasificacion_id" name="clasificacion_id" required>
-                                    <option value="" disabled selected>Seleccione una clasificación</option>
-                                    <?php while ($clasificacion = mysqli_fetch_assoc($clasificaciones)) : ?>
-                                        <option value="<?php echo $clasificacion['id']; ?>">
-                                            <?php echo $clasificacion['nombre']; ?>
-                                        </option>
-                                    <?php endwhile; ?>
-                                </select>
+                                <label for="nit">NIT</label>
+                                <input type="text" class="form-control" id="nit" name="nit" maxlength="17" placeholder="0000-000000-000-0" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="estado">Estado</label>
-                                <input type="text" class="form-control" id="estado" name="estado" value="activo" readonly>
+                                <label for="nrc">NRC</label>
+                                <input type="text" class="form-control" id="nrc" name="nrc" maxlength="8" placeholder="000000-0" required>
                             </div>
                         </div>
 
                         <!-- Botón para abrir el modal de agregar representante legal -->
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="mb-3">
                                 <label for="representante_legal">Representante Legal</label>
                                 <button type="button" class="btn btn-info form-control" data-bs-toggle="modal" data-bs-target="#modalRepresentanteLegal">
@@ -153,7 +137,7 @@ $clasificaciones = ClasificacionModel::listar();
 
     <script>
         // Máscara para el campo de teléfono del cliente jurídico
-        document.getElementById("telefono").addEventListener("input", function (e) {
+        document.getElementById("telefono").addEventListener("input", function(e) {
             let value = this.value.replace(/\D/g, '');
             if (value.length > 4) {
                 value = value.slice(0, 4) + '-' + value.slice(4, 8);
@@ -162,7 +146,7 @@ $clasificaciones = ClasificacionModel::listar();
         });
 
         // Máscara para el campo de teléfono del representante legal
-        document.getElementById("telefono_representante").addEventListener("input", function (e) {
+        document.getElementById("telefono_representante").addEventListener("input", function(e) {
             let value = this.value.replace(/\D/g, '');
             if (value.length > 4) {
                 value = value.slice(0, 4) + '-' + value.slice(4, 8);
@@ -171,7 +155,7 @@ $clasificaciones = ClasificacionModel::listar();
         });
 
         // Máscara para el campo de DUI del representante legal
-        document.getElementById("dui_representante").addEventListener("input", function (e) {
+        document.getElementById("dui_representante").addEventListener("input", function(e) {
             let value = this.value.replace(/\D/g, '');
             if (value.length > 8) {
                 value = value.slice(0, 8) + '-' + value.slice(8, 9);
@@ -179,11 +163,49 @@ $clasificaciones = ClasificacionModel::listar();
             this.value = value.slice(0, 10);
         });
 
+        // Nueva máscara para el campo NIT
+        document.getElementById("nit").addEventListener("input", function(e) {
+            let value = this.value.replace(/\D/g, '');
+            let formatted = '';
+
+            if (value.length > 0) {
+                // Formato XXXX-XXXXXX-XXX-X
+                if (value.length > 4) formatted += value.slice(0, 4) + '-';
+                else formatted += value.slice(0, 4);
+
+                if (value.length > 10) formatted += value.slice(4, 10) + '-';
+                else if (value.length > 4) formatted += value.slice(4);
+
+                if (value.length > 13) formatted += value.slice(10, 13) + '-';
+                else if (value.length > 10) formatted += value.slice(10);
+
+                if (value.length > 13) formatted += value.slice(13, 14);
+            }
+
+            this.value = formatted;
+        });
+
+        // Nueva máscara para el campo NRC
+        document.getElementById("nrc").addEventListener("input", function(e) {
+            let value = this.value.replace(/\D/g, '');
+            let formatted = '';
+
+            if (value.length > 0) {
+                // Formato XXXXXX-X
+                if (value.length > 6) formatted += value.slice(0, 6) + '-';
+                else formatted += value.slice(0, 6);
+
+                if (value.length > 6) formatted += value.slice(6, 7);
+            }
+
+            this.value = formatted;
+        });
+
         function closeModal() {
-            // Validar los campos del representante legal antes de cerrar el modal (opcional)
             var modal = bootstrap.Modal.getInstance(document.getElementById('modalRepresentanteLegal'));
             modal.hide();
         }
     </script>
 </body>
+
 </html>

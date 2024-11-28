@@ -12,7 +12,8 @@ class ClienteNaturalModel
                 f.nombre AS fiador_nombre, 
                 f.direccion AS fiador_direccion, 
                 f.telefono AS fiador_telefono, 
-                f.dui AS fiador_dui, 
+                f.dui AS fiador_dui,
+                f.email AS fiador_email, 
                 c.nombre AS clasificacion_nombre 
             FROM clientesnaturales cn
             LEFT JOIN fiadores f ON cn.fiador_id = f.id

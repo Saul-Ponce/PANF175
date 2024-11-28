@@ -19,7 +19,7 @@ $query = mysqli_query($con, $sql);
                     <input type="hidden" name="action" id="action" value="">
                     <input type="hidden" name="id_activo" id="id_activo" value="">
                     <input type="hidden" name="codigo" id="codigo" value="">
-                    <input type="hidden" name="estado" id="estado" value="">
+                    <input type="hidden" name="darBaja" id="darBaja" value="">
                     <div class="row">
                         <div class="mb-3">
                             <label for="nombre">Codigo de la unidad</label>
@@ -55,12 +55,16 @@ $query = mysqli_query($con, $sql);
                             <label for="estadoActivo">Estado del Activo</label>
                             <select class="form-control" id="estadoActivo" name="estadoActivo" required>
                                 <option value="1">Nuevo</option> <!-- Nuevo activo recién adquirido -->
-                                <option value="3">Mantenimiento</option> <!-- Activo en reparación o revisión -->
-                                <option value="5">Donado</option> <!-- Activo dado a otra entidad -->
-                                <option value="6">Vendido</option> <!-- Activo vendido -->
-                                <option value="7">Votado (Desechado)</option> <!-- Activo descartado -->
-                                <option value="8">Pendiente de Revisión</option> <!-- Activo esperando inspección -->
-                                <option value="9">Obsoleto</option> <!-- Activo que ya no es útil -->
+                                <option value="2">Usado</option> <!-- Activo en reparación o revisión -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="darBaja">Dar de baja</label>
+                            <select class="form-control" id="darBaja" name="darBaja" required>
+                                <option value="1">Dar de baja</option>
+                                <option value="2">Donar</option>
+                                <option value="3">Vendido</option>
+                                <option value="4">Votarlo</option>
                             </select>
                         </div>
                     </div>

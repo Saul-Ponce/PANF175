@@ -90,12 +90,7 @@ $query = mysqli_query($con, $sql);
                                 <label for="estadoActivo">Estado del Activo</label>
                                 <select class="form-select" id="estadoActivo" name="estadoActivo" required>
                                     <option value="1">Nuevo</option>
-                                    <option value="3">Mantenimiento</option>
-                                    <option value="5">Donado</option>
-                                    <option value="6">Vendido</option>
-                                    <option value="7">Votado (Desechado)</option>
-                                    <option value="8">Pendiente de Revisión</option>
-                                    <option value="9">Obsoleto</option>
+                                    <option value="2">Usado</option>
                                 </select>
                             </div>
                         </div>
