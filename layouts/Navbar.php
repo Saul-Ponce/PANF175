@@ -128,10 +128,10 @@ if (!isset($_SESSION['usuario'])) {
                             <div class="dropdown-menu">
                                 <div class="dropdown-menu-columns">
                                     <div class="dropdown-menu-column">
-                                        <a class="dropdown-item" href="./alerts.html">
+                                        <a class="dropdown-item" href="../vistas/mantenimiento.php">
                                             Gestion de inventario
                                         </a>
-                                        <a class="dropdown-item" href="./accordion.html">
+                                        <a class="dropdown-item" href=".../vistas/mantenimiento.php">
                                             Movimientos
                                         </a>
                                         <a class="dropdown-item" href="../vistas/registrar_proveedor.php">
@@ -341,7 +341,7 @@ if (!isset($_SESSION['usuario'])) {
                                         <a class="dropdown-item" href="../vistas/lista-compras.php">
                                             Lista de compras
                                         </a>
-                    <?php endif; ?>
+                                    <?php endif; ?>
 
                 </ul>
             </div>

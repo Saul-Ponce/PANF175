@@ -107,7 +107,7 @@ $ident = implode($id);
                                         <?php foreach ($query as $row): ?>
                                         <option value="<?= $row["id"] ?>" data-code="<?= $row["codigo"] ?>"
                                             data-stock="<?= $row["cantidad"] ?>"
-                                            data-price="<?= sprintf("%01.2f",round((($row["costo_adquisicion"] / $row["cantidad"]) + (($row["costo_adquisicion"] / $row["cantidad"])*0.22)),2))?>">
+                                            data-price="<?= $row["precio_venta"] ?>">
                                             <?= $row["codigo"] ?> | <?= $row["nombre"] ?>
                                         </option>
                                         <?php endforeach; ?>
