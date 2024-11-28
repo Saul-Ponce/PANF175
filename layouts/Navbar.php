@@ -19,7 +19,7 @@ if (!isset($_SESSION['usuario'])) {
             <span class="navbar-toggler-icon"></span>
         </button>
         <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-            <a href=".">
+            <a href="../vistas/home.php">
                 <img src="../../public/assets/img/logo-white.svg" width="200" height="100" alt="Punto digital"
                     class="navbar-brand-image" style="height: 4rem;">
             </a>
@@ -37,7 +37,7 @@ if (!isset($_SESSION['usuario'])) {
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" data-bs-theme="light">
-                    <a href="./profile.html" class="dropdown-item">Perfil</a>
+                    <a href="../vistas/mantenimiento.php" class="dropdown-item">Perfil</a>
                     <div class="dropdown-divider"></div>
                     <a href="../includes/cerrar_sesion.php" class="dropdown-item">Salir</a>
                 </div>
@@ -262,10 +262,10 @@ if (!isset($_SESSION['usuario'])) {
                                                 Ventas a credito
                                             </a>
                                             <div class="dropdown-menu">
-                                                <a href="./sign-in.html" class="dropdown-item">
+                                                <a href="../vistas/genera-venta-credito.php" class="dropdown-item">
                                                     Registrar Venta a credito
                                                 </a>
-                                                <a href="./sign-in.html" class="dropdown-item">
+                                                <a href="../vistas/lista-venta-credito.php" class="dropdown-item">
                                                     lista de Ventas a credito
                                                 </a>
                                             </div>
@@ -280,12 +280,12 @@ if (!isset($_SESSION['usuario'])) {
                                                 <a href="../vistas/genera-venta-contado.php" class="dropdown-item">
                                                     Registrar Venta al contado
                                                 </a>
-                                                <a href="./sign-in.html" class="dropdown-item">
+                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     lista de Ventas al contado
                                                 </a>
                                             </div>
                                         </div>
-                                        <a class="dropdown-item" href="./alerts.html">
+                                        <a class="dropdown-item" href="../vistas/mantenimiento.php">
                                             Facturacion
                                         </a>
                                         <div class="dropend">
@@ -295,16 +295,16 @@ if (!isset($_SESSION['usuario'])) {
                                                 Cuentas por cobrar
                                             </a>
                                             <div class="dropdown-menu">
-                                                <a href="./sign-in.html" class="dropdown-item">
+                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     Gestion de cuentas por cobrar
                                                 </a>
-                                                <a href="./sign-in-link.html" class="dropdown-item">
+                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     Intereses
                                                 </a>
-                                                <a href="./sign-in-illustration.html" class="dropdown-item">
+                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     Embargo
                                                 </a>
-                                                <a href="./sign-in-cover.html" class="dropdown-item">
+                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     Historial de pago
                                                 </a>
                                             </div>
