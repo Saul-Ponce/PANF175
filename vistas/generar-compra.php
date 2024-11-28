@@ -12,7 +12,6 @@ if (!isset($_SESSION['usuario'])) {
 }
 
 require_once "../models/conexion.php";
-include "../models/VentaModel.php";
 include "../models/UsuarioModel.php";
 $con = connection();
 $sql = "SELECT p.id as productoid, i.id as inventarioid, p.*,i.* FROM productos as p INNER JOIN inventario as i ON i.producto_id = p.id";
@@ -35,7 +34,7 @@ $ident = implode($id);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Registrar venta al contado</title>
+    <title>Registrar compra</title>
     <meta content="Proyecto de analisis finaciero" name="description" />
     <meta content="Grupo ANF DIU" name="author" />
     <?php include '../layouts/headerStyles.php'; ?>
@@ -101,10 +100,9 @@ $ident = implode($id);
                                 </div>
 
                                 <div class="col-lg-2">
-                                    <label>Precio unitario</label>
-                                    <input class="form-control" id="txtprecio" name="txtprecio"
-                                        type="number" />
-                                </div>
+    <label>Precio unitario</label>
+    <input class="form-control" id="txtprecio" name="txtprecio" type="number" step="0.01" />
+</div>
 
                                 <div class="col-lg-2">
                                     <label>Stock</label>
@@ -134,7 +132,7 @@ $ident = implode($id);
                             <div class="col-lg-12 mt-4">
 
                                 <a class="btn btn-danger" id="btncancelar">Cancelar</a>
-                                <button class="btn btn-primary" type="submit">Guardar venta</button>
+                                <button class="btn btn-primary" type="submit">Guardar compra</button>
 
                             </div>
 
