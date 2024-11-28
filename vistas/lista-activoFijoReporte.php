@@ -32,7 +32,7 @@ include_once "../models/ActivoFijoModel.php";
         <div class="container mt-4 ">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Activo fijo</h3>
+                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Depreciacion activo fijo</h3>
                     <div class="table-responsive">
                         <table class="table table-bordered text-center align-middle">
                             <thead>

@@ -76,8 +76,6 @@ if (isset($_GET['id'])) {
     } else {
         $resultado = [];
     }
-} else {
-    echo "no trae el id ";
 }
 ?>
 
@@ -96,7 +94,7 @@ if (isset($_GET['id'])) {
             <div class="modal-header">
                 <p class="mt-1"> Valor original: $<?= number_format($datosActivo['valor_adquisicion'], 2); ?>
                     <br> Estado: <?= $datosActivo['estadoActivo'] == 2 ? 'usado' : 'nuevo'; ?>
-                    <br> porcentaje: <?= $porcentajeDepreciacion ?>
+                    <br> porcentaje: <?= $porcentajeDepreciacion * 100 ?>%
                 </p>
             </div>
             <div class=" modal-body">
@@ -113,9 +111,9 @@ if (isset($_GET['id'])) {
                         <?php foreach ($resultado as $fila): ?>
                             <tr>
                                 <td><?= $fila['fecha'] ?></td>
-                                <td><?= $fila['valorInicio'] ?></td>
-                                <td><?= $fila['depreciacionAnual'] ?></td>
-                                <td><?= $fila['valorFinal'] ?></td>
+                                <td>$<?= $fila['valorInicio'] ?></td>
+                                <td>$<?= $fila['depreciacionAnual'] ?></td>
+                                <td>$<?= $fila['valorFinal'] ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

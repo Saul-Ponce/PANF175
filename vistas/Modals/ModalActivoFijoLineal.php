@@ -75,8 +75,6 @@ if (isset($_GET['id'])) {
     } else {
         $resultado = [];
     }
-} else {
-    echo "no trae el id ";
 }
 ?>
 
@@ -107,9 +105,9 @@ if (isset($_GET['id'])) {
                         <?php foreach ($resultado as $fila): ?>
                             <tr>
                                 <td><?= $fila['fecha'] ?></td>
-                                <td><?= $fila['valorInicio'] ?></td>
-                                <td><?= $fila['depreciacionAnual'] ?></td>
-                                <td><?= $fila['valorFinal'] ?></td>
+                                <td>$<?= $fila['valorInicio'] ?></td>
+                                <td>$<?= $fila['depreciacionAnual'] ?></td>
+                                <td>$<?= $fila['valorFinal'] ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
