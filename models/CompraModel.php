@@ -40,8 +40,10 @@ class CompraModel
 		$con = connection();
 			
 			$sql = "SELECT
-			p.nombre,  
-			c.*
+			u.id as usuario_id,
+			c.id as compras_id,
+			c.*,
+			u.*
 		FROM
 			compras AS c
 			INNER JOIN
@@ -55,30 +57,32 @@ class CompraModel
 
 
 	public static function listarDet($id)
-    {
-		$con = connection();
-			
-			$sql = "SELECT
-			p.nombre_p,
-			det.compra, 
-			det.producto, 
-			det.cantidad, 
-			det.cantidad*p.precio as precioDet
-		FROM
-			detallecompra AS det
-			INNER JOIN
-			compras AS c
-			ON 
-				det.compra_id = c.id
-			INNER JOIN
-			productos AS p
-			ON 
-				det.producto_id = p.id
-		WHERE
-			id_compra = '$id'";
-			$result = mysqli_query($con,$sql);
-            return $result; 
-    }
+{
+    $con = connection();
+    
+    $sql = "SELECT
+        p.nombre,
+        det.compra_id, 
+        det.producto_id, 
+        det.cantidad,
+        det.precio_unitario
+    FROM
+        detallecompra AS det
+    INNER JOIN
+        compras AS c ON det.compra_id = c.id
+    INNER JOIN
+        productos AS p ON det.producto_id = p.id
+    WHERE
+        det.compra_id = '$id'";
+    
+    $result = mysqli_query($con, $sql);
+    
+    return $result;
+
+   
+	
+}
+
 
 	
 

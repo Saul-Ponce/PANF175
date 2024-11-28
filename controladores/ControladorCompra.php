@@ -44,6 +44,8 @@ class ControladorCompra{
             header("Location: ../vistas/generar-Compra.php");
             break;
 
+           
+
            case "editar":
                 CompraModel::editar($_POST);
                 header("Location: ../vistas/lista-Compra.php");

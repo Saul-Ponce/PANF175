@@ -333,7 +333,10 @@ if (!isset($_SESSION['usuario'])) {
                                 <div class="dropdown-menu-columns">
                                     <div class="dropdown-menu-column">
                                         <a class="dropdown-item" href="../vistas/generar-compra.php">
-                                            comprar
+                                            Compra
+                                        </a>
+                                        <a class="dropdown-item" href="../vistas/lista-compras.php">
+                                            Lista de compras
                                         </a>
                     <?php endif; ?>
 

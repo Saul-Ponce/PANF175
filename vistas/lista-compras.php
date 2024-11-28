@@ -10,8 +10,8 @@ if (!isset($_SESSION['usuario'])) {
     die();
 }
 
-include "../controladores/ControladorClienteNatural.php";
-include_once "../models/ClienteNaturalModel.php";
+include "../controladores/ControladorCompra.php";
+include_once "../models/CompraModel.php";
 
 ?>
 <!DOCTYPE html>
@@ -21,7 +21,7 @@ include_once "../models/ClienteNaturalModel.php";
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Lista de Clientes Naturales</title>
+    <title>Lista de compras</title>
     <meta content="Proyecto de analisis finaciero" name="description" />
     <meta content="Grupo ANF DIU" name="author" />
     <?php include '../layouts/headerStyles.php';?>
@@ -55,113 +55,43 @@ include_once "../models/ClienteNaturalModel.php";
         <div class="container-fluid mt-4 ">
             <div class="card">
                 <div class="card-body table-responsive">
-                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Clientes Naturales</h3>
+                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de compras</h3>
                     <table class="table table-bordered  text-center align-middle">
                         <thead>
                             <tr>
                                 <td class="font-weight: 700; font-size:10px; text-align: center!important;" 
-                                    scope="col">Nombre</th>
+                                    scope="col">Fecha</th>
                                 <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">Direccion</th>
+                                    scope="col">Total</th>
                                 <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">Telefono</th>
+                                    scope="col">detalles</th>
                                 <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">Email</th>
-                                <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">Ingresos</th>
-                                <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">Egresos</th>
-                                <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">Estado civil</th>
-                                <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">Lugar de trabajo</th>
-                                <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">DUI</th>
-                                <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">Fiador</th>
-                                <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">Clasificación</th>
-                                    <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">Estado</th>
-                                <th style="font-weight: 700; font-size:10px; text-align: center!important; "
-                                    scope="col">acciones</th>
+                                    scope="col">usuario</th>
+                               
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-$resultado = ControladorClienteNatural::listar();
+$resultado = ControladorCompra::listar();
 while ($row = mysqli_fetch_assoc($resultado)): ?>
                             <tr>
                                 <td>
-                                    <?=$row["nombre"]?>
+                                    <?=$row["fecha"]?>
                                 </td>
                                 <td>
-                                    <?=$row["direccion"]?></td>
-                                <td>
-                                    <?=$row["telefono"]?>
-                                </td>
-                                <td>
-                                    <?=$row["email"]?>
-                                </td>
-                                <td>
-                                    $<?=$row["ingresos"]?>
-                                </td>
-                                <td>
-                                    $<?=$row["egresos"]?>
-                                </td>
-                                <td>
-                                    <?=$row["estado_civil"]?>
-                                </td>
-                                <td>
-                                    <?=$row["lugar_trabajo"]?>
-                                </td>
-                                <td>
-                                    <?=$row["dui"]?>
-                                </td>
-                                <td>
-    <button type="button" class="btn btn-primary" onclick='verFiador(<?=json_encode($row)?>)' data-bs-toggle="modal" data-bs-target="#mdverF">
+    $<?=$row["total_compra"]?>
+</td>
+
+                                   
+<td>
+    <button type="button" class="btn btn-primary" onclick="showDetalles(<?=$row['compras_id']?>)" data-bs-toggle="modal" data-bs-target="#mdverF">
         <i class="fa-solid fa-eye"></i>
     </button>
 </td>
-                                
                                 <td>
-                                <?php
-                                    $clasificacion = $row["clasificacion_nombre"];
-
-                                if ($clasificacion == 'A') {
-                                    echo '<span class="badge bg-green text-green-fg">A</span>';
-                                } elseif ($clasificacion == 'B') {
-                                    echo '<span class="badge bg-yellow text-yellow-fg">B</span>';
-                                } elseif ($clasificacion == 'C') {
-                                    echo '<span class="badge bg-orange text-orange-fg">C</span>';
-                                } elseif ($clasificacion == 'D') {
-                                    echo '<span class="badge bg-red text-red-fg">D</span>';
-                                }
-                                 ?>
-                                 </td>
+                                    <?=$row["nombre"]?>
+                                </td>
                                 
-                                 <td>
-                                        <?=$row["estado"] ? '<span class="badge bg-green text-green-fg">Activo</span>' : '<span class="badge bg-red text-red-fg">Incobrable</span>'?>
-                                    </td>
-                                <th>
-                                    <div class="d-flex justify-content-center">
-
-                                    <button type="button" onclick='editar(<?=json_encode($row)?>)'
-                                                id="btn-editar" class="btn btn-warning me-2" data-bs-toggle="modal"
-                                                data-bs-target="#mdCN">
-
-                                                <i class="fa-regular fa-pen-to-square"></i>
-                                            </button>
-
-                                         <button class="btn <?=$row["estado"] ? 'btn-danger' : 'btn-success'?> me-2"
-                                                data-bs-toggle="modal" data-bs-target="#mdCN"
-                                                onclick='cambiarEstado(<?=json_encode($row)?>)'>
-                                                <?=$row["estado"] ? '<i class="fa fa-user-times" aria-hidden="true"></i>' : '<i class="fa fa-user" aria-hidden="true"></i>'?></button>
-                                                <button class="btn btn-danger " data-bs-toggle="modal"
-                                                data-bs-target="#mdCN" onclick='eliminar(<?=json_encode($row)?>)'>
-                                                <i class="fa-solid fa-trash"></i></button>
-                                    </div>
-                                </th>
                             </tr>
 
                             
@@ -177,14 +107,99 @@ while ($row = mysqli_fetch_assoc($resultado)): ?>
 
     <!-- Scripts de Bootstrap 4 y otros aquí -->
     <?php include '../layouts/footerScript.php';?>
-
-    <?php include '../vistas/Modals/ModalClienteNatural.php';?>
-    <?php include '../vistas/Modals/ModalVerF.php';?>
-
+    <?php include '../vistas/Modals/modalCompras.php';?>
+    
     
 
 
+
+    
+    
+<div class="modal fade" id="detalleCompraModal" tabindex="-1" role="dialog" aria-labelledby="detalleCompraModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detalleCompraModalLabel">Detalles de la Compra</h5>
+        <!-- Close button (X) -->
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="detalleCompraTableBody">
+            <!-- Rows will be appended here dynamically -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <!-- Cerrar button -->
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
+function showDetalles(compraId) {
+    $.ajax({
+        url: '../vistas/getDetalleCompra.php', // The PHP file to fetch the details
+        method: 'GET',
+        data: { id_compra: compraId }, // Send the compraId to fetch details
+        success: function(response) {
+            try {
+                // Directly use the response since the server sends a valid JSON array
+                const detalle = response; 
+
+                const tableBody = $('#detalleCompraTableBody');
+                tableBody.empty(); // Clear any previous rows
+
+                if (detalle.length === 0) {
+                    tableBody.append('<tr><td colspan="4">No hay detalles disponibles.</td></tr>');
+                    return;
+                }
+
+                detalle.forEach(item => {
+                    const row = `<tr>
+                        <td>${item.nombre}</td>
+                        <td>${item.cantidad}</td>
+                        <td>${item.precio_unitario}</td>
+                        <td>${(item.cantidad * item.precio_unitario).toFixed(2)}</td>
+                    </tr>`;
+                    tableBody.append(row);
+                });
+
+                // Show the modal
+                $('#detalleCompraModal').modal('show');
+            } catch (e) {
+                console.error('Error parsing response:', e);
+                alert('Error al procesar los datos del servidor.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', error);
+            alert('Error en la solicitud al servidor.');
+        }
+    });
+}
+
+
+
+
+
+
     function editar(data) {
         document.getElementById("nombre").removeAttribute("disabled", "");
         document.getElementById("direccion").removeAttribute("disabled", "");
@@ -303,14 +318,6 @@ while ($row = mysqli_fetch_assoc($resultado)): ?>
 
     }
 
-    function verFiador(data) {
-    // Set modal fields for the fiador data
-    document.getElementById("nombref").textContent = data.fiador_nombre || "No disponible";
-    document.getElementById("direccionf").textContent = data.fiador_direccion || "No disponible"; // assuming fiador_direccion exists
-    document.getElementById("telefonof").textContent = data.fiador_telefono || "No disponible";   // 
-    document.getElementById("emailf").textContent = data.fiador_email || "No disponible";   // assuming fiador_telefono exists
-    document.getElementById("duif").textContent = data.fiador_dui || "No disponible";
-}
     
 
 
