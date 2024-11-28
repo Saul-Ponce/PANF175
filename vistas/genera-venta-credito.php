@@ -121,7 +121,7 @@ $ident = implode($id);
                                         <?php foreach ($queryProductos as $row): ?>
                                         <option value="<?= $row['id'] ?>" data-code="<?= $row['codigo'] ?>"
                                             data-stock="<?= $row['cantidad'] ?>"
-                                            data-price="<?= ($row['total_venta'] / $row['cantidad']) + (($row['total_venta'] / $row['cantidad'])*0.22) ?>">
+                                            data-price="<?= $row['precio_venta'] ?>">
                                             <?= $row['codigo'] ?> | <?= $row['nombre'] ?>
                                         </option>
                                         <?php endforeach; ?>
@@ -140,7 +140,7 @@ $ident = implode($id);
 
                                 <div class="col-lg-2">
                                     <label>Cantidad</label>
-                                    <input class="form-control" id="txtcantidad" name="txtcantidad" type="number" />
+                                    <input class="form-control" id="txtcantidad" name="txtcantidad" type="number" min="0"/>
                                 </div>
 
                                 <div class="col-lg-2">
