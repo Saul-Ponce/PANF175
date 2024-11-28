@@ -25,26 +25,7 @@ include_once "../models/CompraModel.php";
     <meta content="Proyecto de analisis finaciero" name="description" />
     <meta content="Grupo ANF DIU" name="author" />
     <?php include '../layouts/headerStyles.php';?>
-
-<style>
-.table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
-}
-
-</style>
-
-<style>
-    table td{
-     padding:.5em; /* Not essential for this answer, just a little buffer for the jsfiddle */
-}
-
-.forcedWidth{
-    width:200px;
-    word-wrap:break-word;
-    display:inline-block;
-}
-</style>
+    
 
 </head>
 
@@ -107,7 +88,7 @@ while ($row = mysqli_fetch_assoc($resultado)): ?>
 
     <!-- Scripts de Bootstrap 4 y otros aquí -->
     <?php include '../layouts/footerScript.php';?>
-    <?php include '../vistas/Modals/modalCompras.php';?>
+   
     
     
 
@@ -115,15 +96,14 @@ while ($row = mysqli_fetch_assoc($resultado)): ?>
 
     
     
-<div class="modal fade" id="detalleCompraModal" tabindex="-1" role="dialog" aria-labelledby="detalleCompraModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+<div class="modal modal-blur fade" id="detalleCompraModal" tabindex="-1" role="dialog" aria-labelledby="detalleCompraModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="detalleCompraModalLabel">Detalles de la Compra</h5>
         <!-- Close button (X) -->
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                </button>
       </div>
       <div class="modal-body">
         <table class="table table-bordered text-center">
@@ -142,7 +122,7 @@ while ($row = mysqli_fetch_assoc($resultado)): ?>
       </div>
       <div class="modal-footer">
         <!-- Cerrar button -->
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
@@ -194,129 +174,6 @@ function showDetalles(compraId) {
         }
     });
 }
-
-
-
-
-
-
-    function editar(data) {
-        document.getElementById("nombre").removeAttribute("disabled", "");
-        document.getElementById("direccion").removeAttribute("disabled", "");
-        document.getElementById("telefono").removeAttribute("disabled", "");
-        document.getElementById("email").removeAttribute("disabled", "");
-        document.getElementById("ingresos").removeAttribute("disabled", "");
-        document.getElementById("egresos").removeAttribute("disabled", "");
-        document.getElementById("estado_civil").removeAttribute("disabled", "");
-        document.getElementById("lugar_trabajo").removeAttribute("disabled", "");
-        document.getElementById("dui").removeAttribute("disabled", "");
-        document.getElementById("estado").removeAttribute("disabled", "");
-        document.getElementById("fiador_id").removeAttribute("disabled", "");
-        document.getElementById("clasificacion_id").removeAttribute("disabled", "");
-        
-        
-        
-
-        document.getElementById("action").value = "editar";
-        document.getElementById("id").value = data.id || "";
-        document.getElementById("nombre").value = data.nombre || "";
-        document.getElementById("direccion").value = data.direccion || "";
-        document.getElementById("telefono").value = data.telefono || "";
-        document.getElementById("email").value = data.email || "";
-        document.getElementById("ingresos").value = data.ingresos || "";
-        document.getElementById("egresos").value = data.egresos || "";
-        document.getElementById("estado_civil").value = data.estado_civil || "";
-        document.getElementById("lugar_trabajo").value = data.lugar_trabajo || "";
-        document.getElementById("dui").value = data.dui || "";
-        document.getElementById("estado").value = data.estado || "";
-        document.getElementById("fiador_id").value = data.fiador_id || "";
-        document.getElementById("clasificacion_id").value = data.clasificacion_id || "";
-        document.getElementById("enviar").innerHTML = "Guardar Cambios";
-        document.getElementById("enviar").classList.remove('btn-danger');
-        document.getElementById("enviar").classList.add('btn-primary');
-
-    }
-
-    function cambiarEstado(data) {
-        document.getElementById("titulo").innerHTML = data.estado == "1" ?
-            '¿SEGURO QUE DESEA DAR DE BAJA A ESTE USUARIO?' : '¿SEGURO QUE DESEA ACTIVAR A ESTE CLIENTE?';
-
-        document.getElementById("nombre").setAttribute("disabled", "");
-        document.getElementById("direccion").setAttribute("disabled", "");
-        document.getElementById("telefono").setAttribute("disabled", "");
-        document.getElementById("email").setAttribute("disabled", "");
-        document.getElementById("ingresos").setAttribute("disabled", "");
-        document.getElementById("egresos").setAttribute("disabled", "");
-        document.getElementById("estado_civil").setAttribute("disabled", "");
-        document.getElementById("lugar_trabajo").setAttribute("disabled", "");
-        document.getElementById("dui").setAttribute("disabled", "");
-        
-        document.getElementById("fiador_id").setAttribute("disabled", "");
-        document.getElementById("clasificacion_id").setAttribute("disabled", "");
-
-        document.getElementById("action").value = "cambiarEstado";
-        document.getElementById("id").value = data.id || "";
-        document.getElementById("estado").value = data.estado == 1 ? false : true || "";
-        document.getElementById("nombre").value = data.nombre || "";
-        document.getElementById("direccion").value = data.direccion || "";
-        document.getElementById("telefono").value = data.telefono || "";
-        document.getElementById("email").value = data.email || "";
-        document.getElementById("ingresos").value = data.ingresos || "";
-        document.getElementById("egresos").value = data.egresos || "";
-        document.getElementById("estado_civil").value = data.estado_civil || "";
-        document.getElementById("lugar_trabajo").value = data.lugar_trabajo || "";
-        document.getElementById("dui").value = data.dui || "";
-        document.getElementById("fiador_id").value = data.fiador_id || "";
-        document.getElementById("clasificacion_id").value = data.clasificacion_id || "";
-        document.getElementById("enviar").innerHTML = "Guardar Cambios";
-        document.getElementById("enviar").classList.remove('btn-danger');
-        document.getElementById("enviar").classList.add('btn-primary');
-        document.getElementById("enviar").innerHTML = data.estado == 1 ? "Dar de baja" : "Activar";
-
-        if (data.estado == 1) {
-            document.getElementById("enviar").classList.remove('btn-primary');
-            document.getElementById("enviar").classList.add('btn-danger');
-
-        } else {
-            document.getElementById("enviar").classList.remove('btn-danger');
-            document.getElementById("enviar").classList.add('btn-primary');
-
-        }
-
-    }
-    function eliminar(data) {
-        document.getElementById("titulo").innerHTML = "¿SEGURO QUE DESEA BORRAR ESTE USUARIO?";
-
-        document.getElementById("nombre").setAttribute("disabled", "");
-        document.getElementById("direccion").setAttribute("disabled", "");
-        document.getElementById("telefono").setAttribute("disabled", "");
-        document.getElementById("email").setAttribute("disabled", "");
-        document.getElementById("ingresos").setAttribute("disabled", "");
-        document.getElementById("egresos").setAttribute("disabled", "");
-        document.getElementById("estado_civil").setAttribute("disabled", "");
-        document.getElementById("lugar_trabajo").setAttribute("disabled", "");
-        document.getElementById("dui").setAttribute("disabled", "");
-
-        document.getElementById("action").value = "borrar";
-        document.getElementById("id").value = data.id || "";
-        document.getElementById("estado").value = data.estado == 1 ? false : true || "";
-        document.getElementById("nombre").value = data.nombre || "";
-        document.getElementById("direccion").value = data.direccion || "";
-        document.getElementById("telefono").value = data.telefono || "";
-        document.getElementById("email").value = data.email || "";
-        document.getElementById("ingresos").value = data.ingresos || "";
-        document.getElementById("egresos").value = data.egresos || "";
-        document.getElementById("estado_civil").value = data.estado_civil || "";
-        document.getElementById("lugar_trabajo").value = data.lugar_trabajo || "";
-        document.getElementById("dui").value = data.dui || "";
-        
-        document.getElementById("fiador_id").value = data.fiador_id || "";
-        document.getElementById("clasificacion_id").value = data.clasificacion_id || "";
-        document.getElementById("enviar").innerHTML = "Eliminar";
-        document.getElementById("enviar").classList.remove('btn-primary');
-        document.getElementById("enviar").classList.add('btn-danger');
-
-    }
 
     
 
