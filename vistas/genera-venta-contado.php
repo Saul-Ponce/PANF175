@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || $_SESSION['rol'] != "Administrador" || $_SESSION['rol'] != "Vendedor") {
     echo '
     <script>
         alert("Por favor Inicia Sesion");
