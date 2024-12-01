@@ -104,7 +104,7 @@ if (!isset($_SESSION['usuario'])) {
                             </div>
                         </li>
                     <?php endif; ?>
-                    <?php if ($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Vendedor'): ?>
+                    <?php if ($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Compras'): ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                                 data-bs-auto-close="outside" role="button" aria-expanded="false">
@@ -156,6 +156,8 @@ if (!isset($_SESSION['usuario'])) {
                                 </div>
                             </div>
                         </li>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Vendedor'): ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                                 data-bs-auto-close="outside" role="button" aria-expanded="false">
@@ -319,6 +321,8 @@ if (!isset($_SESSION['usuario'])) {
                                 </div>
                             </div>
                         </li>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Compras'): ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                                 data-bs-auto-close="outside" role="button" aria-expanded="false">
