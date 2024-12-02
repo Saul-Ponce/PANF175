@@ -56,7 +56,7 @@ $ident = implode($id);
                         <h3 class="card-title">Generar Venta</h3>
                     </div>
                     <div class="card-body">
-                        <form id="form" class="row" name="form" action="../controladores/ControladorVenta.php"
+                        <form id="form" class="row" name="form" action="../controladores/ControladorVentaContado.php"
                             method="POST" class="row">
                             <div class="row">
                                 <label class="form-label">Seleccione el tipo de cliente</label>
@@ -76,18 +76,21 @@ $ident = implode($id);
                                 </div>
 
                                 <input type="hidden" name="action" value="insert">
-                                <input type="hidden" class="form-control" id="dui_emp" name="dui_emp"
-                                    value="<?php echo $ident ?>">
-
+                                <input type="hidden" name="tipo_venta" value="contado">
+                                <input type="hidden" id="usuario_id" name="usuario_id"
+                                    value="<?php echo $_SESSION['id'] ?>">
                                 <input type="hidden" id="data_array" name="data_array">
+                                <input type="hidden" name="tipo_cliente" id="tipo_cliente" value="natural">
                                 <div id="cliente" class="col-lg-5">
-                                    <label>Cliente</label><input type="hidden" id="tipo-cliente" name="tipo-cliente"
+                                    <label>Cliente</label><input type="hidden" id="cliente" name="cliente"
                                         value="cliente-natural"><select class="form-select" id="clienteSelect"
                                         name="clienteSelect" placeholder="Seleccione un cliente...">
                                         <option value=""> Seleccione un cliente... </option>
-                                        <?php foreach ($cnquery as $row): ?> <option value="<?= $row['id'] ?>"
-                                            data-id="<?= $row['id'] ?>"> <?= $row['id'] ?> <?= $row['nombre'] ?>
-                                        </option> <?php endforeach; ?>
+                                        <?php foreach ($cnquery as $row): ?> <option value="<?= $row["id"] ?>"
+                                            data-id="<?= $row["id"] ?>">
+                                            <?= $row["id"] ?> <?= $row["nombre"] ?>
+                                        </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                                 <div class="col-lg-2">
@@ -95,7 +98,7 @@ $ident = implode($id);
                                     <?php date_default_timezone_set("America/El_Salvador");
                                     $fecha = date("Y-m-d"); ?>
                                     <input type="date" class="form-control" value="<?= $fecha ?>" id="fecha_venta"
-                                        name="fecha_venta" readonly>
+                                        name="fecha" readonly>
                                 </div>
                             </div>
 
@@ -108,8 +111,8 @@ $ident = implode($id);
                                         <option value="">Seleccione</option>
                                         <?php foreach ($query as $row): ?>
                                         <option value="<?= $row["id"] ?>" data-code="<?= $row["codigo"] ?>"
-                                            data-stock="<?= $row["cantidad"] ?>"
-                                            data-price="<?= $row["precio_venta"] ?>">
+                                            data-stock="<?= $row["stok"] ?>" data-price="<?= $row["precio_venta"] ?>"
+                                            data-inv="<?= $row["idInventario"] ?>" data-product="<?= $row["id"] ?>">
                                             <?= $row["codigo"] ?> | <?= $row["nombre"] ?>
                                         </option>
                                         <?php endforeach; ?>
@@ -140,8 +143,8 @@ $ident = implode($id);
                                 <div class="col-lg-12 mt-4">
                                     <label>PRECIO TOTAL</label>
 
-                                    <input class="form-control" id="total" name="total" type="text" placeholder="00.00"
-                                        readonly>
+                                    <input class="form-control" id="total_venta" name="total_venta" type="text"
+                                        placeholder="00.00" readonly>
                                 </div>
                             </div>
 
@@ -202,7 +205,7 @@ $ident = implode($id);
     function mostrarSelectCliente(tipo) {
         if (tipo == 'juridico') {
             document.getElementById('cliente').innerHTML =
-                "<label>Cliente</label><input type='hidden' id='tipo-cliente' name='tipo-cliente' value='cliente-juridico'><select class='form-select' id='clienteSelect' name='clienteSelect' placeholder='Seleccione un cliente...' > <option value='' > Seleccione un cliente... </option> <?php foreach ($cjquery as $row): ?> <option value='<?= $row['id'] ?>' data-id='<?= $row['id'] ?>'> <?= $row['id'] ?>                             <?= $row['nombre'] ?> </option> <?php endforeach; ?></select>"
+                "<label>Cliente</label><input type='hidden' id='cliente' name='cliente' value='cliente-juridico'><select class='form-select' id='clienteSelect' name='clienteSelect' placeholder='Seleccione un cliente...' > <option value='' > Seleccione un cliente... </option> <?php foreach ($cjquery as $row): ?> <option value='<?= $row['id'] ?>' data-id='<?= $row['id'] ?>'> <?= $row['id'] ?>                             <?= $row['nombre'] ?> </option> <?php endforeach; ?></select>"
             window.TomSelect && (new TomSelect("#clienteSelect", {
                 create: false,
                 sortField: {
@@ -210,9 +213,10 @@ $ident = implode($id);
                     direction: "asc"
                 }
             }));
+            document.getElementById('tipo_cliente').value = "juridico"
         } else if (tipo == 'natural') {
             document.getElementById('cliente').innerHTML =
-                "<label>Cliente</label><input type='hidden' id='tipo-cliente' name='tipo-cliente' value='cliente-natural'><select class='form-select' id='clienteSelect' name='clienteSelect' placeholder='Seleccione un cliente...'> <option value='' > Seleccione un cliente... </option> <?php foreach ($cnquery as $row): ?> <option value='<?= $row['id'] ?>' data-id='<?= $row['id'] ?>' > <?= $row['id'] ?>                                 <?= $row['nombre'] ?> </option> <?php endforeach; ?></select>"
+                "<label>Cliente</label><input type='hidden' id='cliente' name='cliente' value='cliente-natural'><select class='form-select' id='clienteSelect' name='clienteSelect' placeholder='Seleccione un cliente...'> <option value='' > Seleccione un cliente... </option> <?php foreach ($cnquery as $row): ?> <option value='<?= $row['id'] ?>' data-id='<?= $row['id'] ?>' > <?= $row['id'] ?>                                 <?= $row['nombre'] ?> </option> <?php endforeach; ?></select>"
             window.TomSelect && (new TomSelect("#clienteSelect", {
                 create: false,
                 sortField: {
@@ -220,6 +224,7 @@ $ident = implode($id);
                     direction: "asc"
                 }
             }));
+            document.getElementById('tipo_cliente').value = "natural"
         }
     }
 
@@ -299,6 +304,8 @@ $ident = implode($id);
             var selectedProductName = selectedOption.textContent;
             var quantity = parseInt(quantityInput.value);
             var stock = parseInt(selectedOption.getAttribute("data-stock"));
+            var inv_id = parseInt(selectedOption.getAttribute("data-inv"));
+            var product = parseInt(selectedOption.getAttribute("data-product"));
 
 
 
@@ -324,9 +331,10 @@ $ident = implode($id);
                     // Otherwise, add the new item to the cart
                     var item = {
                         code: selectedProductCode,
-                        product: selectedProductName,
+                        product: product,
                         price: parseFloat(selectedProductPrice),
                         quantity: quantity,
+                        inv: inv_id,
                     };
                     cart.push(item);
                 }
@@ -386,7 +394,7 @@ $ident = implode($id);
     }
 
     function updatetotal() {
-        var totalInput = document.getElementById("total");
+        var totalInput = document.getElementById("total_venta");
         var total = 0;
 
         for (var i = 0; i < cart.length; i++) {
