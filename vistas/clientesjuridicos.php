@@ -1,9 +1,16 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario'])) {
-    echo '<script>window.location = "../index.php"</script>';
-    session_destroy();
-    die();
+if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || $_SESSION['rol'] != "Administrador") {
+    if($_SESSION['rol'] != "Vendedor"){
+        echo '
+        <script>
+            alert("Por favor Inicia Sesion");
+            window.location = "../index.html"
+        </script>
+        ';
+        session_destroy();
+        die();
+    }
 }
 
 require_once("../models/conexion.php");

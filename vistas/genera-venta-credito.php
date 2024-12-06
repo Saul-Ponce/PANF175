@@ -1,15 +1,18 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario'])) {
-    echo '
-    <script>
-        alert("Por favor, inicia sesión");
-        window.location = "../index.html";
-    </script>
-    ';
-    session_destroy();
-    die();
+if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || $_SESSION['rol'] != "Administrador") {
+    if($_SESSION['rol'] != "Vendedor"){
+        echo '
+        <script>
+            alert("Por favor Inicia Sesion");
+            window.location = "../index.html"
+        </script>
+        ';
+        session_destroy();
+        die();
+    }
 }
+
 
 require_once "../models/conexion.php";
 include "../models/VentaCreditoModel.php"; // Asegúrate de que este es el modelo correcto
@@ -120,7 +123,7 @@ $ident = implode($id);
                                         <option value="">Seleccione</option>
                                         <?php foreach ($queryProductos as $row): ?>
                                         <option value="<?= $row['id'] ?>" data-code="<?= $row['codigo'] ?>"
-                                            data-stock="<?= $row['cantidad'] ?>"
+                                            data-stock="<?= $row['stok'] ?>"
                                             data-price="<?= $row['precio_venta'] ?>">
                                             <?= $row['codigo'] ?> | <?= $row['nombre'] ?>
                                         </option>
