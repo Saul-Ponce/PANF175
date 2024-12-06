@@ -52,12 +52,12 @@ class VentaModel
 
 
 
-	public static function agregar($fecha_venta, $cliente, $empleado, $total, $data)
+
+	public static function agregar($fecha_venta, $tipo_venta, $tipo_cliente, $cliente, $usuario, $total, $data)
 	{
 		$con = connection();
 
-
-		$sql = "INSERT INTO venta (fecha_venta, cliente, empleado, total) VALUES ('$fecha_venta','$cliente','$empleado','$total')";
+		$sql = $tipo_cliente == "natural" ? "INSERT INTO ventas (fecha, tipo_venta, cliente_natural_id, total_venta, usuario_id) VALUES ('$fecha_venta', '$tipo_venta', $cliente, $total, $usuario)" : "INSERT INTO ventas (fecha, tipo_venta, cliente_juridico_id, total_venta, usuario_id) VALUES ('$fecha_venta', '$tipo_venta', $cliente, $total, $usuario)";
 
 		$querry = mysqli_query($con, $sql);
 		$venta_id = mysqli_insert_id($con);
@@ -76,15 +76,19 @@ class VentaModel
 
 		// Extract data from the array
 		foreach ($data as $item) {
-			$producto = $item['code'];
+			$producto = $item['product'];
 			$cantidad = $item['quantity'];
+			$precio = $item['price'];
+			$id_inventario = $item['inv'];
 
 			// Update the stock of the product in the database
-			$sqlUpdateStock = "UPDATE producto SET stock = stock - $cantidad WHERE codigo_producto = '$producto'";
+			$sqlUpdateStock = "UPDATE inventario SET stok=stok - $cantidad
+			WHERE idInventario=$id_inventario;";
 			$queryUpdateStock = mysqli_query($con, $sqlUpdateStock);
 
-
-			$sql = "INSERT INTO detalleventa (venta, producto, cantidad) VALUES ('$id','$producto','$cantidad')";
+			$sql = "INSERT INTO detalleventa
+			(venta_id, producto_id, cantidad, precio_unitario)
+			VALUES( $id, $producto, $cantidad, $precio);";
 
 			$querry = mysqli_query($con, $sql);
 
