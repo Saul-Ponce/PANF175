@@ -27,7 +27,9 @@ include_once "../models/InventarioModel.php";
 
 <body>
     <?php include '../layouts/Navbar.php'; ?>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./../public/assets/libs/datatables/datatables.min.js"></script>
     <div class="main-panel">
         <div class="container mt-4 ">
             <div class="card">
@@ -43,7 +45,7 @@ include_once "../models/InventarioModel.php";
                         <strong> Stock excesivo, podría necesitar revisión.</strong>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered text-center align-middle">
+                        <table id="tabla-inventario" class="table table-bordered text-center align-middle">
                             <thead>
                                 <tr>
                                     <th style="font-size:13px !important;" scope="col">Clasificacion</th>
@@ -98,6 +100,13 @@ include_once "../models/InventarioModel.php";
     <!-- Scripts de Bootstrap 4 y otros aquí -->
     <?php include '../layouts/footerScript.php'; ?>
     <script>
+        $(document).ready(function() {
+            $('#tabla-inventario').DataTable({
+                "language": {
+                    "url": "./../public/assets/libs/datatables/esp.json"
+                },
+            });
+        });
         // Check if a success message is set in the session
         <?php if (isset($_SESSION['success_messageP'])): ?>
             Swal.fire('<?php echo $_SESSION['success_messageP']; ?>', '', 'success');

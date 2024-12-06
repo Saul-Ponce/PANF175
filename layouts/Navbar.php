@@ -131,8 +131,8 @@ if (!isset($_SESSION['usuario'])) {
                                         <a class="dropdown-item" href="../vistas/lista-inventario.php">
                                             Lista de inventario
                                         </a>
-                                        <a class="dropdown-item" href="../vistas/mantenimiento.php">
-                                            Movimientos
+                                        <a class="dropdown-item" href="../vistas/lista-kardex.php">
+                                            Kardex
                                         </a>
                                     </div>
                                 </div>
