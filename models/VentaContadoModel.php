@@ -10,19 +10,18 @@ class VentaModel
 
 		$sql = "SELECT
 			v.*, 
-			c.*, 
-			p.nombre, 
-			p.apellido
+			cj.nombre, 
+			cn.nombre,
 		FROM
-			venta AS v
+			ventas AS v
 			INNER JOIN
-			cliente AS c
+			clientesjuridicos AS cj
 			ON 
-				v.cliente = c.dui_cliente
+				v.cliente_juridico_id = cj.id
 			INNER JOIN
-			persona AS p
+			clientesnaturales AS cn
 			ON 
-				v.empleado = p.dui_persona";
+				v.cliente_natural_id = cn.dui_cliente";
 		$result = mysqli_query($con, $sql);
 		return $result;
 	}
@@ -32,20 +31,20 @@ class VentaModel
 		$con = connection();
 
 		$sql = "	SELECT
-			p.nombre_p, 
+			p.nombre, 
 			d.cantidad,
-			d.cantidad*p.precio as precioDet
+			d.precio_unitario
 		FROM
-			venta AS v
-			INNER JOIN
 			detalleventa AS d
-			ON 
-				v.id_venta = d.venta
 			INNER JOIN
-			producto AS p
+			ventas AS v
 			ON 
-				d.producto = p.codigo_producto
-				where id_venta='$id'";
+				v.id = d.venta_id
+			INNER JOIN
+			productos AS p
+			ON 
+				d.producto_id = p.id
+				where d.venta_id='$id'";
 		$result = mysqli_query($con, $sql);
 		return $result;
 	}
