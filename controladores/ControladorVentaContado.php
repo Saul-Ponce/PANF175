@@ -54,6 +54,10 @@ if (isset($_POST["action"])) {
             VentaModel::borrar($_POST['dui_Venta']);
             header("Location: ../vistas/lista-Venta.php");
             break;
+        case "ver-det":
+            $detalle = VentaModel::listarDet($_POST['id']);
+            print json_encode($detalle);
+            break;
 
 
         default:

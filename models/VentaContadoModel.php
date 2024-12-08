@@ -10,18 +10,23 @@ class VentaModel
 
 		$sql = "SELECT
 			v.*, 
-			cj.nombre, 
-			cn.nombre,
+			cj.nombre as cjurdico, 
+			cn.nombre as cnatural,
+			u.nombre as usuario
 		FROM
 			ventas AS v
-			INNER JOIN
+			LEFT JOIN
 			clientesjuridicos AS cj
 			ON 
 				v.cliente_juridico_id = cj.id
-			INNER JOIN
+			LEFT JOIN
 			clientesnaturales AS cn
 			ON 
-				v.cliente_natural_id = cn.dui_cliente";
+				v.cliente_natural_id = cn.id
+			INNER JOIN
+			usuarios AS u
+			ON 
+				v.usuario_id = u.id";
 		$result = mysqli_query($con, $sql);
 		return $result;
 	}
@@ -46,7 +51,29 @@ class VentaModel
 				d.producto_id = p.id
 				where d.venta_id='$id'";
 		$result = mysqli_query($con, $sql);
-		return $result;
+		$tabla = "";
+		$htmltr = "";
+		foreach ($result as $row) {
+			$htmltr .= '<tr>
+	                            <td>' . $row['nombre'] . '</td>
+	                            <td>' . $row['cantidad'] . '</td>
+	                            <td>$' . $row['precio_unitario'] . '</td>
+	                        </tr>';
+		}
+		$tabla .= '<table id="tabla_detalleVC" class="table table-bordered text-center align-middle" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+		$tabla .= $htmltr;
+		$tabla .= '</tbody>
+                    	</table>';
+
+		return $tabla;
 	}
 
 
