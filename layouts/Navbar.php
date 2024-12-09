@@ -288,7 +288,7 @@ if (!isset($_SESSION['usuario'])) {
                                                 <a href="../vistas/genera-venta-contado.php" class="dropdown-item">
                                                     Registrar Venta al contado
                                                 </a>
-                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
+                                                <a href="../vistas/lista-venta-contado.php" class="dropdown-item">
                                                     lista de Ventas al contado
                                                 </a>
                                             </div>

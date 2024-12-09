@@ -66,14 +66,27 @@ include_once "../models/InventarioModel.php";
                                     $stok_minimo = $row["stock_minimo"];
                                     $stok_maximo = $row["stok_maximo"];
 
-                                    // Determinar el tipo de alerta
-                                    if ($stok >= $stok_maximo) {
-                                        $alertaColor = "orange";  // Rojo
-                                    } elseif ($stok >= $stok_minimo && $stok <= $stok_maximo) {
-                                        $alertaColor = "green";  // Verde
+                                    // Define los límites y tolerancia.
+                                    $stok_tolerancia = 5; // Tolerancia para definir cercanía.
+                                    $alertaColor = ""; // Inicializamos la variable de alerta.
+
+                                    if ($stok < $stok_minimo) {
+                                        // Stock insuficiente, muy por debajo del mínimo.
+                                        $alertaColor = "red";
+                                    } elseif ($stok >= $stok_minimo && $stok <= $stok_minimo + $stok_tolerancia) {
+                                        // Stock cercano al mínimo, dentro del rango permitido pero en alerta.
+                                        $alertaColor = "lightred"; // Cambiar a rojo claro o define una clase CSS.
+                                    } elseif ($stok > $stok_minimo + $stok_tolerancia && $stok <= $stok_maximo) {
+                                        // Stock adecuado dentro del rango permitido.
+                                        $alertaColor = "green";
+                                    } elseif ($stok > $stok_maximo && $stok <= $stok_maximo + $stok_tolerancia) {
+                                        // Stock ligeramente superior al máximo.
+                                        $alertaColor = "lightorange"; // Cambiar a naranja claro o define una clase CSS.
                                     } else {
-                                        $alertaColor = "red";  // Naranja
+                                        // Stock excesivo, muy por encima del máximo.
+                                        $alertaColor = "orange";
                                     }
+
                                 ?>
                                     <tr>
                                         <td><?= $row["clasificacion"] ?></td>

@@ -10,19 +10,23 @@ class VentaModel
 
 		$sql = "SELECT
 			v.*, 
-			c.*, 
-			p.nombre, 
-			p.apellido
+			cj.nombre as cjurdico, 
+			cn.nombre as cnatural,
+			u.nombre as usuario
 		FROM
-			venta AS v
-			INNER JOIN
-			cliente AS c
+			ventas AS v
+			LEFT JOIN
+			clientesjuridicos AS cj
 			ON 
-				v.cliente = c.dui_cliente
-			INNER JOIN
-			persona AS p
+				v.cliente_juridico_id = cj.id
+			LEFT JOIN
+			clientesnaturales AS cn
 			ON 
-				v.empleado = p.dui_persona";
+				v.cliente_natural_id = cn.id
+			INNER JOIN
+			usuarios AS u
+			ON 
+				v.usuario_id = u.id";
 		$result = mysqli_query($con, $sql);
 		return $result;
 	}
@@ -32,22 +36,44 @@ class VentaModel
 		$con = connection();
 
 		$sql = "	SELECT
-			p.nombre_p, 
+			p.nombre, 
 			d.cantidad,
-			d.cantidad*p.precio as precioDet
+			d.precio_unitario
 		FROM
-			venta AS v
-			INNER JOIN
 			detalleventa AS d
-			ON 
-				v.id_venta = d.venta
 			INNER JOIN
-			producto AS p
+			ventas AS v
 			ON 
-				d.producto = p.codigo_producto
-				where id_venta='$id'";
+				v.id = d.venta_id
+			INNER JOIN
+			productos AS p
+			ON 
+				d.producto_id = p.id
+				where d.venta_id='$id'";
 		$result = mysqli_query($con, $sql);
-		return $result;
+		$tabla = "";
+		$htmltr = "";
+		foreach ($result as $row) {
+			$htmltr .= '<tr>
+	                            <td>' . $row['nombre'] . '</td>
+	                            <td>' . $row['cantidad'] . '</td>
+	                            <td>$' . $row['precio_unitario'] . '</td>
+	                        </tr>';
+		}
+		$tabla .= '<table id="tabla_detalleVC" class="table table-bordered text-center align-middle" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+		$tabla .= $htmltr;
+		$tabla .= '</tbody>
+                    	</table>';
+
+		return $tabla;
 	}
 
 
