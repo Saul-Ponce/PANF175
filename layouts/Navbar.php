@@ -134,6 +134,24 @@ if (!isset($_SESSION['usuario'])) {
                                         <a class="dropdown-item" href="../vistas/lista-kardex.php">
                                             Kardex
                                         </a>
+                                        <a class="dropdown-item" href="../vistas/registrar_proveedor.php">
+                                            Registrar Proveedores
+                                        </a>
+                                        <a class="dropdown-item" href="../vistas/lista-proveedor.php">
+                                            Gestionar Proveedores
+                                        </a>
+                                        <a class="dropdown-item" href="../vistas/registrar_producto.php">
+                                            Registrar Productos
+                                        </a>
+                                        <a class="dropdown-item" href="../vistas/lista-producto.php">
+                                            Gestionar Productos
+                                        </a>
+                                        <a class="dropdown-item" href="../vistas/registrar_categoria.php">
+                                            Registrar Categoria de productos
+                                        </a>
+                                        <a class="dropdown-item" href="../vistas/lista-categoria.php">
+                                            Gestionar Categoria de productos
+                                        </a>
                                     </div>
                                 </div>
                             </div>
