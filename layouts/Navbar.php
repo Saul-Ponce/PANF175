@@ -288,7 +288,7 @@ if (!isset($_SESSION['usuario'])) {
                                                 <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     Gestion de cuentas por cobrar
                                                 </a>
-                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
+                                                <a href="../vistas/lista-intereses.php" class="dropdown-item">
                                                     Intereses
                                                 </a>
                                                 <a href="../vistas/mantenimiento.php" class="dropdown-item">

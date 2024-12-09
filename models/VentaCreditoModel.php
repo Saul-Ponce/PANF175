@@ -13,11 +13,11 @@ class VentaCreditoModel
             p.nombre, 
             p.apellido
         FROM
-            venta_credito AS v
+            ventas AS v
+            LEFT JOIN
+            cliente AS c ON (v.cliente_natural_id = c.id OR v.cliente_juridico_id = c.id)
             INNER JOIN
-            cliente AS c ON v.cliente = c.dui_cliente
-            INNER JOIN
-            persona AS p ON v.empleado = p.dui_persona";
+            usuarios AS p ON v.usuario_id = p.id";
         $result = mysqli_query($con, $sql);
         return $result;
     }
@@ -32,14 +32,12 @@ class VentaCreditoModel
         $sql = "SELECT
             p.nombre_p, 
             d.cantidad,
-            d.cantidad * p.precio AS precioDet
+            d.cantidad * d.precio_unitario AS precioDet
         FROM
-            venta_credito AS v
+            detalleventa AS d
             INNER JOIN
-            detalleventa_credito AS d ON v.id_venta = d.venta
-            INNER JOIN
-            producto AS p ON d.producto = p.codigo_producto
-        WHERE v.id_venta = '$id'";
+            producto AS p ON d.producto_id = p.id
+        WHERE d.venta_id = '$id'";
         $result = mysqli_query($con, $sql);
         return $result;
     }
@@ -48,21 +46,25 @@ class VentaCreditoModel
     {
         $con = connection();
 
-        // Escapar variables para prevenir inyección SQL
-        $fecha_venta = mysqli_real_escape_string($con, $fecha_venta);
-        $cliente = mysqli_real_escape_string($con, $cliente);
-        $empleado = mysqli_real_escape_string($con, $empleado);
-        $total = mysqli_real_escape_string($con, $total);
-        $aval = mysqli_real_escape_string($con, $aval);
+        $sql = $con->prepare("INSERT INTO ventas (fecha, tipo_venta, cliente_natural_id, cliente_juridico_id, total_venta, usuario_id, aval) 
+                               VALUES (?, 'credito', ?, ?, ?, ?, ?)");
+        $clienteNatural = $clienteJuridico = null;
 
-        $sql = "INSERT INTO venta_credito (fecha_venta, cliente, empleado, total, aval) VALUES ('$fecha_venta', '$cliente', '$empleado', '$total', '$aval')";
-
-        $query = mysqli_query($con, $sql);
-        if (!$query) {
-            die("Error al insertar la venta: " . mysqli_error($con));
+        // Dependiendo del cliente, asignar a la columna correspondiente
+        if ($_POST['tipo-cliente'] === 'cliente-natural') {
+            $clienteNatural = $cliente;
+        } else {
+            $clienteJuridico = $cliente;
         }
 
-        $venta_id = mysqli_insert_id($con);
+        $sql->bind_param("siiiss", $fecha_venta, $clienteNatural, $clienteJuridico, $total, $empleado, $aval);
+        $sql->execute();
+
+        if ($sql->error) {
+            die("Error al insertar la venta: " . $sql->error);
+        }
+
+        $venta_id = $sql->insert_id;
 
         self::agregarDet($venta_id, $data);
 
@@ -80,27 +82,27 @@ class VentaCreditoModel
             // Escapar variables
             $producto = mysqli_real_escape_string($con, $item['code']);
             $cantidad = intval($item['quantity']);
+            $precio_unitario = floatval($item['price']);
 
             // Actualizar el stock del producto en la base de datos
-            $sqlUpdateStock = "UPDATE producto SET stock = stock - $cantidad WHERE codigo_producto = '$producto'";
+            $sqlUpdateStock = "UPDATE producto SET stock = stock - $cantidad WHERE id = '$producto'";
             $queryUpdateStock = mysqli_query($con, $sqlUpdateStock);
 
             if (!$queryUpdateStock) {
                 die("Error al actualizar el stock: " . mysqli_error($con));
             }
 
-            $sql = "INSERT INTO detalleventa_credito (venta, producto, cantidad) VALUES ('$id', '$producto', '$cantidad')";
+            $sql = "INSERT INTO detalleventa (venta_id, producto_id, cantidad, precio_unitario) 
+                    VALUES ('$id', '$producto', '$cantidad', '$precio_unitario')";
 
             $query = mysqli_query($con, $sql);
 
             if (!$query) {
-                die("Error al insertar en detalleventa_credito: " . mysqli_error($con));
+                die("Error al insertar en detalleventa: " . mysqli_error($con));
             }
         }
 
         mysqli_close($con);
     }
-
-    // Métodos adicionales si es necesario, como editar y borrar
 }
 ?>
