@@ -77,10 +77,11 @@ include "../models/UsuarioModel.php";
                                         <td>$<?= $row["total_venta"] ?></td>
                                         <th>
                                             <div class="d-flex justify-content-center">
-                                                <button type="button" class="btn btn-warning mr-2" data-bs-toggle="modal"
+                                                <button type="button" class="btn btn-info me-2" data-toggle="tooltip"
+                                                    data-bs-placement="top" title="Ver detalles" data-bs-toggle="modal"
                                                     data-bs-target="#mdverDetVCont"
                                                     onclick='verDetalleVentaCont(<?= json_encode($row["id"]) ?>)'><i
-                                                        class="fa-regular fa-pen-to-square"></i></button>
+                                                        class="fa-solid fa-bars"></i></i></button>
 
                                             </div>
                                         </th>
