@@ -66,6 +66,19 @@ $query = mysqli_query($con, $sql);
                             <input type="number" name="stock_minimo" id="stock_minimo" class="form-control" value=""
                              required="true">
                         </div>
+                        <div class="form-group col-md-6">
+                            <label for="stock_maximo" class="col-form-label">Stock Maximo</label>
+                            <input type="number" name="stock_maximo" id="stock_maximo" class="form-control" value=""
+                             required="true">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="clasificacion">Clasificación</label>
+                            <select class="form-select" name="clasificacion" id="clasificacion" required="true">
+                                <option value="A">Alta Prioridad</option>
+                                <option value="B">Media Prioridad</option>
+                                <option value="C">Baja Prioridad</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

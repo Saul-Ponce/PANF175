@@ -61,7 +61,7 @@ if (isset($_POST["action"])) {
             // Movemos el archivo de la carpeta temporal a la carpeta objetivo y verificamos si fue exitoso
             if ($validator == 1) {
                 if (move_uploaded_file($url_temp, $url_target)) {
-                    ProductoModel::agregar($_POST['nombre'], $_POST['descripcion'], $_POST['cat_id'], 'upload/' . $nuevo_nombre, $_POST['marca'], $_POST['modelo'], $_POST['stock'], $_POST['codigo']);
+                    ProductoModel::agregar($_POST['nombre'], $_POST['descripcion'], $_POST['cat_id'], 'upload/' . $nuevo_nombre, $_POST['marca'], $_POST['modelo'], $_POST['stock'], $_POST['codigo'], $_POST['clasificacion'], $_POST['stockmax']);
                     header("Location: ../vistas/lista-producto.php");
                 } else {
                     echo "Ha habido un error al cargar tu archivo.";
