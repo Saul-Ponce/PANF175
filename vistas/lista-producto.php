@@ -50,6 +50,8 @@ include_once "../models/ProductoModel.php";
                                     <th style="font-size:13px !important;" scope="col">Marca</th>
                                     <th style="font-size:13px !important;" scope="col">Modelo</th>
                                     <th style="font-size:13px !important;" scope="col">Stock Minimo</th>
+                                    <th style="font-size:13px !important;" scope="col">Stock Maximo</th>
+                                    <th style="font-size:13px !important;" scope="col">Clasificación</th>
                                     <th style="font-size:13px !important;" scope="col">Estado</th>
                                     <th style="font-size:13px !important;" scope="col">Acciones</th>
                                 </tr>
@@ -72,6 +74,8 @@ include_once "../models/ProductoModel.php";
                                         <td><?= $row["marca"] ?></td>
                                         <td><?= $row["modelo"] ?></td>
                                         <td><?= $row["stock_minimo"] ?></td>
+                                        <td><?= $row["stok_maximo"] ?></td>
+                                        <td><?= $row["clasificacion"] ?></td>
                                         <td>
                                             <?= $row["pestado"] ? '<span class="badge bg-green text-green-fg">Activo</span>' : '<span class="badge bg-red text-red-fg">Inactivo</span>' ?>
                                         </td>
@@ -123,6 +127,8 @@ include_once "../models/ProductoModel.php";
                 },
             });
         });
+
+        
         // Check if a success message is set in the session
         <?php if (isset($_SESSION['success_messageP'])): ?>
 
@@ -149,6 +155,8 @@ include_once "../models/ProductoModel.php";
             document.getElementById("marca").removeAttribute("disabled", "");
             document.getElementById("modelo").removeAttribute("disabled", "");
             document.getElementById("stock_minimo").removeAttribute("disabled", "");
+            document.getElementById("stock_maximo").removeAttribute("disabled", "");
+            document.getElementById("clasificacion").removeAttribute("disabled", "");
             document.getElementById("action").value = "editar";
 
             document.getElementById("id").value = data.pid || "";
@@ -159,6 +167,8 @@ include_once "../models/ProductoModel.php";
             document.getElementById("marca").value = data.marca || "";
             document.getElementById("modelo").value = data.modelo || "";
             document.getElementById("stock_minimo").value = data.stock_minimo || "";
+            document.getElementById("stock_maximo").value = data.stok_maximo || "";
+            document.getElementById("clasificacion").value = data.clasificacion || "";
             document.getElementById("imagen").value = data.imagen || "";
             document.getElementById("enviar").innerHTML = "Guardar Cambios";
             document.getElementById("enviar").classList.remove('btn-danger');
@@ -178,6 +188,8 @@ include_once "../models/ProductoModel.php";
             document.getElementById("marca").setAttribute("disabled", "");
             document.getElementById("modelo").setAttribute("disabled", "");
             document.getElementById("stock_minimo").setAttribute("disabled", "");
+            document.getElementById("stock_maximo").setAttribute("disabled", "");
+            document.getElementById("clasificacion").setAttribute("disabled", "");
             document.getElementById("action").value = "cambiarEstado";
 
 
@@ -190,6 +202,8 @@ include_once "../models/ProductoModel.php";
             document.getElementById("marca").value = data.marca || "";
             document.getElementById("modelo").value = data.modelo || "";
             document.getElementById("stock_minimo").value = data.stock_minimo || "";
+            document.getElementById("stock_maximo").value = data.stok_maximo || "";
+            document.getElementById("clasificacion").value = data.clasificacion || "";
             document.getElementById("imagen").value = data.imagen || "";
             document.getElementById("enviar").innerHTML = data.pestado == 1 ? "Dar de baja" : "Activar";
 
@@ -216,6 +230,8 @@ include_once "../models/ProductoModel.php";
             document.getElementById("marca").setAttribute("disabled", "");
             document.getElementById("modelo").setAttribute("disabled", "");
             document.getElementById("stock_minimo").setAttribute("disabled", "");
+            document.getElementById("stock_maximo").setAttribute("disabled", "");
+            document.getElementById("clasificacion").setAttribute("disabled", "");
             document.getElementById("action").value = "borrar";
 
             document.getElementById("id").value = data.pid || "";
@@ -226,6 +242,8 @@ include_once "../models/ProductoModel.php";
             document.getElementById("marca").value = data.marca || "";
             document.getElementById("modelo").value = data.modelo || "";
             document.getElementById("stock_minimo").value = data.stock_minimo || "";
+            document.getElementById("stock_maximo").value = data.stok_maximo || "";
+            document.getElementById("clasificacion").value = data.clasificacion || "";
             document.getElementById("imagen").value = data.imagen || "";
             document.getElementById("enviar").innerHTML = "Eliminar";
             document.getElementById("enviar").classList.remove('btn-primary');

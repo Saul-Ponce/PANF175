@@ -16,12 +16,12 @@ class ProductoModel
 
 	
 
-	public static function agregar($nombre, $descripcion, $categoria, $imagen, $marca, $modelo, $stock, $codigo)
+	public static function agregar($nombre, $descripcion, $categoria, $imagen, $marca, $modelo, $stock, $codigo, $clasificacion, $stockmax)
 	{
 		$con = connection();
 
 
-		$sql = "INSERT INTO productos (nombre, descripcion, categoria_id, imagen, marca, modelo, stock_minimo, codigo) VALUES ('$nombre','$descripcion','$categoria', '$imagen',  '$marca', '$modelo', '$stock', '$codigo')";
+		$sql = "INSERT INTO productos (nombre, descripcion, categoria_id, imagen, marca, modelo, stock_minimo, codigo, clasificacion, stok_maximo) VALUES ('$nombre','$descripcion','$categoria', '$imagen',  '$marca', '$modelo', '$stock', '$codigo', '$clasificacion', '$stockmax')";
         $query = mysqli_query($con, $sql);
 	}
 
@@ -37,12 +37,14 @@ class ProductoModel
         $marca = $data['marca'];
         $modelo = $data['modelo'];
         $stock_minimo = $data['stock_minimo'];
+		$stock_maximo = $data['stock_maximo'];
+		$clasificacion = $data['clasificacion'];
 		$codigo = $data['codigo'];
         if(is_null($imagen)){
-            $sql = "UPDATE productos SET nombre='$nombre',  descripcion='$descripcion', categoria_id='$categoria_id', marca='$marca' , modelo='$modelo', stock_minimo='$stock_minimo', codigo='$codigo'  WHERE id='$id'";
+            $sql = "UPDATE productos SET nombre='$nombre',  descripcion='$descripcion', categoria_id='$categoria_id', marca='$marca' , modelo='$modelo', stock_minimo='$stock_minimo', codigo='$codigo', clasificacion='$clasificacion', stok_maximo='$stock_maximo'  WHERE id='$id'";
 		$query = mysqli_query($con, $sql);
         }else{
-            $sql = "UPDATE productos SET nombre='$nombre',  descripcion='$descripcion', categoria_id='$categoria_id', imagen='$imagen', marca='$marca' , modelo='$modelo', stock_minimo='$stock_minimo', codigo='$codigo'  WHERE id='$id'";
+            $sql = "UPDATE productos SET nombre='$nombre',  descripcion='$descripcion', categoria_id='$categoria_id', imagen='$imagen', marca='$marca' , modelo='$modelo', stock_minimo='$stock_minimo', codigo='$codigo', clasificacion='$clasificacion', stok_maximo='$stock_maximo'  WHERE id='$id'";
 		$query = mysqli_query($con, $sql);
         }
 		
