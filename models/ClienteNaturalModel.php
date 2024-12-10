@@ -23,15 +23,38 @@ class ClienteNaturalModel
     return $query;
 }
 
-    public static function agregar($nombre, $direccion, $telefono, $email, $ingresos, $egresos, $estado_civil, $lugar_trabajo, $dui, $fiador_id)
-    {
-        $con = connection();
-        $sql = "INSERT INTO clientesnaturales (nombre, direccion, telefono, email, ingresos, egresos, estado_civil, lugar_trabajo, dui, fiador_id) 
-                VALUES ('$nombre', '$direccion', '$telefono', '$email', '$ingresos', '$egresos', '$estado_civil', '$lugar_trabajo', '$dui', '$fiador_id')";
-        $query = mysqli_query($con, $sql);
-        
-        return $query;
-    }
+public static function agregar($nombre, $direccion, $telefono, $email, $ingresos, $egresos, $estado_civil, $lugar_trabajo, $dui, $fiador_id)
+{
+    $con = connection();
+    // Convert empty values to NULL
+    $ingresos = $ingresos === "" ? 0 : $ingresos;
+    $egresos = $egresos === "" ? 0 : $egresos;
+    $fiador_id = $fiador_id === "" ? null : $fiador_id;
+
+    $sql = "INSERT INTO clientesnaturales (nombre, direccion, telefono, email, ingresos, egresos, estado_civil, lugar_trabajo, dui, fiador_id) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $con->prepare($sql);
+    
+    // Bind parameters
+    $stmt->bind_param(
+        "ssssddsssi", 
+        $nombre, 
+        $direccion, 
+        $telefono, 
+        $email, 
+        $ingresos, 
+        $egresos, 
+        $estado_civil, 
+        $lugar_trabajo, 
+        $dui, 
+        $fiador_id
+    );
+
+    $result = $stmt->execute();
+    $stmt->close();
+
+    return $result;
+}
 
     public static function editar($data)
 {

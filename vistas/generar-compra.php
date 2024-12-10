@@ -14,7 +14,7 @@ if (!isset($_SESSION['usuario'])) {
 require_once "../models/conexion.php";
 include "../models/UsuarioModel.php";
 $con = connection();
-$sql = "SELECT p.id as productoid, i.id as inventarioid, p.*,i.* FROM productos as p INNER JOIN inventario as i ON i.producto_id = p.id";
+$sql = "SELECT p.id as productoid, i.idInventario as inventarioid, p.*,i.* FROM productos as p LEFT JOIN inventario as i ON i.producto_id = p.id";
 
 $query = mysqli_query($con, $sql);
 
@@ -91,7 +91,7 @@ $ident = implode($id);
                                         <option value="">Seleccione</option>
                                         <?php foreach ($query as $row): ?>
                                         <option value="<?= $row["productoid"] ?>" data-code="<?= $row["codigo"] ?>"
-                                            data-stock="<?= $row["cantidad"] ?>"
+                                            data-stock="<?= $row["stok"] ?>"
                                             data-inventario="<?= $row["inventarioid"]?>">
                                             <?= $row["codigo"] ?> | <?= $row["nombre"] ?>
                                         </option>
@@ -214,11 +214,11 @@ $ident = implode($id);
     
 
     $(document).ready(function() {
-        $('#productSelect').on('change', function() {
-            var selectedPrice = $('option:selected', this).data('stock');
-            $('#txtstock').val(selectedPrice);
-        });
+    $('#productSelect').on('change', function() {
+        var stockActual = $('option:selected', this).data('stock') || 0; // Set to 0 if null or undefined
+        $('#txtstock').val(stockActual);
     });
+});
 
     $(document).ready(function() {
         $('#clienteSelect').on('change', function() {

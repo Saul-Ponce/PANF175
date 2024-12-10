@@ -5,7 +5,7 @@ class CompraModel
 {
 
 
-	public static function actualizarInventario($id, $cantidad) {
+	/*public static function actualizarInventario($id, $cantidad) {
 		$con = connection();
 		
 		// Retrieve the current cantidad from the inventario table
@@ -34,6 +34,7 @@ class CompraModel
 		
 		mysqli_close($con);
 	}
+		*/
 
 	public static function listar()
     {
@@ -64,7 +65,7 @@ class CompraModel
         p.nombre,
         det.compra_id, 
         det.producto_id, 
-        det.cantidad,
+        det.stok,
         det.precio_unitario
     FROM
         detallecompra AS det
@@ -86,46 +87,39 @@ class CompraModel
 
 	
 
-	public static function agregar($fecha, $total_compra, $usuario_id, $data)
-	{
-		
-		$con = connection();
+public static function agregar($fecha, $total_compra, $usuario_id, $data)
+{
+    $con = connection();
 
+    // Insertar la compra
+    $sql = "INSERT INTO compras (fecha, total_compra, usuario_id) VALUES ('$fecha', '$total_compra', '$usuario_id')";
+    $querry = mysqli_query($con, $sql);
 
-		$sql = "INSERT INTO compras (fecha, total_compra, usuario_id) VALUES ('$fecha','$total_compra','$usuario_id')";
-        $querry = mysqli_query($con, $sql);
+    $compra_id = mysqli_insert_id($con);
+    mysqli_close($con);
 
-		$compra_id = mysqli_insert_id($con);
-		mysqli_close($con);
+    // Insertar detalles de la compra
+    self::agregarDet($compra_id, $data);
+}
 
-		self::agregarDet($compra_id, $data);
+public static function agregarDet($compra_id, $data)
+{
+    $con = connection();
 
-	}
-	
+    foreach ($data as $item) {
+        $producto_id = $item['code'];
+        $cantidad = $item['quantity'];
+        $precio_unitario = $item['price'];
+        $proveedor_id = $item['proveedorId'];
 
-	public static function agregarDet($id, $data)
-	{
-		$con = connection();
+        // Insertar detalle de la compra (el trigger maneja el inventario)
+        $sql = "INSERT INTO detallecompra (compra_id, producto_id, proveedor_id, cantidad, precio_unitario) 
+                VALUES ('$compra_id', '$producto_id', '$proveedor_id', '$cantidad', '$precio_unitario')";
+        mysqli_query($con, $sql);
+    }
 
-		 // Extract data from the array
-		 foreach ($data as $item) {
-		 $producto_id = $item['code'];
-		 $cantidad = $item['quantity'];
-		 $precio_unitario = $item['price'];
-		 $proveedor_id = $item['proveedorId'];
-		 $inventario_id = $item['inventarioid'];
-
-		 self::actualizarInventario($inventario_id, $cantidad);
-
-
-		$sql = "INSERT INTO detallecompra (compra_id, producto_id, proveedor_id, cantidad, precio_unitario) VALUES ('$id','$producto_id','$proveedor_id','$cantidad','$precio_unitario')";
-		
-        $querry = mysqli_query($con, $sql);
-        
-
-
-		 }
-	}
+    mysqli_close($con);
+}
 
 
 
