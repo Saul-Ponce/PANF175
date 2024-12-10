@@ -73,16 +73,13 @@ require_once("../models/conexion.php");
                             </div>
                         </div>
 
-                        <!-- Botón para abrir el modal de agregar representante legal -->
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label for="representante_legal">Representante Legal</label>
-                                <button type="button" class="btn btn-info form-control" data-bs-toggle="modal" data-bs-target="#modalRepresentanteLegal">
-                                    Agregar Representante Legal
-                                </button>
-                            </div>
-                        </div>
-
+                       <!-- Botones en columna alineados -->
+<div class="col-md-8 d-flex justify-content-between align-items-center">
+    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalRepresentanteLegal">
+        Agregar Representante Legal
+    </button>
+    <button class="btn btn-primary" type="submit">Agregar Cliente Jurídico</button>
+</div>
                         <!-- Modal para agregar representante legal (dentro del formulario) -->
                         <div class="modal fade" id="modalRepresentanteLegal" tabindex="-1" aria-labelledby="modalRepresentanteLegalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -120,11 +117,6 @@ require_once("../models/conexion.php");
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Botón para enviar el formulario -->
-                        <div class="col-12">
-                            <button class="btn btn-primary" type="submit">Agregar Cliente Jurídico</button>
                         </div>
                     </form>
                     <!-- Fin del formulario principal -->

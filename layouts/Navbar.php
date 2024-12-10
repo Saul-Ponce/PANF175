@@ -104,7 +104,7 @@ if (!isset($_SESSION['usuario'])) {
                             </div>
                         </li>
                     <?php endif; ?>
-                    <?php if ($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Vendedor'): ?>
+                    <?php if ($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Compras'): ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                                 data-bs-auto-close="outside" role="button" aria-expanded="false">
@@ -128,34 +128,36 @@ if (!isset($_SESSION['usuario'])) {
                             <div class="dropdown-menu">
                                 <div class="dropdown-menu-columns">
                                     <div class="dropdown-menu-column">
-                                        <a class="dropdown-item" href="./alerts.html">
-                                            Gestion de inventario
+                                        <a class="dropdown-item" href="../vistas/lista-inventario.php">
+                                            Lista de inventario
                                         </a>
-                                        <a class="dropdown-item" href="./accordion.html">
-                                            Movimientos
-                                        </a>
-                                        <a class="dropdown-item" href="../vistas/registrar_proveedor.php">
-                                            Registrar Proveedores
-                                        </a>
-                                        <a class="dropdown-item" href="../vistas/lista-proveedor.php">
-                                            Gestionar Proveedores
+                                        <a class="dropdown-item" href="../vistas/lista-kardex.php">
+                                            Kardex
                                         </a>
                                         <a class="dropdown-item" href="../vistas/registrar_producto.php">
-                                            Registrar Productos
+                                            Agregar Productos
                                         </a>
                                         <a class="dropdown-item" href="../vistas/lista-producto.php">
-                                            Gestionar Productos
+                                            Gestión de Productos
                                         </a>
                                         <a class="dropdown-item" href="../vistas/registrar_categoria.php">
-                                            Registrar Categoria de productos
+                                            Agregar Categoria de Productos
                                         </a>
                                         <a class="dropdown-item" href="../vistas/lista-categoria.php">
-                                            Gestionar Categoria de productos
+                                            Gestion de Categorias de Productos
+                                        </a>
+                                        <a class="dropdown-item" href="../vistas/registrar_proveedor.php">
+                                            Agregar Proveedor
+                                        </a>
+                                        <a class="dropdown-item" href="../vistas/lista-proveedor.php">
+                                            Gestion de Proveedores
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </li>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Vendedor'): ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                                 data-bs-auto-close="outside" role="button" aria-expanded="false">
@@ -271,7 +273,7 @@ if (!isset($_SESSION['usuario'])) {
                                                 <a href="../vistas/genera-venta-credito.php" class="dropdown-item">
                                                     Registrar Venta a credito
                                                 </a>
-                                                <a href="../vistas/lista-venta-credito.php" class="dropdown-item">
+                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
                                                     lista de Ventas a credito
                                                 </a>
                                             </div>
@@ -286,7 +288,7 @@ if (!isset($_SESSION['usuario'])) {
                                                 <a href="../vistas/genera-venta-contado.php" class="dropdown-item">
                                                     Registrar Venta al contado
                                                 </a>
-                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
+                                                <a href="../vistas/lista-venta-contado.php" class="dropdown-item">
                                                     lista de Ventas al contado
                                                 </a>
                                             </div>
@@ -319,6 +321,8 @@ if (!isset($_SESSION['usuario'])) {
                                 </div>
                             </div>
                         </li>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Compras'): ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                                 data-bs-auto-close="outside" role="button" aria-expanded="false">
@@ -347,7 +351,7 @@ if (!isset($_SESSION['usuario'])) {
                                         <a class="dropdown-item" href="../vistas/lista-compras.php">
                                             Lista de compras
                                         </a>
-                    <?php endif; ?>
+                                    <?php endif; ?>
 
                 </ul>
             </div>

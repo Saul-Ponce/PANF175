@@ -92,8 +92,26 @@ $query = mysqli_query($con, $sql);
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
+                                <label for="rol">Clasificacion</label>
+                                <select class="form-select" id="clasificacion" name="clasificacion">
+                                    <option value="0" disabled selected>Seleccione</option>
+                                    <option value="A">Alta Prioridad</option>
+                                    <option value="B">Media Prioridad</option>
+                                    <option value="C">Baja Prioridad</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
                                 <label for="stock">Stock Minimo</label>
                                 <input type="number" class="form-control" id="stock" name="stock"
+                                    oninput="validarNoNegativo('stock')">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="stockmax">Stock Maximo</label>
+                                <input type="number" class="form-control" id="stockmax" name="stockmax"
                                     oninput="validarNoNegativo('stock')">
                             </div>
                         </div>

@@ -27,14 +27,16 @@ include_once "../models/CatalogoActivoFijoModel.php";
 
 <body>
     <?php include '../layouts/Navbar.php'; ?>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./../public/assets/libs/datatables/datatables.min.js"></script>
     <div class="main-panel">
         <div class="container mt-4 ">
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title text-center align-middle" style="font-weight: 700;">Catalogo Activo fijo</h3>
                     <div class="table-responsive">
-                        <table class="table table-bordered text-center align-middle">
+                        <table id="tabla-catalogoActivoFijo" class="table table-bordered text-center align-middle">
                             <thead>
                                 <tr>
                                     <th style="font-size:13px !important;" scope="col">Nombre</th>
@@ -88,6 +90,14 @@ include_once "../models/CatalogoActivoFijoModel.php";
     <?php include '../layouts/footerScript.php'; ?>
     <?php include '../vistas/Modals/ModalEditarCatalogoActivoFijo.php'; ?>
     <script>
+        $(document).ready(function() {
+            $('#tabla-catalogoActivoFijo').DataTable({
+                "language": {
+                    "url": "./../public/assets/libs/datatables/esp.json"
+                },
+            });
+        });
+
         function editar(data) {
             console.log(data);
             document.getElementById("titulo").innerHTML = "Editar catalogo tipos de activo"

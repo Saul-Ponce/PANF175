@@ -23,10 +23,12 @@ include "../controladores/ControladorProducto.php";
                             <th scope="col">Nombre Producto</th>
                             <th scope="col">Marca</th>
                             <th scope="col">Precio</th>
-                            <th scope="col">Stock</th>
+                            <th scope="col">Stock Minimo</th>
+                            <th scope="col">Stock Maximo</th>
                             <th scope="col">Categoria</th>
                             <th scope="col">Proveedor</th>
                             <th scope="col">Imagen del producto</th>
+                            <th scope="col">Clasificación</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
@@ -38,10 +40,11 @@ include "../controladores/ControladorProducto.php";
                                 <th><?=$row["marca"]?></th>
                                 <th>$ <?=$row["precio"]?></th>
                                 <th><?=$row["stock"]?></th>
+                                <th><?=$row["stok_maximo"]?></th>
                                 <th><?=$row["nombre"]?></th>
                                 <th><?=$row["proveedor"]?></th>
                                 <th><img src="../controladores/<?=$row["imagen_p"]?>" style="max-width: 100px; max-height: 100px;"></th>
-
+                                <th><?=$row["clasificacion"]?></th>
                                 <th>
                                     <div class="d-flex justify-content-center">
                                         <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#editarProducto<?php echo $row['codigo_producto']; ?>">Editar</button>
