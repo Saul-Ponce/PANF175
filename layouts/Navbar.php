@@ -273,7 +273,7 @@ if (!isset($_SESSION['usuario'])) {
                                                 <a href="../vistas/genera-venta-credito.php" class="dropdown-item">
                                                     Registrar Venta a credito
                                                 </a>
-                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
+                                                <a href="../vistas/lista-venta-credito.php" class="dropdown-item">
                                                     lista de Ventas a credito
                                                 </a>
                                             </div>
