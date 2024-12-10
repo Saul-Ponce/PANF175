@@ -81,14 +81,20 @@ include "../models/UsuarioModel.php";
                                                 <button type="button" class="btn btn-info me-2" data-toggle="tooltip"
                                                     data-bs-placement="top" title="Ver detalles" data-bs-toggle="modal"
                                                     data-bs-target="#mdverDetVCont"
-                                                    onclick='verDetalleVentaCont(<?= json_encode($row["id"])?>)'><i
+                                                    onclick='verDetalleVentaCont(<?= json_encode($row["id"]) ?>)'><i
                                                         class="fa-solid fa-bars"></i></button>
-                                                        <form method="POST" action="../includes/Facturas/invoicecontado.php" target="_blank">
-                                                            <input type="hidden" name="id" value="<?=$row["id"]?>">
-                                                            <button type="submit" class="btn btn-info me-2" data-toggle="tooltip"
-                                                    data-bs-placement="top" title="Generar Factura" data-bs-toggle="modal"><i
-                                                        class="fa-solid fa-file-lines"></i></button>
-                                                        </form>                                        
+                                                <button type="button" class="btn btn-warning me-2" data-toggle="tooltip"
+                                                    data-bs-placement="top" title="Generar nota de credito"
+                                                    data-bs-toggle="modal" data-bs-target="#mdNotaCredito"><i
+                                                        class="fa-solid fa-rotate-left"></i></button>
+                                                <form method="POST" action="../includes/Facturas/invoicecontado.php"
+                                                    target="_blank">
+                                                    <input type="hidden" name="id" value="<?= $row["id"] ?>">
+                                                    <button type="submit" class="btn btn-info me-2" data-toggle="tooltip"
+                                                        data-bs-placement="top" title="Generar Factura"
+                                                        data-bs-toggle="modal"><i
+                                                            class="fa-solid fa-file-lines"></i></button>
+                                                </form>
                                             </div>
                                         </th>
                                     </tr>
@@ -107,28 +113,29 @@ include "../models/UsuarioModel.php";
     <?php include '../layouts/footerScript.php'; ?>
 
     <?php include '../vistas/Modals/ModalVerDetVCont.php'; ?>
+    <?php include '../vistas/Modals/ModalNotaCredito.php'; ?>
     <script src="../public/assets/js/toast.js"></script>
 
     <script>
         function factura(id) {
             // Dimensiones de la nueva ventana
-        const width = 800;
-        const height = 600;
+            const width = 800;
+            const height = 600;
 
-        // Calcular posición para centrar la ventana
-        const screenWidth = window.screen.width;
-        const screenHeight = window.screen.height;
+            // Calcular posición para centrar la ventana
+            const screenWidth = window.screen.width;
+            const screenHeight = window.screen.height;
 
-        const left = (screenWidth - width) / 2;
-        const top = (screenHeight - height) / 2;
+            const left = (screenWidth - width) / 2;
+            const top = (screenHeight - height) / 2;
 
-        // Abrir ventana centrada
-        window.open(
-            '../includes/Facturas/invoicecontado.php', 
-            '_blank', 
-            `width=${width},height=${height},scrollbars=yes,left=${left},top=${top}`
-        );
-    }
+            // Abrir ventana centrada
+            window.open(
+                '../includes/Facturas/invoicecontado.php',
+                '_blank',
+                `width=${width},height=${height},scrollbars=yes,left=${left},top=${top}`
+            );
+        }
         $(document).ready(function () {
             $('#tabla-ventas').DataTable({
                 "language": {
