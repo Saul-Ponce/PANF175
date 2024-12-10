@@ -103,6 +103,8 @@ class ControladorCompra{
                             $stockmaximo = CompraModel::getStockMaximo($_POST['productId']);
 
                             $stockActual = CompraModel::getStockByProductId($_POST['productId']);
+                            
+                           
                             if(!$stockActual){
                                 $stockActual=0;
                             }

@@ -69,7 +69,13 @@ class CompraModel
 		$stmt->bind_param("i", $productId);
 		$stmt->execute();
 		$result = $stmt->get_result();
-		return $result->fetch_assoc()['stok'];
+		
+		if ($row = $result->fetch_assoc()) {
+			return $row['stok'];
+		}
+		return 0; // Return 0 if no stock is found
+
+		
 	}
 	public static function getStockMaximo($productId) {
 		$con = connection();

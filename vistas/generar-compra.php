@@ -184,15 +184,8 @@ $ident = implode($id);
     <script>
    
 
-    $(document).ready(function() {
-        window.TomSelect && (new TomSelect("#productSelect", {
-            create: false,
-            sortField: {
-                field: "text",
-                direction: "asc"
-            }
-        }));
-    });
+   
+   
 
     // Check if a success message is set in the session
     <?php if (isset($_SESSION['success_messageV'])): ?>
@@ -375,6 +368,32 @@ document.getElementById("btnagregar").addEventListener("click", function() {
     totalInput.value = total.toFixed(2); // Display total with two decimal places
 }
 
+$(document).ready(function() {
+    // Initialize Tom Select
+    var tomproduct = new TomSelect("#productSelect", {
+        create: false,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        }
+    });
+
+    // Get the URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const productoId = urlParams.get('producto_id');
+  
+
+    if (productoId) {
+        // Set the value in Tom Select
+        tomproduct.setValue(productoId);
+
+        // Manually trigger the change event to update dependent fields
+        $('#productSelect').trigger('change');
+    }
+
+    
+});
+
 
 
 
@@ -494,6 +513,7 @@ function CheckStockMaximo(cantidad, id, callback) {
         }
     });
 }
+
 
 
  // Check if a success message is set in the session
