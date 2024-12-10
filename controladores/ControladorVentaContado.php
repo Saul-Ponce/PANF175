@@ -41,9 +41,9 @@ if (isset($_POST["action"])) {
             var_dump($_POST);
 
             $_SESSION['success_messageV'] = 'Venta agregada exitosamente!';
-            VentaModel::agregar($_POST['fecha'], $_POST['tipo_venta'], $_POST['tipo_cliente'], $_POST['clienteSelect'], $_POST['usuario_id'], $_POST['total_venta'], $dataArray);
-
-            header("Location: ../vistas/genera-venta-contado.php");
+            VentaModel::agregar($_POST['fecha'], $_POST['tipo_venta'], $_POST['tipo_cliente'], $_POST['clienteSelect'], $_POST['usuario_id'], $_POST['total_venta'], $dataArray);            
+            
+            header("Location: ../vistas/lista-Venta-contado.php");
             break;
         case "editar":
             VentaModel::editar($_POST);
