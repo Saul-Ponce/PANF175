@@ -1,4 +1,5 @@
 <?php
+// controladores/ControladorVentaCredito.php
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -18,87 +19,134 @@ class ControladorVentaCredito
         $respuesta = VentaCreditoModel::listarDet($id);
         return $respuesta;
     }
-}
 
-// Manejo de acciones POST
-if (isset($_POST["action"])) {
+    public static function agregar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            try {
+                // Corrección del nombre de la variable: 'total_venta' a 'total'
+                $fecha_venta = $_POST['fecha_venta'];
+                $tipo_venta = $_POST['tipo_venta'];
+                $tipo_cliente = $_POST['tipo_cliente'];
+                $cliente = $_POST['clienteSelect'];
+                $usuario = $_POST['usuario_id'];
+                $total = $_POST['total']; // Cambio aquí
+                $data = json_decode($_POST['data_array'], true);
+                $plazo = $_POST['plazo'];
+                $interes = $_POST['tasa_interes'];
+                $monto_total_interes = $_POST['monto_total_interes'];
 
-    $action = $_POST["action"];
-    switch ($action) {
-        case "insert":
-            $dataArray = json_decode($_POST['data_array'], true);
+                // Manejo del archivo aval
+                if (isset($_FILES['aval']) && $_FILES['aval']['error'] == 0) {
+                    $tipoCliente = $tipo_cliente == 'cliente-natural' ? 'natural' : 'juridico';
+                    $extension = strtolower(pathinfo($_FILES['aval']['name'], PATHINFO_EXTENSION));
 
-            // Manejo del archivo 'contrato_venta'
-            if (isset($_FILES['contrato_venta']) && $_FILES['contrato_venta']['error'] == 0) {
-                $nombreArchivo = $_FILES['contrato_venta']['name'];
-                $tipoArchivo = $_FILES['contrato_venta']['type'];
-                $tamañoArchivo = $_FILES['contrato_venta']['size'];
-                $rutaTemporal = $_FILES['contrato_venta']['tmp_name'];
-
-                // Validar el tipo de archivo
-                $extensionesPermitidas = array("pdf", "doc", "docx");
-                $extension = pathinfo($nombreArchivo, PATHINFO_EXTENSION);
-
-                if (in_array(strtolower($extension), $extensionesPermitidas)) {
-                    // Definir la ruta donde se guardará el archivo
-                    $rutaDestino = '../contrato/' . uniqid() . '_' . $nombreArchivo;
-
-                    // Verificar que la carpeta de destino exista o crearla
-                    if (!file_exists('../contrato/')) {
-                        mkdir('../contrato/', 0777, true);
+                    // Validar que la extensión sea PDF
+                    if ($extension !== 'pdf') {
+                        throw new Exception("El archivo del aval debe ser un PDF.");
                     }
 
-                    // Mover el archivo subido a la ruta destino
-                    if (move_uploaded_file($rutaTemporal, $rutaDestino)) {
-                        // El archivo se ha subido correctamente
-                        // Proceder a guardar la venta al crédito
+                    $prefijo = "contrato_" . $tipoCliente . "_";
+                    $directorio = '../controladores/contrato/';
+                    if (!file_exists($directorio)) {
+                        if (!mkdir($directorio, 0777, true)) {
+                            throw new Exception("No se pudo crear el directorio para contratos.");
+                        }
+                    }
 
-                        // Escapar variables para seguridad
-                        $con = connection();
-                        $fecha_venta = mysqli_real_escape_string($con, $_POST['fecha_venta']);
-                        $clienteSelect = mysqli_real_escape_string($con, $_POST['clienteSelect']);
-                        $dui_emp = mysqli_real_escape_string($con, $_POST['dui_emp']);
-                        $total = mysqli_real_escape_string($con, $_POST['total']);
+                    // Generar un nombre de archivo único usando uniqid
+                    $unique_id = uniqid('', true); // Más único con más entropía
+                    $nombreArchivo = $prefijo . $unique_id . '.' . $extension;
+                    $rutaDestino = $directorio . $nombreArchivo;
 
-                        VentaCreditoModel::agregar($fecha_venta, $clienteSelect, $dui_emp, $total, $dataArray, $rutaDestino);
-
-                        $_SESSION['success_messageV'] = '¡Venta al crédito agregada exitosamente!';
-                        header("Location: ../vistas/genera-venta-credito.php");
-                        exit();
-                    } else {
-                        // Ocurrió un error al mover el archivo
-                        $_SESSION['error_message'] = 'Error al mover el archivo.';
-                        header("Location: ../vistas/genera-venta-credito.php");
-                        exit();
+                    // Mover el archivo
+                    if (!move_uploaded_file($_FILES['aval']['tmp_name'], $rutaDestino)) {
+                        throw new Exception("Error al subir el archivo del aval.");
                     }
                 } else {
-                    // Tipo de archivo no permitido
-                    $_SESSION['error_message'] = 'Tipo de archivo no permitido. Solo se permiten archivos PDF, DOC y DOCX.';
-                    header("Location: ../vistas/genera-venta-credito.php");
-                    exit();
+                    throw new Exception("Error al subir el archivo del aval.");
                 }
-            } else {
-                // No se subió el archivo o ocurrió un error
-                $_SESSION['error_message'] = 'Error al subir el archivo. Por favor, asegúrate de seleccionar un archivo válido.';
+
+                // Agregar la venta al crédito
+                // Asegúrate de que VentaCreditoModel::agregar recibe los parámetros correctos
+                $venta_id = VentaCreditoModel::agregar($fecha_venta, $tipo_venta, $tipo_cliente, $cliente, $usuario, $total, $data, $nombreArchivo, $plazo, $interes, $monto_total_interes);
+
+                $_SESSION['success_messageC'] = '¡Venta al crédito agregada exitosamente!';
+                header("Location: ../vistas/lista-venta-credito.php");
+                exit();
+            } catch (Exception $e) {
+                $_SESSION['error_message'] = 'Error: ' . $e->getMessage();
                 header("Location: ../vistas/genera-venta-credito.php");
                 exit();
             }
-            break;
-
-        case "editar":
-            // Implementar si es necesario
-            // VentaCreditoModel::editar($_POST);
-            // header("Location: ../vistas/lista-venta-credito.php");
-            break;
-
-        case "borrar":
-            // Implementar si es necesario
-            // VentaCreditoModel::borrar($_POST['id_venta']);
-            // header("Location: ../vistas/lista-venta-credito.php");
-            break;
-
-        default:
-            break;
+        }
     }
+
+    public static function verDetalle()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'ver-det') {
+        $id = intval($_POST['id']); // Asegurar que sea un entero
+        try {
+            // Llama al método `listarDet` del modelo para obtener los datos
+            $detalle = VentaCreditoModel::listarDet($id);
+
+            echo json_encode([
+                'error' => false,
+                'detalles' => $detalle // Aquí se pasa la tabla generada por el modelo
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'error' => true,
+                'message' => $e->getMessage()
+            ]);
+        }
+        exit();
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'ver-contrato') {
+        $id = intval($_POST['id']); // Asegurar que sea un entero
+        // Obtener el contrato basado en la venta
+        $con = connection();
+        // Utilizar consultas preparadas para evitar inyección SQL
+        $stmt = $con->prepare("SELECT aval FROM ventas WHERE id = ? AND tipo_venta = 'credito' LIMIT 1");
+        if (!$stmt) {
+            echo json_encode(['error' => true, 'message' => 'Error en la preparación de la consulta.']);
+            exit();
+        }
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $rutaContrato = "../controladores/contrato/" . $row['aval'];
+            if (file_exists($rutaContrato)) {
+                // Convertir la ruta a una URL accesible
+                $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || 
+                             $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+                $host = $_SERVER['HTTP_HOST'];
+                // Asegurar que la URL sea correcta dependiendo de la estructura de directorios
+                $ruta_contrato_url = $protocol . $host . "/controladores/contrato/" . $row['aval'];
+
+                echo json_encode([
+                    'error' => false,
+                    'ruta_contrato' => $ruta_contrato_url
+                ]);
+            } else {
+                echo json_encode(['error' => true, 'message' => 'Contrato no encontrado']);
+            }
+        } else {
+            echo json_encode(['error' => true, 'message' => 'Venta no encontrada o no es al crédito']);
+        }
+        $stmt->close();
+        exit();
+    }
+}
+
+}
+
+if (isset($_POST["action"]) && $_POST["action"] == 'insert') {
+    ControladorVentaCredito::agregar();
+} else {
+    ControladorVentaCredito::verDetalle();
 }
 ?>

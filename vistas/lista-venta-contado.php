@@ -136,6 +136,13 @@ include "../models/UsuarioModel.php";
                 },
             });
         });
+        // Inicializar tooltips de Bootstrap
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
         // Check if a success message is set in the session
         <?php if (isset($_SESSION['success_messageC'])): ?>
             Swal.fire('<?php echo $_SESSION['success_messageC']; ?>', '', 'success');
