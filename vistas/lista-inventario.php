@@ -52,7 +52,7 @@ include_once "../models/InventarioModel.php";
                                     <th style="font-size:13px !important;" scope="col">Codigo</th>
                                     <th style="font-size:13px !important;" scope="col">Nombre</th>
                                     <th style="font-size:13px !important;" scope="col">Descripcion</th>
-                                    <th style="font-size:13px !important;" scope="col">Stok</th>
+                                    <th style="font-size:13px !important;" scope="col">Stock</th>
                                     <th style="font-size:13px !important;" scope="col">Precio unitario</th>
                                     <th style="font-size:13px !important;" scope="col">Alerta</th>
                                 </tr>
@@ -85,7 +85,7 @@ include_once "../models/InventarioModel.php";
                                         <td><?= $row["codigo"] ?></td>
                                         <td><?= $row["nombre"] ?></td>
                                         <td><?= $row["descripcion"] ?></td>
-                                        <td><?= $row["stock"] ?></td>
+                                        <td><?= $row["stok"] ?></td>
                                         <td><?= $row["precio_venta"] ?></td>
                                         <td>
                                             <!-- Bolita de color según la alerta -->
