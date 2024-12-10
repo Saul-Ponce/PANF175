@@ -50,13 +50,16 @@ include_once "../models/ClienteNaturalModel.php";
 
 <body>
     <?php include '../layouts/Navbar.php';?>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./../public/assets/libs/datatables/datatables.min.js"></script>
 
     <div class="main-panel">
         <div class="container-fluid mt-4 ">
             <div class="card">
                 <div class="card-body table-responsive">
                     <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Clientes Naturales</h3>
-                    <table class="table table-bordered  text-center align-middle">
+                    <table id="tabla-clienteNat" class="table table-bordered ">
                         <thead>
                             <tr>
                                 <td class="font-weight: 700; font-size:10px; text-align: center!important;" 
@@ -170,6 +173,17 @@ include_once "../models/ClienteNaturalModel.php";
 
 
     <script>
+
+
+$(document).ready(function() {
+            $('#tabla-clienteNat').DataTable({
+                "language": {
+                    "url": "./../public/assets/libs/datatables/esp.json"
+                },
+            });
+        });
+
+
     function editar(data) {
         document.getElementById("nombre").removeAttribute("disabled", "");
         document.getElementById("direccion").removeAttribute("disabled", "");
