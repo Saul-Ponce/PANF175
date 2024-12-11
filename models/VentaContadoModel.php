@@ -75,6 +75,51 @@ class VentaModel
 
 		return $tabla;
 	}
+	public static function listarDetN($id)
+	{
+		$con = connection();
+
+		$sql = "	SELECT
+			p.nombre, 
+			d.cantidad,
+			d.precio_unitario,
+			d.id
+		FROM
+			detalleventa AS d
+			INNER JOIN
+			ventas AS v
+			ON 
+				v.id = d.venta_id
+			INNER JOIN
+			productos AS p
+			ON 
+				d.producto_id = p.id
+				where d.venta_id='$id'";
+		$result = mysqli_query($con, $sql);
+		$tabla = "";
+		$htmltr = "";
+		foreach ($result as $row) {
+			$htmltr .= '<tr>
+	                            <td>' . $row['nombre'] . '</td>
+	                            <td><input type="number" id="cantidad" name="cantidad" onchange="calcularMonto(' . $row['precio_unitario'] . ')" class="form-control" value=' . $row['cantidad'] . ' min="0" max=' . $row['cantidad'] . '></td>
+	                            <td>$' . $row['precio_unitario'] . '</td>
+	                        </tr>';
+		}
+		$tabla .= '<table id="tabla_detalleVC" class="table table-bordered text-center align-middle" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+		$tabla .= $htmltr;
+		$tabla .= '</tbody>
+                    	</table>';
+
+		return $tabla;
+	}
 
 
 
@@ -92,6 +137,20 @@ class VentaModel
 		self::agregarDet($venta_id, $data);
 
 
+
+
+	}
+	public static function agregarNotaC($id_venta, $fecha, $monto, $motivo, $usuario, $estado)
+	{
+		$con = connection();
+
+		$sql = "INSERT INTO notas_credito
+		( venta_id, fecha_emision, monto, motivo, usuario_id, estado)
+		VALUES( $id_venta, '$fecha', $monto, $motivo, $usuario, $estado)";
+
+		$querry = mysqli_query($con, $sql);
+		$venta_id = mysqli_insert_id($con);
+		mysqli_close($con);
 
 
 	}

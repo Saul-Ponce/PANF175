@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || $_SESSION['rol'] != "Administrador") {
-    if($_SESSION['rol'] != "Vendedor"){
+    if ($_SESSION['rol'] != "Vendedor") {
         echo '
         <script>
             alert("Por favor Inicia Sesion");
@@ -45,35 +45,37 @@ if ($clasificacionesResult) {
 <body>
     <?php include '../layouts/Navbar.php'; ?>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="./../public/assets/libs/datatables/datatables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./../public/assets/libs/datatables/datatables.min.js"></script>
 
 
     <div class="main-panel">
         <div class="container-fluid mt-4">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Clientes Jurídicos</h3>
+                    <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Clientes
+                        Jurídicos</h3>
 
                     <!-- Mostrar mensajes de éxito y error -->
                     <?php if (isset($_SESSION['success_messageC'])): ?>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <?= htmlspecialchars($_SESSION['success_messageC'], ENT_QUOTES, 'UTF-8') ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        <?php unset($_SESSION['success_messageC']); ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?= htmlspecialchars($_SESSION['success_messageC'], ENT_QUOTES, 'UTF-8') ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <?php unset($_SESSION['success_messageC']); ?>
                     <?php endif; ?>
 
                     <?php if (isset($_SESSION['error_messageC'])): ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <?= htmlspecialchars($_SESSION['error_messageC'], ENT_QUOTES, 'UTF-8') ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        <?php unset($_SESSION['error_messageC']); ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?= htmlspecialchars($_SESSION['error_messageC'], ENT_QUOTES, 'UTF-8') ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <?php unset($_SESSION['error_messageC']); ?>
                     <?php endif; ?>
 
                     <div class="table-responsive">
-                    <table id="tabla-clientesjuridicos" class="table table-bordered text-center align-middle datatable">
+                        <table id="tabla-clientesjuridicos"
+                            class="table table-bordered text-center align-middle datatable">
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
@@ -95,67 +97,71 @@ if ($clasificacionesResult) {
                                     while ($row = mysqli_fetch_assoc($resultado)):
                                         // Crear una copia de $row
                                         $dataForJs = $row;
-                                ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($row["nombre"], ENT_QUOTES, 'UTF-8') ?></td>
-                                            <td><?= htmlspecialchars($row["direccion"], ENT_QUOTES, 'UTF-8') ?></td>
-                                            <td><?= htmlspecialchars($row["telefono"], ENT_QUOTES, 'UTF-8') ?></td>
-                                            <td><?= htmlspecialchars($row["email"], ENT_QUOTES, 'UTF-8') ?></td>
-                                            <td><?= htmlspecialchars($row["nit"], ENT_QUOTES, 'UTF-8') ?></td>
-                                            <td><?= htmlspecialchars($row["nrc"], ENT_QUOTES, 'UTF-8') ?></td>
-                                            <td>
-                                                <button class="btn btn-primary" onclick='verRepresentante(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)' data-bs-toggle="modal" data-bs-target="#modalVerRepresentante">
-                                                    Ver Representante
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-primary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="<?= htmlspecialchars($row["descripcion_clasificacion"], ENT_QUOTES, 'UTF-8') ?>">
-                                                    <?= htmlspecialchars($row["nombre_clasificacion"], ENT_QUOTES, 'UTF-8') ?>
-                                                </span>
-                                            </td>
+                                        ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($row["nombre"], ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td><?= htmlspecialchars($row["direccion"], ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td><?= htmlspecialchars($row["telefono"], ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td><?= htmlspecialchars($row["email"], ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td><?= htmlspecialchars($row["nit"], ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td><?= htmlspecialchars($row["nrc"], ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td>
+                                        <button class="btn btn-primary"
+                                            onclick='verRepresentante(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'
+                                            data-bs-toggle="modal" data-bs-target="#modalVerRepresentante">
+                                            Ver Representante
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary text-white" data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="<?= htmlspecialchars($row["descripcion_clasificacion"], ENT_QUOTES, 'UTF-8') ?>">
+                                            <?= htmlspecialchars($row["nombre_clasificacion"], ENT_QUOTES, 'UTF-8') ?>
+                                        </span>
+                                    </td>
 
-                                            <td>
-                                                <?php if ($row["estado"] === "activo"): ?>
-                                                    <span class="badge bg-success text-white">Activo</span>
+                                    <td>
+                                        <?php if ($row["estado"] === "activo"): ?>
+                                        <span class="badge bg-success text-white">Activo</span>
+                                        <?php else: ?>
+                                        <span class="badge bg-danger text-white">Incobrable</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <!-- Botón Editar Cliente -->
+                                            <button type="button" class="btn btn-warning me-2" data-toggle="tooltip"
+                                                data-bs-placement="top" title="Editar Cliente" data-bs-toggle="modal"
+                                                data-bs-target="#modalEditarCliente"
+                                                onclick='editarCliente(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </button>
+
+                                            <!-- Botón Editar Representante -->
+                                            <button type="button" class="btn btn-info me-2" data-toggle="tooltip"
+                                                data-bs-placement="top" title="Editar Representante Legal"
+                                                data-bs-toggle="modal" data-bs-target="#modalEditarRepresentante"
+                                                onclick='editarRepresentante(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </button>
+
+                                            <!-- Botón Cambiar Estado -->
+                                            <button type="button"
+                                                class="btn <?= $row["estado"] === 'activo' ? 'btn-danger' : 'btn-success' ?>"
+                                                data-bs-toggle="modal" data-bs-target="#modalCambiarEstado"
+                                                data-toggle="tooltip" data-bs-placement="top"
+                                                title="<?= $row["estado"] === 'activo' ? 'Marcar como Incobrable' : 'Activar' ?>"
+                                                onclick='cambiarEstado(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                                <!-- Ícono para "Marcar como Incobrable" o "Activar" -->
+                                                <?php if ($row["estado"] === 'activo'): ?>
+                                                <i class="fa-solid fa-ban"></i> <!-- Ícono "Marcar como Incobrable" -->
                                                 <?php else: ?>
-                                                    <span class="badge bg-danger text-white">Incobrable</span>
+                                                <i class="fa-solid fa-check"></i> <!-- Ícono "Activar" -->
                                                 <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex justify-content-center">
-                                                    <!-- Botón Editar Cliente -->
-                                                    <button type="button" class="btn btn-warning me-2"
-                                                        data-toggle="tooltip" data-bs-placement="top" title="Editar Cliente"
-                                                        data-bs-toggle="modal" data-bs-target="#modalEditarCliente"
-
-                                                        onclick='editarCliente(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-                                                        <i class="fa-regular fa-pen-to-square"></i>
-                                                    </button>
-
-                                                    <!-- Botón Editar Representante -->
-                                                    <button type="button" class="btn btn-info me-2"
-                                                        data-toggle="tooltip" data-bs-placement="top" title="Editar Representante Legal"
-                                                        data-bs-toggle="modal" data-bs-target="#modalEditarRepresentante"
-
-                                                        onclick='editarRepresentante(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-                                                        <i class="fa-regular fa-pen-to-square"></i>
-                                                    </button>
-
-                                                    <!-- Botón Cambiar Estado -->
-                                                    <button type="button" class="btn <?= $row["estado"] === 'activo' ? 'btn-danger' : 'btn-success' ?>"
-                                                        data-bs-toggle="modal" data-bs-target="#modalCambiarEstado"
-                                                        data-toggle="tooltip" data-bs-placement="top" title="<?= $row["estado"] === 'activo' ? 'Marcar como Incobrable' : 'Activar' ?>"
-                                                        onclick='cambiarEstado(<?= json_encode($dataForJs, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-                                                        <!-- Ícono para "Marcar como Incobrable" o "Activar" -->
-                                                        <?php if ($row["estado"] === 'activo'): ?>
-                                                            <i class="fa-solid fa-ban"></i> <!-- Ícono "Marcar como Incobrable" -->
-                                                        <?php else: ?>
-                                                            <i class="fa-solid fa-check"></i> <!-- Ícono "Activar" -->
-                                                        <?php endif; ?>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
                                 <?php
                                     endwhile;
                                 } else {
@@ -171,7 +177,8 @@ if ($clasificacionesResult) {
 
         <!-- Modales -->
         <!-- Modal Ver Representante -->
-        <div class="modal fade" id="modalVerRepresentante" tabindex="-1" aria-labelledby="modalVerRepresentanteLabel" aria-hidden="true">
+        <div class="modal fade" id="modalVerRepresentante" tabindex="-1" aria-labelledby="modalVerRepresentanteLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -190,14 +197,17 @@ if ($clasificacionesResult) {
 
 
         <!-- Modal Editar Cliente -->
-        <div class="modal fade" id="modalEditarCliente" tabindex="-1" aria-labelledby="modalEditarClienteLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg"> <!-- Modal grande para acomodar más campos -->
+        <div class="modal fade" id="modalEditarCliente" tabindex="-1" aria-labelledby="modalEditarClienteLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal grande para acomodar más campos -->
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 id="modalEditarClienteLabel" class="modal-title">Editar Cliente Jurídico</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form action="../controladores/ControladorClienteJuridico.php" method="POST" enctype="multipart/form-data">
+                    <form action="../controladores/ControladorClienteJuridico.php" method="POST"
+                        enctype="multipart/form-data">
                         <input type="hidden" name="action" value="edit">
                         <input type="hidden" name="id" id="cliente_id">
                         <div class="modal-body" id="modalEditarClienteContent">
@@ -213,7 +223,8 @@ if ($clasificacionesResult) {
         </div>
 
         <!-- Modal Editar Representante -->
-        <div class="modal fade" id="modalEditarRepresentante" tabindex="-1" aria-labelledby="modalEditarRepresentanteLabel" aria-hidden="true">
+        <div class="modal fade" id="modalEditarRepresentante" tabindex="-1"
+            aria-labelledby="modalEditarRepresentanteLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -236,7 +247,8 @@ if ($clasificacionesResult) {
         </div>
 
         <!-- Modal Cambiar Estado -->
-        <div class="modal fade" id="modalCambiarEstado" tabindex="-1" aria-labelledby="modalCambiarEstadoLabel" aria-hidden="true">
+        <div class="modal fade" id="modalCambiarEstado" tabindex="-1" aria-labelledby="modalCambiarEstadoLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -264,57 +276,58 @@ if ($clasificacionesResult) {
         <?php include '../layouts/footerScript.php'; ?>
 
         <script>
-            const clasificaciones = <?php echo json_encode($clasificacionesArray, JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        const clasificaciones = <?php echo json_encode($clasificacionesArray, JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
-            // Función para escapar HTML y prevenir XSS
-            function escapeHtml(text) {
-                var map = {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#039;'
-                };
-                return text.replace(/[&<>"']/g, function(m) {
-                    return map[m];
-                });
-            }
+        // Función para escapar HTML y prevenir XSS
+        function escapeHtml(text) {
+            var map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) {
+                return map[m];
+            });
+        }
 
-            // Función para ver el representante legal
-            function verRepresentante(data) {
-                document.getElementById('modalVerRepresentanteLabel').innerText = 'Datos del Representante Legal';
+        // Función para ver el representante legal
+        function verRepresentante(data) {
+            document.getElementById('modalVerRepresentanteLabel').innerText = 'Datos del Representante Legal';
 
-                // Verificar que los datos existan antes de insertarlos
-                let nombre = data.nombre_representante ? escapeHtml(data.nombre_representante) : 'N/A';
-                let direccion = data.direccion_representante ? escapeHtml(data.direccion_representante) : 'N/A';
-                let telefono = data.telefono_representante ? escapeHtml(data.telefono_representante) : 'N/A';
-                let email = data.email_representante ? escapeHtml(data.email_representante) : 'N/A';
-                let dui = data.dui_representante ? escapeHtml(data.dui_representante) : 'N/A';
+            // Verificar que los datos existan antes de insertarlos
+            let nombre = data.nombre_representante ? escapeHtml(data.nombre_representante) : 'N/A';
+            let direccion = data.direccion_representante ? escapeHtml(data.direccion_representante) : 'N/A';
+            let telefono = data.telefono_representante ? escapeHtml(data.telefono_representante) : 'N/A';
+            let email = data.email_representante ? escapeHtml(data.email_representante) : 'N/A';
+            let dui = data.dui_representante ? escapeHtml(data.dui_representante) : 'N/A';
 
-                let modalContent = `
+            let modalContent = `
                     <p><strong>Nombre:</strong> ${nombre}</p>
                     <p><strong>Dirección:</strong> ${direccion}</p>
                     <p><strong>Teléfono:</strong> ${telefono}</p>
                     <p><strong>Correo Electrónico:</strong> ${email}</p>
                     <p><strong>DUI:</strong> ${dui}</p>
                 `;
-                document.getElementById('modalVerRepresentanteContent').innerHTML = modalContent;
-            }
+            document.getElementById('modalVerRepresentanteContent').innerHTML = modalContent;
+        }
 
-            // Función para editar el cliente jurídico
-            function editarCliente(data) {
-                document.getElementById('modalEditarClienteLabel').innerText = 'Editar Cliente Jurídico';
-                document.getElementById('cliente_id').value = data.id;
+        // Función para editar el cliente jurídico
+        function editarCliente(data) {
+            document.getElementById('modalEditarClienteLabel').innerText = 'Editar Cliente Jurídico';
+            document.getElementById('cliente_id').value = data.id;
 
-                // Generar las opciones del select de clasificación
-                let clasificacionOptions = '<option value="" disabled>Seleccione una clasificación</option>';
-                clasificaciones.forEach(clasificacion => {
-                    const selected = data.clasificacion_id == clasificacion.id ? 'selected' : '';
-                    clasificacionOptions += `<option value="${clasificacion.id}" ${selected}>${escapeHtml(clasificacion.nombre)}</option>`;
-                });
+            // Generar las opciones del select de clasificación
+            let clasificacionOptions = '<option value="" disabled>Seleccione una clasificación</option>';
+            clasificaciones.forEach(clasificacion => {
+                const selected = data.clasificacion_id == clasificacion.id ? 'selected' : '';
+                clasificacionOptions +=
+                    `<option value="${clasificacion.id}" ${selected}>${escapeHtml(clasificacion.nombre)}</option>`;
+            });
 
-                // Cargar los campos en el modal
-                let modalContent = `
+            // Cargar los campos en el modal
+            let modalContent = `
         <div class="form-group mb-3">
             <label for="nombre">Nombre de la Empresa</label>
             <input type="text" class="form-control" name="nombre" value="${escapeHtml(data.nombre)}" required>
@@ -346,16 +359,16 @@ if ($clasificacionesResult) {
             </select>
         </div>
     `;
-                document.getElementById('modalEditarClienteContent').innerHTML = modalContent;
-            }
+            document.getElementById('modalEditarClienteContent').innerHTML = modalContent;
+        }
 
 
-            // Función para editar el representante legal
-            function editarRepresentante(data) {
-                document.getElementById('modalEditarRepresentanteLabel').innerText = 'Editar Representante Legal';
-                document.getElementById('representante_legal_id').value = data.representante_legal;
+        // Función para editar el representante legal
+        function editarRepresentante(data) {
+            document.getElementById('modalEditarRepresentanteLabel').innerText = 'Editar Representante Legal';
+            document.getElementById('representante_legal_id').value = data.representante_legal;
 
-                let modalContent = `
+            let modalContent = `
                     <div class="form-group mb-3">
                         <label for="nombre_representante">Nombre</label>
                         <input type="text" class="form-control" name="nombre_representante" value="${escapeHtml(data.nombre_representante)}" required>
@@ -377,44 +390,46 @@ if ($clasificacionesResult) {
                         <input type="text" class="form-control" name="dui_representante" value="${escapeHtml(data.dui_representante)}" maxlength="10" required>
                     </div>
                 `;
-                document.getElementById('modalEditarRepresentanteContent').innerHTML = modalContent;
-            }
+            document.getElementById('modalEditarRepresentanteContent').innerHTML = modalContent;
+        }
 
-            // Función para cambiar el estado del cliente jurídico
-            function cambiarEstado(data) {
-                document.getElementById('modalCambiarEstadoLabel').innerText = 'Cambiar Estado del Cliente Jurídico';
+        // Función para cambiar el estado del cliente jurídico
+        function cambiarEstado(data) {
+            document.getElementById('modalCambiarEstadoLabel').innerText = 'Cambiar Estado del Cliente Jurídico';
 
-                // Establecer los valores en los inputs ocultos
-                document.getElementById('estado_cliente_id').value = data.id;
-                document.getElementById('estado_cliente_estado').value = data.estado;
+            // Establecer los valores en los inputs ocultos
+            document.getElementById('estado_cliente_id').value = data.id;
+            document.getElementById('estado_cliente_estado').value = data.estado;
 
-                // Generar el mensaje de confirmación
-                let mensaje = data.estado === 'activo' ? '¿Está seguro de que desea marcar como Incobrable a este cliente?' : '¿Está seguro de que desea activar a este cliente?';
-                document.getElementById('modalCambiarEstadoContent').innerHTML = `<p>${mensaje}</p>`;
+            // Generar el mensaje de confirmación
+            let mensaje = data.estado === 'activo' ?
+                '¿Está seguro de que desea marcar como Incobrable a este cliente?' :
+                '¿Está seguro de que desea activar a este cliente?';
+            document.getElementById('modalCambiarEstadoContent').innerHTML = `<p>${mensaje}</p>`;
 
-                // Cambiar el texto y la clase del botón de submit
-                let boton = document.getElementById('modalCambiarEstadoSubmitButton');
-                boton.innerText = data.estado === 'activo' ? 'Marcar como Incobrable' : 'Activar';
-                boton.className = data.estado === 'activo' ? 'btn btn-danger' : 'btn btn-success';
-            }
+            // Cambiar el texto y la clase del botón de submit
+            let boton = document.getElementById('modalCambiarEstadoSubmitButton');
+            boton.innerText = data.estado === 'activo' ? 'Marcar como Incobrable' : 'Activar';
+            boton.className = data.estado === 'activo' ? 'btn btn-danger' : 'btn btn-success';
+        }
 
 
-            // Inicializar tooltips de Bootstrap
-            document.addEventListener('DOMContentLoaded', function() {
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
-                var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl);
-                });
+        // Inicializar tooltips de Bootstrap
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
             });
-
-            //Data table
-            $(document).ready(function () {
-        $('#tabla-clientesjuridicos').DataTable({
-            "language": {
-                "url": "./../public/assets/libs/datatables/esp.json"
-            }
         });
-    });
+
+        //Data table
+        $(document).ready(function() {
+            $('#tabla-clientesjuridicos').DataTable({
+                "language": {
+                    "url": "./../public/assets/libs/datatables/esp.json"
+                }
+            });
+        });
         </script>
     </div>
 </body>

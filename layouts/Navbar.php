@@ -293,9 +293,6 @@ if (!isset($_SESSION['usuario'])) {
                                                 </a>
                                             </div>
                                         </div>
-                                        <a class="dropdown-item" href="../vistas/mantenimiento.php">
-                                            Facturacion
-                                        </a>
                                         <div class="dropend">
                                             <a class="dropdown-item dropdown-toggle" href="#sidebar-cuentas-por-cobrar"
                                                 data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button"

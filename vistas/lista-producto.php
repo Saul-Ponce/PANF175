@@ -34,7 +34,7 @@ include_once "../models/ProductoModel.php";
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="./../public/assets/libs/datatables/datatables.min.js"></script>
     <div class="main-panel">
-        <div class="container mt-4 ">
+        <div class="container-fluid mt-4">
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Productos</h3>

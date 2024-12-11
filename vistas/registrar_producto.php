@@ -132,6 +132,25 @@ $query = mysqli_query($con, $sql);
 
 
     <script>
+        const numero1 = document.getElementById('stockmax');
+    const numero2 = document.getElementById('stock');
+
+    // Actualizar el valor máximo permitido en el segundo campo
+    numero1.addEventListener('input', () => {
+        numero2.setAttribute('max', numero1.value);
+    });
+
+    function validarFormulario() {
+        const valor1 = parseFloat(numero1.value);
+        const valor2 = parseFloat(numero2.value);
+
+        if (valor2 > valor1) {
+            alert('El número 2 no puede ser mayor que el número 1.');
+            return false; // Evitar el envío del formulario
+        }
+        return true; // Permitir el envío del formulario
+    }
+
         //evitar que cualquier campo de texto envie el formulario despues de dar enter
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('input[type=text]').forEach(node => node.addEventListener('keypress', e => {
@@ -190,23 +209,6 @@ $query = mysqli_query($con, $sql);
             return false;
         }
 
-
-
-
-        function validarFormulariocompleto() {
-            const nombre = document.getElementById('nombre').value;
-            const usuario = document.getElementById('apellido').value;
-            const rol = document.getElementById('rol_id').value;
-            const contrasena = document.getElementById('contrasena').value;
-
-
-            if (!nombre || !usuario || rol === '0' || !contrasena) {
-                Swal.fire("Aviso", "Por favor, complete todos los campos antes de enviar el formulario.", "warning");
-                return false; // Evitar el envío del formulario
-            }
-
-            return true;
-        }
     </script>
 </body>
 

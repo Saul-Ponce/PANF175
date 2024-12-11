@@ -76,6 +76,12 @@ include "../models/UsuarioModel.php";
                                                     onclick='verDetalleVentaCredito(<?= htmlspecialchars($row["id"]) ?>)'>
                                                     <i class="fa-solid fa-bars"></i>
                                                 </button>
+                                                <form method="POST" action="../includes/Facturas/invoice.php" target="_blank">
+                                                            <input type="hidden" name="id" value="<?=$row["id"]?>">
+                                                            <button type="submit" class="btn btn-info me-2" data-toggle="tooltip"
+                                                    data-bs-placement="top" title="Generar Factura" data-bs-toggle="modal"><i
+                                                        class="fa-solid fa-file-lines"></i></button>
+                                                        </form>
                                             </div>
                                         </td>
                                     </tr>
