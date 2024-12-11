@@ -14,7 +14,7 @@ if (!isset($_SESSION['usuario'])) {
 require_once "../models/conexion.php";
 include "../models/UsuarioModel.php";
 $con = connection();
-$sql = "SELECT p.id as productoid, i.id as inventarioid, p.*,i.* FROM productos as p INNER JOIN inventario as i ON i.producto_id = p.id";
+$sql = "SELECT p.id as productoid, i.idInventario as inventarioid, p.*,i.* FROM productos as p LEFT JOIN inventario as i ON i.producto_id = p.id";
 
 $query = mysqli_query($con, $sql);
 
@@ -91,7 +91,7 @@ $ident = implode($id);
                                         <option value="">Seleccione</option>
                                         <?php foreach ($query as $row): ?>
                                         <option value="<?= $row["productoid"] ?>" data-code="<?= $row["codigo"] ?>"
-                                            data-stock="<?= $row["cantidad"] ?>"
+                                            data-stock="<?= $row["stok"] ?>"
                                             data-inventario="<?= $row["inventarioid"]?>">
                                             <?= $row["codigo"] ?> | <?= $row["nombre"] ?>
                                         </option>
@@ -184,15 +184,8 @@ $ident = implode($id);
     <script>
    
 
-    $(document).ready(function() {
-        window.TomSelect && (new TomSelect("#productSelect", {
-            create: false,
-            sortField: {
-                field: "text",
-                direction: "asc"
-            }
-        }));
-    });
+   
+   
 
     // Check if a success message is set in the session
     <?php if (isset($_SESSION['success_messageV'])): ?>
@@ -214,11 +207,11 @@ $ident = implode($id);
     
 
     $(document).ready(function() {
-        $('#productSelect').on('change', function() {
-            var selectedPrice = $('option:selected', this).data('stock');
-            $('#txtstock').val(selectedPrice);
-        });
+    $('#productSelect').on('change', function() {
+        var stockActual = $('option:selected', this).data('stock') || 0; // Set to 0 if null or undefined
+        $('#txtstock').val(stockActual);
     });
+});
 
     $(document).ready(function() {
         $('#clienteSelect').on('change', function() {
@@ -234,9 +227,7 @@ $ident = implode($id);
         });
     });
 
-
-
-    document.getElementById("btnagregar").addEventListener("click", function() {
+document.getElementById("btnagregar").addEventListener("click", function() {
         var selectElement = document.getElementById("productSelect");
         var selectedIndex = selectElement.selectedIndex;
         var quantityInput = document.getElementById("txtcantidad");
@@ -276,11 +267,18 @@ $ident = implode($id);
                 }, 0);
 
                 if (quantity > 0) {
+                    CheckStockMaximo(quantity, selectedProductCode, function(stockCheckPassed) {
+                        if (stockCheckPassed) {
                 var existingItem = cart.find(item => item.product === selectedProductName);
 
                 if (existingItem) {
                     // If the same product is already in the cart, update its quantity
-                    existingItem.quantity += quantity;
+                    existingItem.quantity = quantity;
+                    existingItem.price = selectedProductPrice;
+                    existingItem.proveedor = selectedProveedorName;
+            
+                    
+                    
                 } else {
                     // Otherwise, add the new item to the cart
                     var item = {
@@ -298,6 +296,8 @@ $ident = implode($id);
                 // Update the cart table, its visibility, and the total price
                 updateCartTable();
                 updatetotal();
+            }
+        });
             } else {
                 alert("Porfavor Ingrese un numero valido!!!");
             }
@@ -367,4 +367,159 @@ $ident = implode($id);
 
     totalInput.value = total.toFixed(2); // Display total with two decimal places
 }
+
+$(document).ready(function() {
+    // Initialize Tom Select
+    var tomproduct = new TomSelect("#productSelect", {
+        create: false,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        }
+    });
+
+    // Get the URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const productoId = urlParams.get('producto_id');
+  
+
+    if (productoId) {
+        // Set the value in Tom Select
+        tomproduct.setValue(productoId);
+
+        // Manually trigger the change event to update dependent fields
+        $('#productSelect').trigger('change');
+    }
+
+    
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var cart = []; // Array to store cart items
+
+    function addItemToCart(item) {
+        cart.push(item);
+
+    }
+
+    function updateCartTable() {
+    var tableBody = document.querySelector("#cartTable tbody");
+    tableBody.innerHTML = ""; // Clear the table body
+
+    if (cart.length > 0) {
+        document.getElementById("cartContainer").style.display = "block"; // Show the table
+        cart.forEach(function (item) {
+            var row = tableBody.insertRow();
+            var productCell = row.insertCell(0);
+            var proveedorCell = row.insertCell(1);
+            var priceCell = row.insertCell(2);
+            var quantityCell = row.insertCell(3);
+            var actionCell = row.insertCell(4);
+            
+
+            productCell.innerHTML = item.product;
+            proveedorCell.innerHTML = item.proveedor;
+
+            // Fetch price dynamically from txtprecio input
+            
+
+            quantityCell.innerHTML = item.quantity;
+            
+            priceCell.innerHTML = item.price;
+            actionCell.innerHTML =
+                '<button type="button" class="btn btn-danger" onclick="removeItem(this)"><i class="fa-solid fa-trash"></i></button>';
+
+        });
+    } else {
+        document.getElementById("cartContainer").style.display = "none"; // Hide the table
+    }
+}
+
+    function removeItem(button) {
+        var row = button.parentNode.parentNode;
+        var index = row.rowIndex - 1; // Subtract 1 to account for the table header
+        cart.splice(index, 1);
+        updateCartTable();
+        updatetotal();
+    }
+
+    function updatetotal() {
+    var totalInput = document.getElementById("total");
+    var total = 0;
+
+    for (var i = 0; i < cart.length; i++) {
+        var item = cart[i];
+        // Use the value from txtprecio input field
+        var price = parseFloat(document.getElementById("txtprecio").value) || 0;
+        total += price * item.quantity;
+    }
+
+    totalInput.value = total.toFixed(2); // Display total with two decimal places
+}
+
+function CheckStockMaximo(cantidad, id, callback) {
+    $.ajax({
+        url: '../controladores/ControladorCompra.php',
+        method: 'POST',
+        data: {
+            action: "checkStockMaximo",
+            cantidadCompra: cantidad,
+            productId: id,
+        },
+        success: function(response) {
+            try {
+                const result = JSON.parse(response);
+                if (result.success) {
+                    callback(true);
+                } else {
+                    Swal.fire({
+                        title: 'Advertencia',
+                        text: 'Se pasa del stock máximo recomendado, ¿desea continuar? stock maximo: '+ result.stockMaximo,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí',
+                        cancelButtonText: 'No',
+                    }).then((decision) => {
+                        callback(decision.isConfirmed);
+                    });
+                }
+            } catch (e) {
+                console.error('Error parsing response:', e);
+                Swal.fire('Error!', 'Ocurrió un problema con el servidor.', 'error');
+                callback(false);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', error);
+            Swal.fire('Error!', 'Ocurrió un problema con la solicitud.', 'error');
+            callback(false);
+        }
+    });
+}
+
+
+
+ // Check if a success message is set in the session
+ <?php if (isset($_SESSION['success_messageC'])): ?>
+            Swal.fire('<?php echo $_SESSION['success_messageC']; ?>', '', 'success');
+            <?php unset($_SESSION['success_messageC']); // Clear the message 
+            ?>
+        <?php endif; ?>
     </script>

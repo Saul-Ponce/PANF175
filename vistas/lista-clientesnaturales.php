@@ -50,13 +50,16 @@ include_once "../models/ClienteNaturalModel.php";
 
 <body>
     <?php include '../layouts/Navbar.php';?>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./../public/assets/libs/datatables/datatables.min.js"></script>
 
     <div class="main-panel">
         <div class="container-fluid mt-4 ">
             <div class="card">
                 <div class="card-body table-responsive">
                     <h3 class="card-title text-center align-middle" style="font-weight: 700;">Lista de Clientes Naturales</h3>
-                    <table class="table table-bordered  text-center align-middle">
+                    <table id="tabla-clienteNat" class="table table-bordered ">
                         <thead>
                             <tr>
                                 <td class="font-weight: 700; font-size:10px; text-align: center!important;" 
@@ -88,87 +91,72 @@ include_once "../models/ClienteNaturalModel.php";
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-$resultado = ControladorClienteNatural::listar();
-while ($row = mysqli_fetch_assoc($resultado)): ?>
-                            <tr>
-                                <td>
-                                    <?=$row["nombre"]?>
-                                </td>
-                                <td>
-                                    <?=$row["direccion"]?></td>
-                                <td>
-                                    <?=$row["telefono"]?>
-                                </td>
-                                <td>
-                                    <?=$row["email"]?>
-                                </td>
-                                <td>
-                                    $<?=$row["ingresos"]?>
-                                </td>
-                                <td>
-                                    $<?=$row["egresos"]?>
-                                </td>
-                                <td>
-                                    <?=$row["estado_civil"]?>
-                                </td>
-                                <td>
-                                    <?=$row["lugar_trabajo"]?>
-                                </td>
-                                <td>
-                                    <?=$row["dui"]?>
-                                </td>
-                                <td>
-    <button type="button" class="btn btn-primary" onclick='verFiador(<?=json_encode($row)?>)' data-bs-toggle="modal" data-bs-target="#mdverF">
-        <i class="fa-solid fa-eye"></i>
-    </button>
-</td>
-                                
-                                <td>
-                                <?php
-                                    $clasificacion = $row["clasificacion_nombre"];
+    <?php
+    $resultado = ControladorClienteNatural::listar();
+    while ($row = mysqli_fetch_assoc($resultado)): ?>
+        <tr>
+            <td><?=$row["nombre"]?></td>
+            <td><?=$row["direccion"]?></td>
+            <td><?=$row["telefono"]?></td>
+            <td><?=$row["email"]?></td>
+            <td>
+                <?= $row["ingresos"] > 0 ? "$" . number_format($row["ingresos"], 2) : '' ?>
+            </td>
+            <td>
+                <?= $row["egresos"] > 0 ? "$" . number_format($row["egresos"], 2) : '' ?>
+            </td>
+            <td><?=$row["estado_civil"]?></td>
+            <td><?=$row["lugar_trabajo"]?></td>
+            <td><?=$row["dui"]?></td>
+            <td>
+                <?php if (!empty($row["fiador_id"])): ?>
+                    <button type="button" class="btn btn-primary" 
+                        onclick='verFiador(<?=json_encode($row)?>)' 
+                        data-bs-toggle="modal" data-bs-target="#mdverF">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php
+                $clasificacion = $row["clasificacion_nombre"];
+                if ($clasificacion == 'A') {
+                    echo '<span class="badge bg-green text-green-fg">A</span>';
+                } elseif ($clasificacion == 'B') {
+                    echo '<span class="badge bg-yellow text-yellow-fg">B</span>';
+                } elseif ($clasificacion == 'C') {
+                    echo '<span class="badge bg-orange text-orange-fg">C</span>';
+                } elseif ($clasificacion == 'D') {
+                    echo '<span class="badge bg-red text-red-fg">D</span>';
+                }
+                ?>
+            </td>
+            <td>
+                <?= $row["estado"] ? '<span class="badge bg-green text-green-fg">Activo</span>' : '<span class="badge bg-red text-red-fg">Incobrable</span>' ?>
+            </td>
+            <th>
+                <div class="d-flex justify-content-center">
+                    <button type="button" onclick='editar(<?=json_encode($row)?>)'
+                        id="btn-editar" class="btn btn-warning me-2" data-bs-toggle="modal"
+                        data-bs-target="#mdCN">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </button>
 
-                                if ($clasificacion == 'A') {
-                                    echo '<span class="badge bg-green text-green-fg">A</span>';
-                                } elseif ($clasificacion == 'B') {
-                                    echo '<span class="badge bg-yellow text-yellow-fg">B</span>';
-                                } elseif ($clasificacion == 'C') {
-                                    echo '<span class="badge bg-orange text-orange-fg">C</span>';
-                                } elseif ($clasificacion == 'D') {
-                                    echo '<span class="badge bg-red text-red-fg">D</span>';
-                                }
-                                 ?>
-                                 </td>
-                                
-                                 <td>
-                                        <?=$row["estado"] ? '<span class="badge bg-green text-green-fg">Activo</span>' : '<span class="badge bg-red text-red-fg">Incobrable</span>'?>
-                                    </td>
-                                <th>
-                                    <div class="d-flex justify-content-center">
+                    <button class="btn <?=$row["estado"] ? 'btn-danger' : 'btn-success'?> me-2"
+                        data-bs-toggle="modal" data-bs-target="#mdCN"
+                        onclick='cambiarEstado(<?=json_encode($row)?>)'>
+                        <?=$row["estado"] ? '<i class="fa fa-user-times" aria-hidden="true"></i>' : '<i class="fa fa-user" aria-hidden="true"></i>'?>
+                    </button>
+                    <button class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#mdCN" onclick='eliminar(<?=json_encode($row)?>)'>
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </th>
+        </tr>
+    <?php endwhile; ?>
+</tbody>
 
-                                    <button type="button" onclick='editar(<?=json_encode($row)?>)'
-                                                id="btn-editar" class="btn btn-warning me-2" data-bs-toggle="modal"
-                                                data-bs-target="#mdCN">
-
-                                                <i class="fa-regular fa-pen-to-square"></i>
-                                            </button>
-
-                                         <button class="btn <?=$row["estado"] ? 'btn-danger' : 'btn-success'?> me-2"
-                                                data-bs-toggle="modal" data-bs-target="#mdCN"
-                                                onclick='cambiarEstado(<?=json_encode($row)?>)'>
-                                                <?=$row["estado"] ? '<i class="fa fa-user-times" aria-hidden="true"></i>' : '<i class="fa fa-user" aria-hidden="true"></i>'?></button>
-                                                <button class="btn btn-danger " data-bs-toggle="modal"
-                                                data-bs-target="#mdCN" onclick='eliminar(<?=json_encode($row)?>)'>
-                                                <i class="fa-solid fa-trash"></i></button>
-                                    </div>
-                                </th>
-                            </tr>
-
-                            
-
-                            <?php endwhile;?>
-
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -185,6 +173,17 @@ while ($row = mysqli_fetch_assoc($resultado)): ?>
 
 
     <script>
+
+
+$(document).ready(function() {
+            $('#tabla-clienteNat').DataTable({
+                "language": {
+                    "url": "./../public/assets/libs/datatables/esp.json"
+                },
+            });
+        });
+
+
     function editar(data) {
         document.getElementById("nombre").removeAttribute("disabled", "");
         document.getElementById("direccion").removeAttribute("disabled", "");

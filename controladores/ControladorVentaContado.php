@@ -41,8 +41,8 @@ if (isset($_POST["action"])) {
             var_dump($_POST);
 
             $_SESSION['success_messageV'] = 'Venta agregada exitosamente!';
-            VentaModel::agregar($_POST['fecha'], $_POST['tipo_venta'], $_POST['tipo_cliente'], $_POST['clienteSelect'], $_POST['usuario_id'], $_POST['total_venta'], $dataArray);            
-            
+            VentaModel::agregar($_POST['fecha'], $_POST['tipo_venta'], $_POST['tipo_cliente'], $_POST['clienteSelect'], $_POST['usuario_id'], $_POST['total_venta'], $dataArray);
+
             header("Location: ../vistas/lista-Venta-contado.php");
             break;
         case "editar":
@@ -57,6 +57,14 @@ if (isset($_POST["action"])) {
         case "ver-det":
             $detalle = VentaModel::listarDet($_POST['id']);
             print json_encode($detalle);
+            break;
+        case "ver-det-notas":
+            $detalleN = VentaModel::listarDetN($_POST['id']);
+            print json_encode($detalleN);
+            break;
+        case "gen-nota":
+            $_SESSION['success_messageNC'] = 'Nota de credito generada';
+            VentaModel::agregarNotaC($_POST['id-venta'], $_POST['fecha'], $_POST['monto'], $_POST['motivo'], $_POST['usuario'], true);
             break;
 
 
