@@ -303,16 +303,16 @@ if (!isset($_SESSION['usuario'])) {
                                                 Cuentas por cobrar
                                             </a>
                                             <div class="dropdown-menu">
-                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
+                                                <a href="../vistas/gestion-cuentas-por-cobrar.php" class="dropdown-item">
                                                     Gestion de cuentas por cobrar
                                                 </a>
                                                 <a href="../vistas/lista-intereses.php" class="dropdown-item">
                                                     Intereses
                                                 </a>
-                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
+                                                <a href="../vistas/embargo.php" class="dropdown-item">
                                                     Embargo
                                                 </a>
-                                                <a href="../vistas/mantenimiento.php" class="dropdown-item">
+                                                <a href="../vistas/historial-pagos.php" class="dropdown-item">
                                                     Historial de pago
                                                 </a>
                                             </div>

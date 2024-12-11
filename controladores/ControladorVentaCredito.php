@@ -38,7 +38,8 @@ class ControladorVentaCredito
 
                 // Manejo del archivo aval
                 if (isset($_FILES['aval']) && $_FILES['aval']['error'] == 0) {
-                    $tipoCliente = $tipo_cliente == 'cliente-natural' ? 'natural' : 'juridico';
+                    $tipoCliente = ($tipo_cliente === 'natural') ? 'natural' : 'juridico';
+
                     $extension = strtolower(pathinfo($_FILES['aval']['name'], PATHINFO_EXTENSION));
 
                     // Validar que la extensión sea PDF
