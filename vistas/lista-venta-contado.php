@@ -70,34 +70,35 @@ include "../models/UsuarioModel.php";
                             </thead>
                             <tbody>
                                 <?php foreach (ControladorVentaContado::listar() as $row): ?>
-                                    <tr>
-                                        <td><?= $row["id"] ?></td>
-                                        <td><?= $row["fecha"] ?></td>
-                                        <td><?= $row["cnatural"] ? $row["cnatural"] : $row["cjurdico"] ?></td>
-                                        <td><?= $row["usuario"] ?> </td>
-                                        <td>$<?= $row["total_venta"] ?></td>
-                                        <th>
-                                            <div class="d-flex justify-content-center">
-                                                <button type="button" class="btn btn-info me-2" data-toggle="tooltip"
-                                                    data-bs-placement="top" title="Ver detalles" data-bs-toggle="modal"
-                                                    data-bs-target="#mdverDetVCont"
-                                                    onclick='verDetalleVentaCont(<?= json_encode($row["id"]) ?>)'><i
-                                                        class="fa-solid fa-bars"></i></button>
-                                                <button type="button" class="btn btn-warning me-2" data-toggle="tooltip"
-                                                    data-bs-placement="top" title="Generar nota de credito"
-                                                    data-bs-toggle="modal" data-bs-target="#mdNotaCredito"><i
-                                                        class="fa-solid fa-rotate-left"></i></button>
-                                                <form method="POST" action="../includes/Facturas/invoicecontado.php"
-                                                    target="_blank">
-                                                    <input type="hidden" name="id" value="<?= $row["id"] ?>">
-                                                    <button type="submit" class="btn btn-info me-2" data-toggle="tooltip"
-                                                        data-bs-placement="top" title="Generar Factura"
-                                                        data-bs-toggle="modal"><i
-                                                            class="fa-solid fa-file-lines"></i></button>
-                                                </form>
-                                            </div>
-                                        </th>
-                                    </tr>
+                                <tr>
+                                    <td><?= $row["id"] ?></td>
+                                    <td><?= $row["fecha"] ?></td>
+                                    <td><?= $row["cnatural"] ? $row["cnatural"] : $row["cjurdico"] ?></td>
+                                    <td><?= $row["usuario"] ?> </td>
+                                    <td>$<?= $row["total_venta"] ?></td>
+                                    <th>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-info me-2" data-toggle="tooltip"
+                                                data-bs-placement="top" title="Ver detalles" data-bs-toggle="modal"
+                                                data-bs-target="#mdverDetVCont"
+                                                onclick='verDetalleVentaCont(<?= json_encode($row["id"]) ?>)'><i
+                                                    class="fa-solid fa-bars"></i></button>
+                                            <button type="button" class="btn btn-warning me-2" data-toggle="tooltip"
+                                                data-bs-placement="top" title="Generar nota de credito"
+                                                data-bs-toggle="modal" data-bs-target="#mdNotaCredito"
+                                                onclick='notaCredito(<?= json_encode($row) ?>)'><i
+                                                    class="fa-solid fa-rotate-left"></i></button>
+                                            <form method="POST" action="../includes/Facturas/invoicecontado.php"
+                                                target="_blank">
+                                                <input type="hidden" name="id" value="<?= $row["id"] ?>">
+                                                <button type="submit" class="btn btn-info me-2" data-toggle="tooltip"
+                                                    data-bs-placement="top" title="Generar Factura"
+                                                    data-bs-toggle="modal"><i
+                                                        class="fa-solid fa-file-lines"></i></button>
+                                            </form>
+                                        </div>
+                                    </th>
+                                </tr>
 
                                 <?php endforeach; ?>
 
@@ -117,46 +118,92 @@ include "../models/UsuarioModel.php";
     <script src="../public/assets/js/toast.js"></script>
 
     <script>
-        function factura(id) {
-            // Dimensiones de la nueva ventana
-            const width = 800;
-            const height = 600;
+    function factura(id) {
+        // Dimensiones de la nueva ventana
+        const width = 800;
+        const height = 600;
 
-            // Calcular posición para centrar la ventana
-            const screenWidth = window.screen.width;
-            const screenHeight = window.screen.height;
+        // Calcular posición para centrar la ventana
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
 
-            const left = (screenWidth - width) / 2;
-            const top = (screenHeight - height) / 2;
+        const left = (screenWidth - width) / 2;
+        const top = (screenHeight - height) / 2;
 
-            // Abrir ventana centrada
-            window.open(
-                '../includes/Facturas/invoicecontado.php',
-                '_blank',
-                `width=${width},height=${height},scrollbars=yes,left=${left},top=${top}`
-            );
+        // Abrir ventana centrada
+        window.open(
+            '../includes/Facturas/invoicecontado.php',
+            '_blank',
+            `width=${width},height=${height},scrollbars=yes,left=${left},top=${top}`
+        );
+    }
+    $(document).ready(function() {
+        $('#tabla-ventas').DataTable({
+            "language": {
+                "url": "./../public/assets/libs/datatables/esp.json"
+            },
+        });
+    });
+    // Inicializar tooltips de Bootstrap
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+    // Check if a success message is set in the session
+    <?php if (isset($_SESSION['success_messageNC'])): ?>
+    Swal.fire('<?php echo $_SESSION['success_messageNC']; ?>', '', 'success');
+    <?php unset($_SESSION['success_messageC']); // Clear the message ?>
+    <?php endif; ?>
+
+    let verDetalleVentaCont = (id) => {
+        Swal.fire({
+            title: 'Procesando...',
+            text: 'Por favor espera mientras procesamos tu solicitud',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        let datos = {
+            "action": "ver-det",
+            "id": id
         }
-        $(document).ready(function () {
-            $('#tabla-ventas').DataTable({
-                "language": {
-                    "url": "./../public/assets/libs/datatables/esp.json"
-                },
-            });
+        $.ajax({
+            dataType: "json",
+            method: "POST",
+            url: "../controladores/ControladorVentaContado.php",
+            data: datos,
+        }).done(function(json) {
+            swal.close();
+            document.getElementById("dataDV").innerHTML = json
         });
-        // Inicializar tooltips de Bootstrap
-        document.addEventListener('DOMContentLoaded', function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        });
-        // Check if a success message is set in the session
-        <?php if (isset($_SESSION['success_messageC'])): ?>
-            Swal.fire('<?php echo $_SESSION['success_messageC']; ?>', '', 'success');
-            <?php unset($_SESSION['success_messageC']); // Clear the message ?>
-        <?php endif; ?>
+    }
 
-        let verDetalleVentaCont = (id) => {
+    let notaCredito = (data) => {
+        Swal.fire({
+            title: 'Procesando...',
+            text: 'Por favor espera mientras procesamos tu solicitud',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        document.getElementById("action").value = "gen-nota";
+        document.getElementById("id-venta").value = data.id || "";
+        document.getElementById("txtid-venta").innerHTML = data.id || "";
+        document.getElementById("monto").value = data.total_venta || "";
+        //si es para ver es asi
+        //document.getElementById("usuario").value = data.usuario || "";
+        document.getElementById("usuario").value = '<?php echo $_SESSION['nombre']; ?>';
+        swal.close();
+    }
+
+    let mostrarTablaProducto = (value) => {
+        if (!value) {
+            document.getElementById("dataDVN").innerHTML = ""
+        } else {
             Swal.fire({
                 title: 'Procesando...',
                 text: 'Por favor espera mientras procesamos tu solicitud',
@@ -165,8 +212,11 @@ include "../models/UsuarioModel.php";
                     Swal.showLoading();
                 }
             });
+            let id = document.getElementById("id-venta").value
+            console.log(id);
+
             let datos = {
-                "action": "ver-det",
+                "action": "ver-det-notas",
                 "id": id
             }
             $.ajax({
@@ -174,20 +224,19 @@ include "../models/UsuarioModel.php";
                 method: "POST",
                 url: "../controladores/ControladorVentaContado.php",
                 data: datos,
-            }).done(function (json) {
+            }).done(function(json) {
                 swal.close();
-                document.getElementById("dataDV").innerHTML = json
-                /* if (json.exito) {
-                    
-                } else {
-                    Swal.fire({
-                        icon: "error",
-                        title: json[1],
-                        text: json.error,
-                    });
-                } */
+                document.getElementById("dataDVN").innerHTML = json
             });
         }
+    }
+
+    let calcularMonto = (precio_u) => {
+        monto_actual = document.getElementById("monto").value
+        monto_nuevo = monto_actual - precio_u
+        document.getElementById("monto").value = monto_nuevo || "";
+        swal.close();
+    }
     </script>
 
 </body>

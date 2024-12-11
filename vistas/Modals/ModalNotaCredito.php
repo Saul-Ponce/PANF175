@@ -15,12 +15,13 @@ $query = mysqli_query($con, $sql);
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
                 </button>
             </div>
-            <form action="../controladores/ControladorUsuario.php" method="POST" name="form" id="form">
+            <form action="../controladores/ControladorVentaContado.php" method="POST" name="form" id="form">
                 <div class="modal-body">
                     <input type="hidden" id="usuario_id" name="usuario_id" value="">
                     <input type="hidden" name="action" id="action" value="">
                     <input type="hidden" name="id" id="id" value="">
                     <input type="hidden" name="id-venta" id="id-venta" value="">
+                    <h5 class="modal-title" id="titulo">ID #<span id="txtid-venta"></span></h5>
                     <div class="row">
                         <div class="col-md-6">
                             <label>Fecha</label>
@@ -31,7 +32,7 @@ $query = mysqli_query($con, $sql);
                         </div>
                         <div class="col-md-6">
                             <label>Monto($)</label>
-                            <input readonly class="form-control" id="txtmonto" name="txtmonto" type="number" />
+                            <input readonly class="form-control" id="monto" name="monto" type="number" />
                         </div>
                         <div class="form-group col-md-6">
                             <label for="recipient-name" class="col-form-label">Motivo</label>
@@ -54,8 +55,8 @@ $query = mysqli_query($con, $sql);
                                 <span onclick="mostrarTablaProducto(true)" class="form-selectgroup-label">
                                     Productos especificos</span>
                             </label>
-                            <div id="dataDV"></div>
                         </div>
+                        <div id="dataDVN"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -68,18 +69,18 @@ $query = mysqli_query($con, $sql);
 </div>
 
 <script>
-    //let formUsuario = document.getElementById('form');
+//let formUsuario = document.getElementById('form');
 
 
 
-    function Solo_Texto(e) {
-        var code;
-        if (!e) var e = window.event;
-        if (e.keyCode) code = e.keyCode;
-        else if (e.which) code = e.which;
-        var character = String.fromCharCode(code);
-        var AllowRegex = /^[\ba-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
-        if (AllowRegex.test(character)) return true;
-        return false;
-    }
+function Solo_Texto(e) {
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    var AllowRegex = /^[\ba-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
+    if (AllowRegex.test(character)) return true;
+    return false;
+}
 </script>
