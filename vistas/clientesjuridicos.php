@@ -1,31 +1,31 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario'])) {
-    echo '
-    <script>
-        window.location = "../index.php"
-    </script>
-    ';
-    session_destroy();
-    die();
+if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || $_SESSION['rol'] != "Administrador") {
+    if($_SESSION['rol'] != "Vendedor"){
+        echo '
+        <script>
+            alert("Por favor Inicia Sesion");
+            window.location = "../index.html"
+        </script>
+        ';
+        session_destroy();
+        die();
+    }
 }
 
 require_once("../models/conexion.php");
-include("../models/ClienteJuridicoModel.php");
-include("../models/ClasificacionModel.php");
-
-// Obtener las clasificaciones existentes para el select
-$clasificaciones = ClasificacionModel::listar();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Cliente Jurídico</title>
     <?php include '../layouts/headerStyles.php'; ?>
 </head>
+
 <body>
     <?php include '../layouts/Navbar.php'; ?>
 
@@ -36,9 +36,11 @@ $clasificaciones = ClasificacionModel::listar();
                     <h3 class="card-title">Agregar Cliente Jurídico</h3>
                 </div>
                 <div class="card-body">
+                    <!-- Inicio del formulario principal -->
                     <form action="../controladores/ControladorClienteJuridico.php" method="POST" class="row" name="form">
                         <input type="hidden" name="action" value="insert">
-                        
+
+                        <!-- Campos del cliente jurídico -->
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nombre">Nombre de la Empresa</label>
@@ -54,7 +56,7 @@ $clasificaciones = ClasificacionModel::listar();
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="telefono">Teléfono</label>
-                                <input type="text" class="form-control" id="telefono" name="telefono" maxlength="15" required>
+                                <input type="text" class="form-control" id="telefono" name="telefono" maxlength="9" required>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -63,44 +65,68 @@ $clasificaciones = ClasificacionModel::listar();
                                 <input type="email" class="form-control" id="email" name="email" required>
                             </div>
                         </div>
+
+                        <!-- Nuevos campos NIT y NRC -->
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="representante_legal">Representante Legal</label>
-                                <input type="text" class="form-control" id="representante_legal" name="representante_legal" required>
+                                <label for="nit">NIT</label>
+                                <input type="text" class="form-control" id="nit" name="nit" maxlength="17" placeholder="0000-000000-000-0" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="aval">Aval</label>
-                                <input type="text" class="form-control" id="aval" name="aval">
+                                <label for="nrc">NRC</label>
+                                <input type="text" class="form-control" id="nrc" name="nrc" maxlength="8" placeholder="000000-0" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="clasificacion_id">Clasificación</label>
-                                <select class="form-select" id="clasificacion_id" name="clasificacion_id" required>
-                                    <option value="" disabled selected>Seleccione una clasificación</option>
-                                    <?php while ($clasificacion = mysqli_fetch_assoc($clasificaciones)) : ?>
-                                        <option value="<?php echo $clasificacion['id']; ?>">
-                                            <?php echo $clasificacion['nombre']; ?>
-                                        </option>
-                                    <?php endwhile; ?>
-                                </select>
+
+                       <!-- Botones en columna alineados -->
+<div class="col-md-8 d-flex justify-content-between align-items-center">
+    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalRepresentanteLegal">
+        Agregar Representante Legal
+    </button>
+    <button class="btn btn-primary" type="submit">Agregar Cliente Jurídico</button>
+</div>
+                        <!-- Modal para agregar representante legal (dentro del formulario) -->
+                        <div class="modal fade" id="modalRepresentanteLegal" tabindex="-1" aria-labelledby="modalRepresentanteLegalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Agregar Representante Legal</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Campos del representante legal -->
+                                        <div class="mb-3">
+                                            <label for="nombre_representante">Nombre</label>
+                                            <input type="text" class="form-control" id="nombre_representante" name="nombre_representante" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="direccion_representante">Dirección</label>
+                                            <input type="text" class="form-control" id="direccion_representante" name="direccion_representante" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="telefono_representante">Teléfono</label>
+                                            <input type="text" class="form-control" id="telefono_representante" name="telefono_representante" maxlength="9" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email_representante">Correo Electrónico</label>
+                                            <input type="email" class="form-control" id="email_representante" name="email_representante" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="dui_representante">DUI</label>
+                                            <input type="text" class="form-control" id="dui_representante" name="dui_representante" maxlength="10" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <!-- Botón "Guardar" que cierra el modal -->
+                                        <button type="button" class="btn btn-primary" onclick="closeModal()">Guardar</button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="estado">Estado</label>
-                                <select class="form-select" id="estado" name="estado" required>
-                                    <option value="activo">Activo</option>
-                                    <option value="inactivo">Inactivo</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <button class="btn btn-primary" type="submit">Agregar Cliente Jurídico</button>
                         </div>
                     </form>
+                    <!-- Fin del formulario principal -->
                 </div>
             </div>
         </div>
@@ -109,25 +135,76 @@ $clasificaciones = ClasificacionModel::listar();
     <?php include '../layouts/footerScript.php'; ?>
 
     <script>
-        function Solo_Texto(e) {
-            var code;
-            if (!e) var e = window.event;
-            if (e.keyCode) code = e.keyCode;
-            else if (e.which) code = e.which;
-            var character = String.fromCharCode(code);
-            var AllowRegex = /^[\ba-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
-            if (AllowRegex.test(character)) return true;
-            return false;
-        }
-
-        function validarFormulario() {
-            const clasificacion_id = document.getElementById('clasificacion_id').value;
-            if (clasificacion_id == '') {
-                Swal.fire("Debe seleccionar una clasificación");
-                return false; // Evitar el envío del formulario
+        // Máscara para el campo de teléfono del cliente jurídico
+        document.getElementById("telefono").addEventListener("input", function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 4) {
+                value = value.slice(0, 4) + '-' + value.slice(4, 8);
             }
-            return true;
+            this.value = value.slice(0, 9);
+        });
+
+        // Máscara para el campo de teléfono del representante legal
+        document.getElementById("telefono_representante").addEventListener("input", function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 4) {
+                value = value.slice(0, 4) + '-' + value.slice(4, 8);
+            }
+            this.value = value.slice(0, 9);
+        });
+
+        // Máscara para el campo de DUI del representante legal
+        document.getElementById("dui_representante").addEventListener("input", function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 8) {
+                value = value.slice(0, 8) + '-' + value.slice(8, 9);
+            }
+            this.value = value.slice(0, 10);
+        });
+
+        // Nueva máscara para el campo NIT
+        document.getElementById("nit").addEventListener("input", function(e) {
+            let value = this.value.replace(/\D/g, '');
+            let formatted = '';
+
+            if (value.length > 0) {
+                // Formato XXXX-XXXXXX-XXX-X
+                if (value.length > 4) formatted += value.slice(0, 4) + '-';
+                else formatted += value.slice(0, 4);
+
+                if (value.length > 10) formatted += value.slice(4, 10) + '-';
+                else if (value.length > 4) formatted += value.slice(4);
+
+                if (value.length > 13) formatted += value.slice(10, 13) + '-';
+                else if (value.length > 10) formatted += value.slice(10);
+
+                if (value.length > 13) formatted += value.slice(13, 14);
+            }
+
+            this.value = formatted;
+        });
+
+        // Nueva máscara para el campo NRC
+        document.getElementById("nrc").addEventListener("input", function(e) {
+            let value = this.value.replace(/\D/g, '');
+            let formatted = '';
+
+            if (value.length > 0) {
+                // Formato XXXXXX-X
+                if (value.length > 6) formatted += value.slice(0, 6) + '-';
+                else formatted += value.slice(0, 6);
+
+                if (value.length > 6) formatted += value.slice(6, 7);
+            }
+
+            this.value = formatted;
+        });
+
+        function closeModal() {
+            var modal = bootstrap.Modal.getInstance(document.getElementById('modalRepresentanteLegal'));
+            modal.hide();
         }
     </script>
 </body>
+
 </html>

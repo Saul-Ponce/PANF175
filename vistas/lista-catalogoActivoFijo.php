@@ -27,20 +27,16 @@ include_once "../models/CatalogoActivoFijoModel.php";
 
 <body>
     <?php include '../layouts/Navbar.php'; ?>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./../public/assets/libs/datatables/datatables.min.js"></script>
     <div class="main-panel">
         <div class="container mt-4 ">
             <div class="card">
                 <div class="card-body">
-                    <!-- Botón para redirigir a la página del formulario -->
-                    <div class="d-flex justify-content-end mb-3">
-                        <a href="../vistas/registrar_catalogo_tipo_activo.php" class="btn btn-primary">
-                            Agregar Nuevo Tipo de Activo Fijo
-                        </a>
-                    </div>
                     <h3 class="card-title text-center align-middle" style="font-weight: 700;">Catalogo Activo fijo</h3>
                     <div class="table-responsive">
-                        <table class="table table-bordered text-center align-middle">
+                        <table id="tabla-catalogoActivoFijo" class="table table-bordered text-center align-middle">
                             <thead>
                                 <tr>
                                     <th style="font-size:13px !important;" scope="col">Nombre</th>
@@ -58,7 +54,7 @@ include_once "../models/CatalogoActivoFijoModel.php";
                                     <tr>
                                         <td><?= $row["nombreActivo"] ?></td>
                                         <td><?= $row["descripcion"] ?></td>
-                                        <td><?= $row["porcentajeDepreciacion"] ?></td>
+                                        <td><?= $row["porcentajeDepreciacion"] ?>%</td>
                                         <td><?= $row["codigo"] ?></td>
                                         <td><?= $row["estado"] ? '<span class="badge bg-green text-green-fg">Activo</span>' : '<span class="badge bg-red text-red-fg">Inactivo</span>' ?></td>
                                         <th>
@@ -94,6 +90,14 @@ include_once "../models/CatalogoActivoFijoModel.php";
     <?php include '../layouts/footerScript.php'; ?>
     <?php include '../vistas/Modals/ModalEditarCatalogoActivoFijo.php'; ?>
     <script>
+        $(document).ready(function() {
+            $('#tabla-catalogoActivoFijo').DataTable({
+                "language": {
+                    "url": "./../public/assets/libs/datatables/esp.json"
+                },
+            });
+        });
+
         function editar(data) {
             console.log(data);
             document.getElementById("titulo").innerHTML = "Editar catalogo tipos de activo"

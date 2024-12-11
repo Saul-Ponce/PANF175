@@ -31,8 +31,10 @@ $query = mysqli_query($con, $sql);
 
 <body>
     <?php include '../layouts/Navbar.php'; ?>
+    
 
     <div class="page-body">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <div class="container-xl">
             <div class="card">
                 <div class="card-header">
@@ -45,14 +47,14 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre"
+                                <input type="text" class="form-control" id="nombre" name="nombre"autocomplete="off" 
                                     onkeypress="return Solo_Texto(event);">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="direccion">Direccion</label>
-                                <input type="text" class="form-control" id="direccion" name="direccion"
+                                <input type="text" class="form-control" id="direccion" name="direccion"autocomplete="off" 
                                     onkeypress="return Solo_Texto(event);">
                             </div>
                         </div>
@@ -60,7 +62,7 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="telefono">telefono</label>
-                                <input type="text" class="form-control" id="telefono" name="telefono">
+                                <input type="text" class="form-control" id="telefono" name="telefono" autocomplete="off" >
                             </div>
                         </div>
 
@@ -68,27 +70,27 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" name="email">
+                                <input type="email" class="form-control" id="email" name="email" autocomplete="off" >
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="ingresos">Ingresos</label>
-                                <input type="text" class="form-control" id="ingresos" name="ingresos">
+                                <input type="number" class="form-control" id="ingresos" name="ingresos" autocomplete="off" step="0.01"  >
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="egresos">egresos</label>
-                                <input type="text" class="form-control" id="egresos" name="egresos">
+                                <input type="number" class="form-control" id="egresos" name="egresos" autocomplete="off" step="0.01" >
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="estado_civil">Estado civil</label>
-                                <select class="form-select" id="estado_civil" name="estado_civil">
-                                    <option value="0">Seleccione</option>
+                                <select class="form-select" id="estado_civil" name="estado_civil" aria-placeholder="Seleccione">
+                                    <option value="">Seleccione</option>
                                     <option value="soltero">Soltero</option>
                                     <option value="casado">Casado</option>
                                     <option value="viudo">Viudo</option>
@@ -102,7 +104,7 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="lugar">Lugar de trabajo</label>
-                                <input type="text" class="form-control" id="lugar_trabajo" name="lugar_trabajo"
+                                <input type="text" class="form-control" id="lugar_trabajo" name="lugar_trabajo" autocomplete="off" 
                                     onkeypress="return Solo_Texto(event);">
                             </div>
                         </div>
@@ -110,7 +112,7 @@ $query = mysqli_query($con, $sql);
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="dui">DUI</label>
-                                <input type="text" class="form-control" id="dui" name="dui">
+                                <input type="text" class="form-control" id="dui" name="dui" autocomplete="off">
                             </div>
                         </div>
 
@@ -119,7 +121,7 @@ $query = mysqli_query($con, $sql);
                             <div class="mb-3">
                                 <label for="fiador_id">Fiador</label>
                                 <select class="form-select" id="fiador_id" name="fiador_id">
-                                    <option value="0">Seleccione</option>
+                                    <option value="">Seleccione</option>
                                     <?php foreach ($query as $row): ?>
                                     <option value="<?=$row["id"]?>"> <?=$row["nombre"]?> <?="-"?> <?=$row["dui"]?></option>
                                     <?php endforeach;?>
@@ -142,9 +144,21 @@ $query = mysqli_query($con, $sql);
 
     <!-- Scripts de Bootstrap 4 y otros aquí -->
     <?php include '../layouts/footerScript.php'; ?>
+    <script src="../public/assets/js/toast.js"></script>
 
 
     <script>
+
+$(document).ready(function() {
+        window.TomSelect && (new TomSelect("#fiador_id", {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        }));
+    });
+
         function validarFormulario() {
             var rol = document.getElementById('rol').value;
             if (rol == 0) {
@@ -153,6 +167,22 @@ $query = mysqli_query($con, $sql);
             }
             return true;
         }
+        document.getElementById("telefono").addEventListener("input", function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 4) {
+                value = value.slice(0, 4) + '-' + value.slice(4, 8);
+            }
+            this.value = value.slice(0, 9);
+        });
+
+        // Máscara para el campo de DUI del representante legal
+        document.getElementById("dui").addEventListener("input", function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 8) {
+                value = value.slice(0, 8) + '-' + value.slice(8, 9);
+            }
+            this.value = value.slice(0, 10);
+        });
 
         function Solo_Texto(e) {
             var code;

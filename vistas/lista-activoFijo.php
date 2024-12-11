@@ -27,29 +27,26 @@ include_once "../models/ActivoFijoModel.php";
 
 <body>
     <?php include '../layouts/Navbar.php'; ?>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./../public/assets/libs/datatables/datatables.min.js"></script>
     <div class="main-panel">
         <div class="container mt-4 ">
             <div class="card">
                 <div class="card-body">
-                    <!-- Botón para redirigir a la página del formulario -->
-                    <div class="d-flex justify-content-end mb-3">
-                        <a href="../vistas/registrar_activoFijo.php" class="btn btn-primary">
-                            Agregar Activo Fijo
-                        </a>
-                    </div>
                     <h3 class="card-title text-center align-middle" style="font-weight: 700;">Activo fijo</h3>
                     <div class="table-responsive">
-                        <table class="table table-bordered text-center align-middle">
+                        <table id="tabla-activoFijo" class="table table-bordered text-center align-middle">
                             <thead>
                                 <tr>
                                     <th style="font-size:13px !important;" scope="col">Codigo</th>
                                     <th style="font-size:13px !important;" scope="col">Nombre</th>
-                                    <th style="font-size:13px !important;" scope="col">Tipo A.</th>
-                                    <th style="font-size:13px !important;" scope="col">Fecha adquis</th>
-                                    <th style="font-size:13px !important;" scope="col">Valor adquis</th>
+                                    <th style="font-size:13px !important;" scope="col">Tipo</th>
+                                    <th style="font-size:13px !important;" scope="col">Fecha</th>
+                                    <th style="font-size:13px !important;" scope="col">Valor</th>
                                     <th style="font-size:13px !important;" scope="col">Vida util</th>
-                                    <th style="font-size:13px !important;" scope="col">Estado A.</th>
+                                    <th style="font-size:13px !important;" scope="col">Adquirido</th>
+                                    <th style="font-size:13px !important;" scope="col">Estado</th>
                                     <th style="font-size:13px !important;" scope="col">Acciones</th>
                                 </tr>
                             </thead>
@@ -62,57 +59,64 @@ include_once "../models/ActivoFijoModel.php";
                                         <td><?= $row["nombre"] ?></td>
                                         <td><?= $row["nombreActivo"] ?></td>
                                         <td><?= $row["fecha_adquisicion"] ?></td>
-                                        <td><?= $row["valor_adquisicion"] ?></td>
-                                        <td><?= $row["vida_util"] ?></td>
+                                        <td><?= "$" . number_format($row["valor_adquisicion"], 2) ?></td>
+                                        <td><?= $row["vida_util"] . " años" ?></td>
                                         <td>
                                             <?php
-                                            $estado = $row["estadoActivo"];
-                                            switch ($estado) {
+                                            switch ($row["estadoActivo"]) {
                                                 case 1:
                                                     echo "Nuevo";
                                                     break;
                                                 case 2:
-                                                    echo "Activo";
-                                                    break;
-                                                case 3:
-                                                    echo "Mantenimiento";
-                                                    break;
-                                                case 4:
-                                                    echo "Inactivo";
-                                                    break;
-                                                case 5:
-                                                    echo "Donado";
-                                                    break;
-                                                case 6:
-                                                    echo "Vendido";
-                                                    break;
-                                                case 7:
-                                                    echo "Votado (Desechado)";
-                                                    break;
-                                                case 8:
-                                                    echo "Pendiente de Revisión";
-                                                    break;
-                                                case 9:
-                                                    echo "Obsoleto";
+                                                    echo "Usado";
                                                     break;
                                                 default:
-                                                    echo "Desconocido";
+                                                    echo "Estado desconocido"; // En caso de que haya un valor diferente
+                                                    break;
                                             }
                                             ?>
                                         </td>
-
+                                        <td>
+                                            <?php
+                                            switch ($row["darBaja"]) {
+                                                case 1:
+                                                    echo "Dar de baja";
+                                                    break;
+                                                case 2:
+                                                    echo "Donar";
+                                                    break;
+                                                case 3:
+                                                    echo "Vendido";
+                                                    break;
+                                                case 4:
+                                                    echo "Votarlo";
+                                                    break;
+                                                default:
+                                                    echo "Estado desconocido"; // En caso de que haya un valor diferente
+                                                    break;
+                                            }
+                                            ?>
+                                        </td>
                                         <th>
                                             <div class="d-flex justify-content-center">
                                                 <button type="button" onclick='editar(<?= json_encode($row) ?>)'
-                                                    id="btn-editar" class="btn btn-warning me-2" data-bs-toggle="modal"
+                                                    id="btn-editar" class="btn btn-warning me-1" data-bs-toggle="modal"
                                                     title="modificar"
                                                     data-bs-target="#mdActivofijo">
                                                     <i class="fa-regular fa-pen-to-square"></i>
                                                 </button>
-                                                <button class="btn btn-danger " data-bs-toggle="modal"
-                                                    data-bs-target="#mdActivofijo" onclick='eliminar(<?= json_encode($row) ?>)'>
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </button>
+                                                <?php if ($_SESSION['rol'] == "Administrador"): ?>
+                                                    <button class="btn btn-danger me-1" data-bs-toggle="modal"
+                                                        title="Eliminar"
+                                                        data-bs-target="#mdActivofijo" onclick='eliminar(<?= json_encode($row) ?>)'>
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                    <button class="btn btn-secondary" data-bs-toggle="modal"
+                                                        title="Dar de baja"
+                                                        data-bs-target="#mdActivofijo" onclick='cambiarEstado(<?= json_encode($row) ?>)'>
+                                                        <i class="fas fa-sync-alt"></i>
+                                                    </button>
+                                                <?php endif ?>
                                             </div>
                                         </th>
                                     </tr>
@@ -129,6 +133,14 @@ include_once "../models/ActivoFijoModel.php";
     <?php include '../layouts/footerScript.php'; ?>
     <?php include '../vistas/Modals/ModalEditarActivoFijo.php'; ?>
     <script>
+        $(document).ready(function() {
+            $('#tabla-activoFijo').DataTable({
+                "language": {
+                    "url": "./../public/assets/libs/datatables/esp.json"
+                },
+            });
+        });
+
         function editar(data) {
             console.log(data);
             document.getElementById("titulo").innerHTML = "Editar activo fijo"
@@ -159,6 +171,7 @@ include_once "../models/ActivoFijoModel.php";
             document.getElementById("valor_adquisicion").setAttribute("disabled", "");
             document.getElementById("vida_util").setAttribute("disabled", "");
             document.getElementById("estadoActivo").setAttribute("disabled", "");
+            document.getElementById("darBaja").setAttribute("disabled", "");
 
             document.getElementById("action").value = "borrar";
             document.getElementById("id_activo").value = data.id_activo || "";
@@ -173,6 +186,33 @@ include_once "../models/ActivoFijoModel.php";
             document.getElementById("enviar").innerHTML = "Eliminar";
             document.getElementById("enviar").classList.remove('btn-primary');
             document.getElementById("enviar").classList.add('btn-danger');
+        }
+
+        function cambiarEstado(data) {
+            document.getElementById("titulo").innerHTML =
+                '¿SEGURO QUE DESEA DAR DE BAJA A ESTE ACTIVO FIJO?';
+
+            document.getElementById("codigoUnidad").setAttribute("disabled", "");
+            document.getElementById("nombre").setAttribute("disabled", "");
+            document.getElementById("idTipoActivo").setAttribute("disabled", "");
+            document.getElementById("fecha_adquisicion").setAttribute("disabled", "");
+            document.getElementById("valor_adquisicion").setAttribute("disabled", "");
+            document.getElementById("vida_util").setAttribute("disabled", "");
+            document.getElementById("estadoActivo").setAttribute("disabled", "");
+
+            document.getElementById("id_activo").value = data.id_activo || "";
+            document.getElementById("codigoUnidad").value = data.codigoUnidad || "";
+            document.getElementById("nombre").value = data.nombre || "";
+            document.getElementById("idTipoActivo").value = data.idTipoActivo || "";
+            document.getElementById("fecha_adquisicion").value = data.fecha_adquisicion || "";
+            document.getElementById("valor_adquisicion").value = data.valor_adquisicion || "";
+            document.getElementById("vida_util").value = data.vida_util || "";
+            document.getElementById("estadoActivo").value = data.estadoActivo || "";
+            document.getElementById("action").value = "cambiarEstado";
+            document.getElementById("darBaja").value = data.darBaja || "";
+            document.getElementById("enviar").innerHTML = "Guardar";
+            document.getElementById("enviar").classList.remove('btn-primary');
+            document.getElementById("enviar").classList.add('btn-warning');
         }
 
         // Check if a success message is set in the session

@@ -1,4 +1,9 @@
 <?php
+// Habilitar errores de PHP para ver mensajes de error
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 } 
@@ -20,20 +25,23 @@ if (isset($_POST["action"])) {
             $_SESSION['success_message'] = 'Clasificación agregada exitosamente!';
             ClasificacionModel::agregar($_POST['nombre'], $_POST['descripcion']);
             header("Location: ../vistas/lista-clasificacion.php");
-            break;
+            exit;
 
         case "editar":
             ClasificacionModel::editar($_POST);
+            $_SESSION['success_message'] = 'Clasificación editada exitosamente!';
             header("Location: ../vistas/lista-clasificacion.php");
-            break;
+            exit;
 
         case "borrar":
             ClasificacionModel::borrar($_POST['id']);
+            $_SESSION['success_message'] = 'Clasificación eliminada exitosamente!';
             header("Location: ../vistas/lista-clasificacion.php");
-            break;
+            exit;
 
         default:
-            break;
+            echo "Acción no válida";
+            exit;
     }
 }
 ?>

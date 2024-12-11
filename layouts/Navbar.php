@@ -19,7 +19,7 @@ if (!isset($_SESSION['usuario'])) {
             <span class="navbar-toggler-icon"></span>
         </button>
         <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-            <a href=".">
+            <a href="../vistas/home.php">
                 <img src="../../public/assets/img/logo-white.svg" width="200" height="100" alt="Punto digital"
                     class="navbar-brand-image" style="height: 4rem;">
             </a>
@@ -32,11 +32,12 @@ if (!isset($_SESSION['usuario'])) {
                     <div class="d-none d-xl-block ps-2">
                         <div><?= $_SESSION['nombre'] ?></div>
                         <div class="mt-1 small text-secondary"></div>
-                        <div class="mt-1 small text-secondary"><?= $_SESSION['usuario'] ?> | <?= $_SESSION['rol'] ?></div>
+                        <div class="mt-1 small text-secondary"><?= $_SESSION['usuario'] ?> | <?= $_SESSION['rol'] ?>
+                        </div>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" data-bs-theme="light">
-                    <a href="./profile.html" class="dropdown-item">Perfil</a>
+                    <a href="../vistas/mantenimiento.php" class="dropdown-item">Perfil</a>
                     <div class="dropdown-divider"></div>
                     <a href="../includes/cerrar_sesion.php" class="dropdown-item">Salir</a>
                 </div>
@@ -64,45 +65,46 @@ if (!isset($_SESSION['usuario'])) {
                         </a>
                     </li>
                     <?php if ($_SESSION['rol'] == 'Administrador'): ?>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                data-bs-auto-close="outside" role="button" aria-expanded="false">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <!-- Download SVG icon from http://tabler-icons.io/i/package -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-                                        <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                                        <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Usuarios
-                                </span>
-                            </a>
-                            <div class="dropdown-menu">
-                                <div class="dropdown-menu-columns">
-                                    <div class="dropdown-menu-column">
-                                        <a class="dropdown-item" href="../vistas/registrar_usuario.php">
-                                            Crear de usuario
-                                        </a>
-                                        <a class="dropdown-item" href="../vistas/lista-usuario.php">
-                                            Gestion de usuarios
-                                        </a>
-                                        <a class="dropdown-item" href="../vistas/registrar_rol.php">
-                                            Crear rol
-                                        </a>
-                                        <a class="dropdown-item" href="../vistas/lista-rol.php">
-                                            Gestion de Roles
-                                        </a>
-                                    </div>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
+                            data-bs-auto-close="outside" role="button" aria-expanded="false">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <!-- Download SVG icon from http://tabler-icons.io/i/package -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                    <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                                    <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
+                                </svg>
+                            </span>
+                            <span class="nav-link-title">
+                                Usuarios
+                            </span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-menu-columns">
+                                <div class="dropdown-menu-column">
+                                    <a class="dropdown-item" href="../vistas/registrar_usuario.php">
+                                        Crear de usuario
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/lista-usuario.php">
+                                        Gestion de usuarios
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/registrar_rol.php">
+                                        Crear rol
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/lista-rol.php">
+                                        Gestion de Roles
+                                    </a>
                                 </div>
                             </div>
-                        </li>
+                        </div>
+                    </li>
                     <?php endif; ?>
+                    <?php if ($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Compras'): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
@@ -126,25 +128,36 @@ if (!isset($_SESSION['usuario'])) {
                         <div class="dropdown-menu">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item" href="./alerts.html">
-                                        Gestion de inventario
+                                    <a class="dropdown-item" href="../vistas/lista-inventario.php">
+                                        Lista de inventario
                                     </a>
-                                    <a class="dropdown-item" href="./alerts.html">
-                                        Proveedores
+                                    <a class="dropdown-item" href="../vistas/lista-kardex.php">
+                                        Kardex
                                     </a>
-                                    <a class="dropdown-item" href="./accordion.html">
-                                        Movimientos
+                                    <a class="dropdown-item" href="../vistas/registrar_producto.php">
+                                        Agregar Productos
                                     </a>
-                                    <a class="dropdown-item" href="./accordion.html">
-                                        Productos
+                                    <a class="dropdown-item" href="../vistas/lista-producto.php">
+                                        Gestión de Productos
                                     </a>
-                                    <a class="dropdown-item" href="./accordion.html">
-                                        Categoria de productos
+                                    <a class="dropdown-item" href="../vistas/registrar_categoria.php">
+                                        Agregar Categoria de Productos
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/lista-categoria.php">
+                                        Gestion de Categorias de Productos
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/registrar_proveedor.php">
+                                        Agregar Proveedor
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/lista-proveedor.php">
+                                        Gestion de Proveedores
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </li>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Vendedor'): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
@@ -209,10 +222,19 @@ if (!isset($_SESSION['usuario'])) {
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
                                     <a class="dropdown-item" href="../vistas/lista-catalogoActivoFijo.php">
-                                        Catalogo de activo fijo
+                                        Listar catalogo de activo fijo
                                     </a>
-                                    <a class="dropdown-item" href="./alerts.html">
-                                        Activo fijo
+                                    <a class="dropdown-item" href="../vistas/registrar_catalogo_tipo_activo.php">
+                                        Registrar catalogo de activo fijo
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/lista-activoFijo.php">
+                                        Listar activo fijo
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/registrar_activoFijo.php">
+                                        Registrar activo fijo
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/lista-activoFijoReporte.php">
+                                        Depreciacion
                                     </a>
                                 </div>
                             </div>
@@ -241,15 +263,36 @@ if (!isset($_SESSION['usuario'])) {
                         <div class="dropdown-menu">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item" href="./alerts.html">
-                                        Ventas a credito
-                                    </a>
-                                    <a class="dropdown-item" href="./alerts.html">
-                                        Ventas al contado
-                                    </a>
-                                    <a class="dropdown-item" href="./alerts.html">
-                                        Facturacion
-                                    </a>
+                                    <div class="dropend">
+                                        <a class="dropdown-item dropdown-toggle" href="#sidebar-ventas-a-credito"
+                                            data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button"
+                                            aria-expanded="false">
+                                            Ventas a credito
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a href="../vistas/genera-venta-credito.php" class="dropdown-item">
+                                                Registrar Venta a credito
+                                            </a>
+                                            <a href="../vistas/lista-venta-credito.php" class="dropdown-item">
+                                                lista de Ventas a credito
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="dropend">
+                                        <a class="dropdown-item dropdown-toggle" href="#sidebar-ventas-al-contado"
+                                            data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button"
+                                            aria-expanded="false">
+                                            Ventas al contado
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a href="../vistas/genera-venta-contado.php" class="dropdown-item">
+                                                Registrar Venta al contado
+                                            </a>
+                                            <a href="../vistas/lista-venta-contado.php" class="dropdown-item">
+                                                lista de Ventas al contado
+                                            </a>
+                                        </div>
+                                    </div>
                                     <div class="dropend">
                                         <a class="dropdown-item dropdown-toggle" href="#sidebar-cuentas-por-cobrar"
                                             data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button"
@@ -257,17 +300,11 @@ if (!isset($_SESSION['usuario'])) {
                                             Cuentas por cobrar
                                         </a>
                                         <div class="dropdown-menu">
-                                            <a href="./sign-in.html" class="dropdown-item">
+                                            <a href="../vistas/gestion-cuentas-por-cobrar.php" class="dropdown-item">
                                                 Gestion de cuentas por cobrar
                                             </a>
-                                            <a href="./sign-in-link.html" class="dropdown-item">
+                                            <a href="../vistas/lista-intereses.php" class="dropdown-item">
                                                 Intereses
-                                            </a>
-                                            <a href="./sign-in-illustration.html" class="dropdown-item">
-                                                Embargo
-                                            </a>
-                                            <a href="./sign-in-cover.html" class="dropdown-item">
-                                                Historial de pago
                                             </a>
                                         </div>
                                     </div>
@@ -275,6 +312,38 @@ if (!isset($_SESSION['usuario'])) {
                             </div>
                         </div>
                     </li>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Compras'): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
+                            data-bs-auto-close="outside" role="button" aria-expanded="false">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-home-dollar">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M19 10l-7 -7l-9 9h2v7a2 2 0 0 0 2 2h6" />
+                                    <path d="M9 21v-6a2 2 0 0 1 2 -2h2c.387 0 .748 .11 1.054 .3" />
+                                    <path d="M21 15h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
+                                    <path d="M19 21v1m0 -8v1" />
+                                </svg>
+                            </span>
+                            <span class="nav-link-title">
+                                Compras
+                            </span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-menu-columns">
+                                <div class="dropdown-menu-column">
+                                    <a class="dropdown-item" href="../vistas/generar-compra.php">
+                                        Compra
+                                    </a>
+                                    <a class="dropdown-item" href="../vistas/lista-compras.php">
+                                        Lista de compras
+                                    </a>
+                                    <?php endif; ?>
+
                 </ul>
             </div>
         </div>

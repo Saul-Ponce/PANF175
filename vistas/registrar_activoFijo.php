@@ -50,7 +50,7 @@ $query = mysqli_query($con, $sql);
                             </div>
                             <div class="col-md-6">
                                 <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                <input type="text" class="form-control" name="nombre" required>
                             </div>
                         </div>
                         <!-- Segunda fila con 2 columnas -->
@@ -67,7 +67,7 @@ $query = mysqli_query($con, $sql);
                             </div>
                             <div class="col-md-6">
                                 <label for="fechaAdquisicion">Fecha de Adquisición</label>
-                                <input type="date" class="form-control" id="fechaAdquisicion" name="fecha_adquisicion" required>
+                                <input type="date" class="form-control" name="fecha_adquisicion" max="<?= date('Y-m-d') ?>" required>
                             </div>
                         </div>
 
@@ -75,32 +75,28 @@ $query = mysqli_query($con, $sql);
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="valorAdquisicion">Valor de Adquisición</label>
-                                <input type="number" class="form-control" id="valorAdquisicion" name="valor_adquisicion" step="0.01" min="0" required>
+                                <input type="number" class="form-control" name="valor_adquisicion" step="0.01" min="0" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="vidaUtil">Vida Útil (años)</label>
-                                <input type="number" class="form-control" id="vidaUtil" name="vida_util" step="1" min="0" required>
+                                <input type="number" class="form-control" name="vida_util" step="1" min="0" required>
                             </div>
                         </div>
 
                         <!-- Cuarta fila con solo un campo (Estado del Activo) que ocupará toda la fila -->
                         <div class="row mb-3">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label for="estadoActivo">Estado del Activo</label>
                                 <select class="form-select" id="estadoActivo" name="estadoActivo" required>
                                     <option value="1">Nuevo</option>
-                                    <option value="2">Activo</option>
-                                    <option value="3">Mantenimiento</option>
-                                    <option value="4">Inactivo</option>
-                                    <option value="5">Donado</option>
-                                    <option value="6">Vendido</option>
-                                    <option value="7">Votado (Desechado)</option>
-                                    <option value="8">Pendiente de Revisión</option>
-                                    <option value="9">Obsoleto</option>
+                                    <option value="2">Usado</option>
                                 </select>
                             </div>
+                            <div class="col-md-6">
+                                <label for="fecha_registro">Fecha de Registro</label>
+                                <input type="date" class="form-control" name="fecha_registro" max="<?= date('Y-m-d') ?>" required>
+                            </div>
                         </div>
-
                         <!-- Botón de guardar -->
                         <div class="text-center">
                             <button class="btn btn-primary" type="submit">Guardar</button>
@@ -124,17 +120,6 @@ $query = mysqli_query($con, $sql);
             var AllowRegex = /^[\ba-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
             if (AllowRegex.test(character)) return true;
             return false;
-        }
-
-        function validarFormulariocompleto() {
-            const nombre = document.getElementById('nombre').value;
-            const descripcion = document.getElementById('descripcion').value;
-            const porcentaje_depreciacion = document.getElementById('porcentaje_depreciacion').value;
-            if (!nombre || !descripcion || !porcentaje_depreciacion) {
-                Swal.fire("Aviso", "Por favor, complete todos los campos antes de enviar el formulario.", "warning");
-                return false; // Evitar el envío del formulario
-            }
-            return true;
         }
 
         function validarSeleccion() {

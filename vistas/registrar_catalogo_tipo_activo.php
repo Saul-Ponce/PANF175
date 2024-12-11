@@ -53,7 +53,12 @@ $query = mysqli_query($con, $sql);
                         </div>
                         <div class="mb-3">
                             <label for="porcentajeDepreciacion">Porcentaje de Depreciación</label>
-                            <input type="number" class="form-control" id="porcentajeDepreciacion" name="porcentajeDepreciacion" step="0.01" required>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="porcentajeDepreciacion"
+                                    name="porcentajeDepreciacion" step="0.01" min="0" required
+                                    oninput="validarPorcentaje(this)">
+                                <span class="input-group-text">%</span>
+                            </div>
                         </div>
                         <div class="text-center">
                             <button class="btn btn-primary" type="submit">Guardar</button>
