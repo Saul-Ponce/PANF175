@@ -1,7 +1,9 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 || 
-   ($_SESSION['rol'] != "Administrador" && $_SESSION['rol'] != "Vendedor")) {
+if (
+    !isset($_SESSION['usuario']) || $_SESSION['estado'] != 1 ||
+    ($_SESSION['rol'] != "Administrador" && $_SESSION['rol'] != "Vendedor")
+) {
     echo '
     <script>
         alert("Por favor Inicia Sesion");
@@ -42,6 +44,7 @@ $ident = implode($id);
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -74,7 +77,8 @@ $ident = implode($id);
                                 </label>
                                 <label class="form-selectgroup-item">
                                     <input type="radio" name="cliente" value="cliente-natural"
-                                        class="form-selectgroup-input" checked onclick="mostrarSelectCliente('natural')">
+                                        class="form-selectgroup-input" checked
+                                        onclick="mostrarSelectCliente('natural')">
                                     <span class="form-selectgroup-label">Cliente Natural</span>
                                 </label>
                             </div>
@@ -85,7 +89,7 @@ $ident = implode($id);
                                 value="<?php echo htmlspecialchars($_SESSION['id']); ?>">
                             <input type="hidden" id="data_array" name="data_array">
                             <input type="hidden" name="tipo_cliente" id="tipo_cliente" value="natural">
-                            
+
                             <div id="cliente" class="col-lg-5">
                                 <label>Cliente</label>
                                 <input type="hidden" id="tipo-cliente" name="tipo-cliente" value="cliente-natural">
@@ -93,7 +97,8 @@ $ident = implode($id);
                                     placeholder="Seleccione un cliente..." required>
                                     <option value="">Seleccione un cliente...</option>
                                     <?php foreach ($cnquery as $row): ?>
-                                    <option value="<?= htmlspecialchars($row['id']) ?>" data-id="<?= htmlspecialchars($row['id']) ?>">
+                                    <option value="<?= htmlspecialchars($row['id']) ?>"
+                                        data-id="<?= htmlspecialchars($row['id']) ?>">
                                         <?= htmlspecialchars($row['id']) ?> <?= htmlspecialchars($row['nombre']) ?>
                                     </option>
                                     <?php endforeach; ?>
@@ -104,8 +109,8 @@ $ident = implode($id);
                                 <label>Fecha</label>
                                 <?php date_default_timezone_set("America/El_Salvador");
                                 $fecha = date("Y-m-d"); ?>
-                                <input type="date" class="form-control" value="<?= htmlspecialchars($fecha) ?>" id="fecha_venta"
-                                    name="fecha_venta" readonly>
+                                <input type="date" class="form-control" value="<?= htmlspecialchars($fecha) ?>"
+                                    id="fecha_venta" name="fecha_venta" readonly>
                             </div>
 
                             <div class="col-lg-4">
@@ -120,10 +125,14 @@ $ident = implode($id);
                                 <select class="form-select" id="productSelect" name="productSelect" required>
                                     <option value="">Seleccione</option>
                                     <?php foreach ($queryProductos as $row): ?>
-                                    <option value="<?= htmlspecialchars($row['id']) ?>" data-code="<?= htmlspecialchars($row['codigo']) ?>"
-                                        data-stock="<?= htmlspecialchars($row['stok']) ?>" data-price="<?= htmlspecialchars($row['precio_venta']) ?>"
-                                        data-inv="<?= htmlspecialchars($row['idInventario'] ?? '') ?>" data-product="<?= htmlspecialchars($row['id']) ?>">
-                                        <?= htmlspecialchars($row['codigo']) ?> | <?= htmlspecialchars($row['nombre']) ?>
+                                    <option value="<?= htmlspecialchars($row['id']) ?>"
+                                        data-code="<?= htmlspecialchars($row['codigo']) ?>"
+                                        data-stock="<?= htmlspecialchars($row['stok']) ?>"
+                                        data-price="<?= htmlspecialchars($row['precio_venta'] + ($row["precio_venta"] * 0.25)) ?>"
+                                        data-inv="<?= htmlspecialchars($row['idInventario'] ?? '') ?>"
+                                        data-product="<?= htmlspecialchars($row['id']) ?>">
+                                        <?= htmlspecialchars($row['codigo']) ?> |
+                                        <?= htmlspecialchars($row['nombre']) ?>
                                     </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -131,8 +140,8 @@ $ident = implode($id);
 
                             <div class="col-lg-2">
                                 <label>Precio ($)</label>
-                                <input readonly class="form-control" id="txtprecio" name="txtprecio"
-                                    type="number" step="0.01" />
+                                <input readonly class="form-control" id="txtprecio" name="txtprecio" type="number"
+                                    step="0.01" />
                             </div>
 
                             <div class="col-lg-2">
@@ -142,7 +151,8 @@ $ident = implode($id);
 
                             <div class="col-lg-2">
                                 <label>Cantidad</label>
-                                <input class="form-control" id="txtcantidad" name="txtcantidad" type="number" min="1" required/>
+                                <input class="form-control" id="txtcantidad" name="txtcantidad" type="number" min="1"
+                                    required />
                             </div>
                             <!-- Removed the 'Agregar' button next to 'Cantidad' -->
                         </div>
@@ -174,11 +184,13 @@ $ident = implode($id);
                         <div class="row mt-3 align-items-end">
                             <div class="col-lg-6">
                                 <label>PRECIO TOTAL ($)</label>
-                                <input class="form-control" id="total" name="total" type="text" placeholder="00.00" readonly>
+                                <input class="form-control" id="total" name="total" type="text" placeholder="00.00"
+                                    readonly>
                             </div>
                             <div class="col-lg-6">
                                 <label for="monto_total_interes">Monto Total con Intereses ($)</label>
-                                <input type="text" id="monto_total_interes" name="monto_total_interes" class="form-control" readonly>
+                                <input type="text" id="monto_total_interes" name="monto_total_interes"
+                                    class="form-control" readonly>
                             </div>
                         </div>
 
@@ -202,7 +214,8 @@ $ident = implode($id);
 
                         <div class="row mt-3">
                             <div class="col-lg-12 text-end">
-                                <input type="button" value="Agregar" id="btnagregar" name="btnagregar" class="btn btn-primary" />
+                                <input type="button" value="Agregar" id="btnagregar" name="btnagregar"
+                                    class="btn btn-primary" />
                             </div>
                         </div>
 
@@ -254,21 +267,45 @@ $ident = implode($id);
     function mostrarSelectCliente(tipo) {
         if (tipo == 'juridico') {
             document.getElementById('cliente').innerHTML =
-                "<label>Cliente</label><input type='hidden' id='tipo-cliente' name='tipo-cliente' value='cliente-juridico'><select class='form-select' id='clienteSelect' name='clienteSelect' placeholder='Seleccione un cliente...' required> <option value=''>Seleccione un cliente...</option><?php foreach ($cjquery as $row): ?><option value='<?= htmlspecialchars($row['id']) ?>' data-id='<?= htmlspecialchars($row['id']) ?>'><?= htmlspecialchars($row['id']) ?> <?= htmlspecialchars($row['nombre']) ?></option><?php endforeach; ?></select>";
-            window.TomSelect && (new TomSelect("#clienteSelect", {create: false, sortField: {field: "text", direction: "asc"}}));
+                "<label>Cliente</label><input type='hidden' id='tipo-cliente' name='tipo-cliente' value='cliente-juridico'><select class='form-select' id='clienteSelect' name='clienteSelect' placeholder='Seleccione un cliente...' required> <option value=''>Seleccione un cliente...</option><?php foreach ($cjquery as $row): ?><option value='<?= htmlspecialchars($row['id']) ?>' data-id='<?= htmlspecialchars($row['id']) ?>'><?= htmlspecialchars($row['id']) ?>     <?= htmlspecialchars($row['nombre']) ?></option><?php endforeach; ?></select>";
+            window.TomSelect && (new TomSelect("#clienteSelect", {
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                }
+            }));
             document.getElementById('tipo_cliente').value = "juridico";
         } else if (tipo == 'natural') {
             document.getElementById('cliente').innerHTML =
-                "<label>Cliente</label><input type='hidden' id='tipo-cliente' name='tipo-cliente' value='cliente-natural'><select class='form-select' id='clienteSelect' name='clienteSelect' placeholder='Seleccione un cliente...' required> <option value=''>Seleccione un cliente...</option><?php foreach ($cnquery as $row): ?><option value='<?= htmlspecialchars($row['id']) ?>' data-id='<?= htmlspecialchars($row['id']) ?>'><?= htmlspecialchars($row['id']) ?> <?= htmlspecialchars($row['nombre']) ?></option><?php endforeach; ?></select>";
-            window.TomSelect && (new TomSelect("#clienteSelect", {create: false, sortField: {field: "text", direction: "asc"}}));
+                "<label>Cliente</label><input type='hidden' id='tipo-cliente' name='tipo-cliente' value='cliente-natural'><select class='form-select' id='clienteSelect' name='clienteSelect' placeholder='Seleccione un cliente...' required> <option value=''>Seleccione un cliente...</option><?php foreach ($cnquery as $row): ?><option value='<?= htmlspecialchars($row['id']) ?>' data-id='<?= htmlspecialchars($row['id']) ?>'><?= htmlspecialchars($row['id']) ?>     <?= htmlspecialchars($row['nombre']) ?></option><?php endforeach; ?></select>";
+            window.TomSelect && (new TomSelect("#clienteSelect", {
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                }
+            }));
             document.getElementById('tipo_cliente').value = "natural";
         }
     }
 
     $(document).ready(function() {
         // Inicializar TomSelect si está disponible
-        window.TomSelect && (new TomSelect("#clienteSelect", {create: false, sortField: {field:"text", direction:"asc"}}));
-        window.TomSelect && (new TomSelect("#productSelect", {create: false, sortField: {field:"text", direction:"asc"}}));
+        window.TomSelect && (new TomSelect("#clienteSelect", {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        }));
+        window.TomSelect && (new TomSelect("#productSelect", {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        }));
 
         // Mostrar mensajes de éxito o error
         <?php if (isset($_SESSION['success_messageC'])): ?>
@@ -293,12 +330,12 @@ $ident = implode($id);
         <?php endif; ?>
 
         <?php if (isset($_SESSION['error_message'])): ?>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: '<?php echo htmlspecialchars($_SESSION['error_message']); ?>'
-            });
-            <?php unset($_SESSION['error_message']); ?>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: '<?php echo htmlspecialchars($_SESSION['error_message']); ?>'
+        });
+        <?php unset($_SESSION['error_message']); ?>
         <?php endif; ?>
 
         // Evento al cambiar el producto
@@ -329,7 +366,8 @@ $ident = implode($id);
         document.getElementById('form').addEventListener('submit', function(event) {
             if (cart.length === 0) {
                 event.preventDefault();
-                Swal.fire('El carrito está vacío. Agrega al menos un producto antes de guardar.', '', 'warning');
+                Swal.fire('El carrito está vacío. Agrega al menos un producto antes de guardar.', '',
+                    'warning');
                 return;
             }
             var serializedArray = JSON.stringify(cart);
@@ -361,7 +399,8 @@ $ident = implode($id);
                 var totalQuantityInCart = cart.filter(item => item.id === selectedProductId)
                     .reduce((total, item) => total + item.cantidad, 0);
 
-                if (cantidad > 0 && (totalQuantityInCart + cantidad) <= availableStock[selectedProductId]) {
+                if (cantidad > 0 && (totalQuantityInCart + cantidad) <= availableStock[
+                        selectedProductId]) {
                     var existingItem = cart.find(item => item.id === selectedProductId);
                     if (existingItem) {
                         existingItem.cantidad += cantidad;
@@ -383,7 +422,8 @@ $ident = implode($id);
 
                     // Validación de selección de plazo
                     if (plazo === 0) {
-                        Swal.fire('Seleccione un plazo de pago para calcular intereses.', '', 'warning');
+                        Swal.fire('Seleccione un plazo de pago para calcular intereses.', '',
+                        'warning');
                         cart.pop(); // Remover el último agregado
                         updateCartTable();
                         updatetotal();
@@ -398,7 +438,8 @@ $ident = implode($id);
                     // Limpiar la cantidad
                     // $('#txtcantidad').val(''); // Removed to prevent clearing the quantity field
                 } else if (cantidad > (availableStock[selectedProductId] - totalQuantityInCart)) {
-                    alert("No hay suficiente stock. Cantidad disponible: " + (availableStock[selectedProductId] - totalQuantityInCart));
+                    alert("No hay suficiente stock. Cantidad disponible: " + (availableStock[
+                        selectedProductId] - totalQuantityInCart));
                 } else {
                     alert("Por favor, ingrese una cantidad válida.");
                 }
@@ -429,7 +470,7 @@ $ident = implode($id);
         var totalVal = getCartTotal();
         var plazo = parseInt(document.getElementById('plazo').value) || 0;
         var interesStr = document.getElementById('tasa_interes').value || "";
-        var interes = parseFloat(interesStr.replace('%','')) || 0;
+        var interes = parseFloat(interesStr.replace('%', '')) || 0;
         var interesDecimal = interes / 100;
 
         var montoTotalInteres = 0.00;
@@ -462,7 +503,8 @@ $ident = implode($id);
             costoConIntCell.innerHTML = (montoTotalInteres > 0 ? montoTotalInteres.toFixed(2) : "0.00");
             cuotaMesCell.innerHTML = (cuota > 0 ? cuota.toFixed(2) : "0.00");
 
-            actionCell.innerHTML = '<button type="button" class="btn btn-danger" onclick="removeItem(this)"><i class="fa-solid fa-trash"></i></button>';
+            actionCell.innerHTML =
+                '<button type="button" class="btn btn-danger" onclick="removeItem(this)"><i class="fa-solid fa-trash"></i></button>';
         });
 
         if (cart.length > 0) {
@@ -519,11 +561,11 @@ $ident = implode($id);
 
         if (!tasaInteresInput.value || tasaInteresInput.value === "") {
             montoTotalInput.value = "0.00";
-            updateInstallmentsTable(0,0);
+            updateInstallmentsTable(0, 0);
             return;
         }
 
-        const tasaInteres = parseFloat(tasaInteresInput.value.replace('%','')) || 0;
+        const tasaInteres = parseFloat(tasaInteresInput.value.replace('%', '')) || 0;
         const interes = tasaInteres / 100;
         let montoTotal = 0.00;
 
@@ -594,4 +636,5 @@ $ident = implode($id);
     }
     </script>
 </body>
+
 </html>
