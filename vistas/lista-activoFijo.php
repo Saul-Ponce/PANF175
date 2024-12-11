@@ -71,7 +71,7 @@ include_once "../models/ActivoFijoModel.php";
                                                     echo "Usado";
                                                     break;
                                                 default:
-                                                    echo "Estado desconocido"; // En caso de que haya un valor diferente
+                                                    echo ""; // En caso de que haya un valor diferente
                                                     break;
                                             }
                                             ?>
@@ -92,7 +92,7 @@ include_once "../models/ActivoFijoModel.php";
                                                     echo "Votarlo";
                                                     break;
                                                 default:
-                                                    echo "Estado desconocido"; // En caso de que haya un valor diferente
+                                                    echo ""; // En caso de que haya un valor diferente
                                                     break;
                                             }
                                             ?>
