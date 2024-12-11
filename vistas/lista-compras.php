@@ -201,6 +201,11 @@ function updateDetalle(id) {
         const cantidad = $(`#cantidad-${id}`).val();
         const precio_unitario = $(`#precio-${id}`).val();
 
+        if (cantidad < 0 || precio_unitario < 0) {
+        Swal.fire('Error!', 'La cantidad y el precio unitario no pueden ser negativos.', 'error');
+        return;
+    }
+    
         $.ajax({
             url: '../controladores/ControladorCompra.php?action=updateDetalleCompra',
             method: 'POST',
